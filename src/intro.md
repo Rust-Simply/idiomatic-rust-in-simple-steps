@@ -1,4 +1,4 @@
-# Idiomatic Rust In Simple Steps
+# Idiomatic Rust in Simple Steps
 
 Welcome to IRISS 👁️🦀
 
@@ -9,4 +9,4 @@ a lot of more established languages.
 The goal of this series is to help you go from no knowledge of Rust to understanding how Rust is written as quickly as
 possible.
 
-This repository will provide the content in book form, however, the plan is to make a full YouTube series.
+This book is the written version of (hopefully) a companion YouTube series (coming soon 🤞🏻)

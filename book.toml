@@ -1,0 +1,11 @@
+[book]
+title = "Idiomatic Rust in Simple Steps"
+description = "Learn idiomatic Rust in simple steps even if you have no former knowledge"
+authors = ["Daniel Mason"]
+language = "en"
+multilingual = false
+src = "src"
+
+[build]
+build-dir = "docs"
+create-missing = true
