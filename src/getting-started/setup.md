@@ -53,8 +53,8 @@ cargo 1.75.0 (1d8b05cdd 2023-11-20)
 
 Cargo is the main tool we'll use to build and work with Rust, you will need at least version `1.75` for this tutorial.
 
-Windows
--------
+Windows 11
+----------
 
 Running Rust on Windows is a bit more challenging, but you've got this, I believe in you.
 
@@ -97,11 +97,14 @@ I know, and you don't _necessarily_ need to do this. However, Rust is a language
 In particular, Rust works really well with existing C and C++ libraries, however, Windows and Linux us different C++
 libraries. This can be fixed by installing `gcc`.
 
-Like Microsofts build tools, gcc isn't packaged by itself, but unlike Microsofts build tools there are many, many ways
+Like Microsoft's build tools, gcc isn't packaged by itself, but unlike Microsoft's build tools there are many, many ways
 to install it.
 
 The easiest way I've found is to install [MSYS2](https://www.msys2.org/), with two caveats. This will install more than
 we need... and the installer doesn't quite do everything you need. Don't worry, we'll step through it.
+
+> 🙏🏻 If anyone knows of a friendlier way of achieving this, please do open a PR or Issue 
+> [on this projects repository](https://github.com/Gisleburt/idiomatic-rust-in-simple-steps)
 
 First, grab the installer and follow the instruction. MSYS2 is a little fussy about where its installed, if in doubt
 install it in the default location.
@@ -110,5 +113,37 @@ Before we go further, we want to allow ourselves access to the tools that we're 
 that, you'll need to find where it was installed, then go to the ucrt64 directory, and copy the full path to the bin
 directory in there.
 
+![MSYS2 bin path](./images/windows-msys2-bin.png)
+
 Next we need to add this to a system environment variable called `PATH`, this will allow us to access any tools in that
-directory from anywhere in our system.
+directory from anywhere in our system. To do this, go to the start menu, and simply type "environment" then click
+"Edit the system environment variables"
+
+![Finding Windows Environment](./images/windows-environment.png)
+
+This, weirdly, doesn't take you straight to environment variables but to system properties where you can click through
+to the Environment variables at the bottom.
+![Windows System Properties](./images/windows-system-properties.png)
+
+<div class="warning">
+Be careful here and don't change anything other than what we're here to change. Luckily the UI around this is very
+sensible these days making it much harder to mess up.
+</div>
+
+Select the Path variable in the top box, then hit edit.
+
+![Windows System Properties](./images/windows-environment-variables.png)
+
+Now hit New on the right, and paste in the path as you can see I have done below
+
+![Windows System Properties](./images/windows-edit-environment-variables.png)
+
+Finally we're ready to install gcc. Run the application `MSYS2 UCRT64`. This is a specific environmental setup for MSYS
+and will be the easiest to perform the next step in.
+
+Enter the command `pacman -S mingw-w64-ucrt-x86_64-gcc`, hitting `<enter>` when it asks for confirmation. Pacman is the
+package manager for MSYS and will install `gcc` and all of its dependencies.
+
+You can check this worked by running `gcc --version`
+
+Phew! Thats it, we're all set to move on.
