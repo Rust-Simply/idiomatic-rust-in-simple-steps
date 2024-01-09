@@ -1,7 +1,11 @@
 # Summary
 - [Introduction](./intro.md)
-- [Language Basics](./basics/intro.md)
-    - [Why or Why Not, Installation and Hello World](./basics/why.md)
+- [Getting Started](getting-started/intro.md)
+    - [Why or Why Not](getting-started/why.md)
+    - [Getting Set Up](getting-started/setup.md)
+    - [Environment](getting-started/environment.md)
+    - [Hello World](getting-started/hello-world.md)
+- [Language Basics]()
     - [Guessing Game with extra bits]()
     - [Primitives]()
     - [Functions]()
