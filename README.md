@@ -10,3 +10,5 @@ The goal of this series is to help you go from no knowledge of Rust to understan
 possible.
 
 This repository will provide the content in book form, however, the plan is to make a full YouTube series.
+
+You can view the book here: [https://www.danielmason.com/idiomatic-rust-in-simple-steps](https://www.danielmason.com/idiomatic-rust-in-simple-steps)
