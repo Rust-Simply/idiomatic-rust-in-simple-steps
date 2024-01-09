@@ -5,7 +5,7 @@
     - [Getting Set Up](getting-started/setup.md)
     - [Environment](getting-started/environment.md)
     - [Hello World](getting-started/hello-world.md)
-- [Language Basics]()
+- [Language Basics](language-basics/intro.md)
     - [Guessing Game with extra bits]()
     - [Primitives]()
     - [Functions]()

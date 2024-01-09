@@ -1,7 +1,8 @@
-# Language Basics
+Getting Started
+===============
 
-## Welcome to Rust
-
-In this section we're going to step through the language basics, attempting to cover enough to quickly move on to
-language idioms. By doing this, we hope that people won't end up with a lot of bad habits (like some of us did) as the
-"easy" bits that help you get started end up overly ingrained in your memory.
+In this section we'll go through:
+- [Why Rust may or may not be for you](./why.md)
+- [How to install the language tools](./setup.md)
+- [How to set up your development environment](./environment.md)
+- [And how to create your very first program](./hello-world.md)
