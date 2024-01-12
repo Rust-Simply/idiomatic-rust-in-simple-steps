@@ -185,9 +185,9 @@
 </li>
 </ol>
 <h2 id="mac-and-linux"><a class="header" href="#mac-and-linux">Mac and Linux</a></h2>
-<p>Go to <a href="https://rustup.rs">https://rustup.rs</a>, copy the command displayed there into your terminal.</p>
+<p>Go to <a href="https://rustup.rs" title="" target="_blank">https://rustup.rs</a>, copy the command displayed there into your terminal.</p>
 <p><img src="images/rustup-mac.png" alt="Rustup Mac / Linux" /></p>
-<p>You will be given the option for customizing the installation, but we don't need to do that for now</p>
+<p>You will be given the option for customizing the installation, but we don’t need to do that for now</p>
 <pre><code class="language-sh">$ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
 # [other information about the install appears here]
@@ -215,14 +215,14 @@ like this:</p>
 <pre><code class="language-sh">$ cargo version
 cargo 1.75.0 (1d8b05cdd 2023-11-20)
 </code></pre>
-<p>Cargo is the main tool we'll use to build and work with Rust, you will need at least version <code>1.75</code> for this tutorial.</p>
+<p>Cargo is the main tool we’ll use to build and work with Rust, you will need at least version <code>1.75</code> for this tutorial.</p>
 <h2 id="windows-11"><a class="header" href="#windows-11">Windows 11</a></h2>
-<p>Running Rust on Windows is a bit more challenging, but you've got this, I believe in you.</p>
-<p>All the important differences for Windows are explained on <a href="https://rustup.rs">rustup.rs</a>, however, I personally
-struggled a bit with this, so I'm laying it out here in my own words.</p>
+<p>Running Rust on Windows is a bit more challenging, but you’ve got this, I believe in you.</p>
+<p>All the important differences for Windows are explained on <a href="https://rustup.rs" title="" target="_blank">rustup.rs</a>, however, I personally
+struggled a bit with this, so I’m laying it out here in my own words.</p>
 <h3 id="windows-build-tools"><a class="header" href="#windows-build-tools">Windows Build Tools</a></h3>
-<p>The first thing we're going to need are some Microsoft build tools. </p>
-<p>Head to <a href="https://visualstudio.microsoft.com/downloads/">https://visualstudio.microsoft.com/downloads/</a> and download the 
+<p>The first thing we’re going to need are some Microsoft build tools. </p>
+<p>Head to <a href="https://visualstudio.microsoft.com/downloads/" title="" target="_blank">https://visualstudio.microsoft.com/downloads/</a> and download the 
 community edition.</p>
 <p>== Add Screenshot ==</p>
 <p>The installer is the gateway to a huge number of tools and software, but we only need two things.</p>
@@ -230,40 +230,40 @@ community edition.</p>
 <p>Select the latest version.</p>
 <p>Next search for: <code>Windows 11 SDK</code></p>
 <p>Again, select the latest version.</p>
-<p>Finally, click install. You may get a prompt asking if you'd like to continue without workloads, which you do,
+<p>Finally, click install. You may get a prompt asking if you’d like to continue without workloads, which you do,
 so continue.</p>
 <p>The installation itself can take a while so grab a tea or something ☕</p>
 <h3 id="rustup"><a class="header" href="#rustup">Rustup</a></h3>
-<p>Once the Windows build tools are installed, head back to <a href="https://rustup.rs">rustup.rs</a> and download <code>rustup-init.exe</code>.
+<p>Once the Windows build tools are installed, head back to <a href="https://rustup.rs" title="" target="_blank">rustup.rs</a> and download <code>rustup-init.exe</code>.
 Running this will install the tools we need.</p>
 <p>Choose the default install options.</p>
 <p>Once complete, we can check that things have been installed correctly by opening either <code>cmd</code> or <code>powershell</code> or your
 terminal of choice, and run <code>cargo version</code>.</p>
 <h3 id="gcc-optional-but-recommended"><a class="header" href="#gcc-optional-but-recommended">GCC (optional, but recommended)</a></h3>
-<p>Wait, the rustup website doesn't mention this!</p>
-<p>I know, and you don't <em>necessarily</em> need to do this. However, Rust is a language that can interop with other languages.
+<p>Wait, the rustup website doesn’t mention this!</p>
+<p>I know, and you don’t <em>necessarily</em> need to do this. However, Rust is a language that can interop with other languages.
 In particular, Rust works really well with existing C and C++ libraries, however, Windows and Linux us different C++
 libraries. This can be fixed by installing <code>gcc</code>.</p>
-<p>Like Microsoft's build tools, gcc isn't packaged by itself, but unlike Microsoft's build tools there are many, many ways
+<p>Like Microsoft’s build tools, gcc isn’t packaged by itself, but unlike Microsoft’s build tools there are many, many ways
 to install it.</p>
-<p>The easiest way I've found is to install <a href="https://www.msys2.org/">MSYS2</a>, with two caveats. This will install more than
-we need... and the installer doesn't quite do everything you need. Don't worry, we'll step through it.</p>
+<p>The easiest way I’ve found is to install <a href="https://www.msys2.org/" title="" target="_blank">MSYS2</a>, with two caveats. This will install more than
+we need… and the installer doesn’t quite do everything you need. Don’t worry, we’ll step through it.</p>
 <blockquote>
 <p>🙏🏻 If anyone knows of a friendlier way of achieving this, please do open a PR or Issue 
-<a href="https://github.com/Gisleburt/idiomatic-rust-in-simple-steps">on this projects repository</a></p>
+<a href="https://github.com/Gisleburt/idiomatic-rust-in-simple-steps" title="" target="_blank">on this projects repository</a></p>
 </blockquote>
 <p>First, grab the installer and follow the instruction. MSYS2 is a little fussy about where its installed, if in doubt
-install it in the default location. Wherever you install it though, keep it in mind, we'll need to find it shortly.</p>
-<p>After installation but before we go further, we want to allow ourselves access to the tools that we're going to install
-inside MSYS2. To do that, you'll need to find where it was installed, then go to the <code>ucrt64</code> directory, and then <code>bin</code>.
+install it in the default location. Wherever you install it though, keep it in mind, we’ll need to find it shortly.</p>
+<p>After installation but before we go further, we want to allow ourselves access to the tools that we’re going to install
+inside MSYS2. To do that, you’ll need to find where it was installed, then go to the <code>ucrt64</code> directory, and then <code>bin</code>.
 Copy the full path to this directory. Note, I installed mine to <code>D:/Programs/MYSYS64</code> but by default it will be <code>C:/MYSYS64</code></p>
 <p><img src="./images/windows-msys2-bin.png" alt="MSYS2 bin path" /></p>
 <p>== Add more arrows ==</p>
 <p>Next we need to add this to a system environment variable called <code>PATH</code>, this will allow us to access any tools in that
-directory from anywhere in our system. To do this, go to the start menu, and simply type &quot;environment&quot; then click
-&quot;Edit the system environment variables&quot;</p>
+directory from anywhere in our system. To do this, go to the start menu, and simply type “environment” then click
+“Edit the system environment variables”</p>
 <p><img src="./images/windows-environment.png" alt="Finding Windows Environment" /></p>
-<p>This, weirdly, doesn't take you straight to environment variables but to system properties where you can click through
+<p>This, weirdly, doesn’t take you straight to environment variables but to system properties where you can click through
 to the Environment variables at the bottom.
 <img src="./images/windows-system-properties.png" alt="Windows System Properties" /></p>
 <div class="warning">
@@ -275,13 +275,13 @@ sensible these days making it much harder to mess up.
 <p>Now hit New on the right, and paste in the path as you can see I have done below</p>
 <p><img src="./images/windows-edit-environment-variables.png" alt="Windows System Properties" /></p>
 <p>Click OK to save the new path.</p>
-<p>Finally we're ready to install gcc. Run the application <code>MSYS2 UCRT64</code> from the start menu. This is a specific
+<p>Finally we’re ready to install gcc. Run the application <code>MSYS2 UCRT64</code> from the start menu. This is a specific
 environmental setup for MSYS and will be the easiest to perform the next step in.</p>
 <p>Enter the command <code>pacman -S mingw-w64-ucrt-x86_64-gcc</code>, hitting <code>&lt;enter&gt;</code> when it asks for confirmation. Pacman is the
 package manager for MSYS and will install <code>gcc</code> and all of its dependencies.</p>
 <p>You can check this worked by running <code>gcc --version</code></p>
 <p>Phew! Thats it, congratulations! It took me over an hour to do this on my first attempt.</p>
-<p>If you haven't done already, its a good idea to restart your computer before moving on.</p>
+<p>If you haven’t done already, its a good idea to restart your computer before moving on.</p>
 
                     </main>
 
