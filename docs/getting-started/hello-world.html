@@ -186,12 +186,13 @@ the one you want might need a little scroll. Normally for a Terminal you want to
 <p><img src="./images/vscode-any-command-terminal.png" alt="Open the terminal" /></p>
 <p>Navigate to an appropriate location for your projects such as your home directory or my documents, depending on your
 system.</p>
-<p>Run <code>cargo new hello-world</code></p>
+<p>Run <code>cargo new hello-world</code>, and cargo will report that it has created the project</p>
 <p>Cargo is the program we'll use to run our rust programs as well as many of the rust tools that will help us along the
 way.</p>
 <p>Now in Visual Studio Code, go to File -&gt; Open Folder and navigate to the hello-world folder we just created.</p>
 <p>You can see that cargo has created some files for us. We're going to talk about the cargo files later but for now,
-head into the `src`` directory and open main.rs</p>
+head into the <code>src</code> directory and open main.rs</p>
+<p>== More Pictures ==</p>
 <p>You can see the file has already been created with the following code</p>
 <pre><pre class="playground"><code class="language-rust">fn main() {
     println!(&quot;Hello, world!&quot;);
@@ -216,11 +217,11 @@ all we need to know is that the main function is called when the program starts,
 call functions in Rust, and that <code>println</code> is the function name. However, the exclamation mark actually tells us this
 is a macro. Macro's are very powerful and can do much more than functions, however they are an advanced topic and we
 won't be creating our own until much later. We will be using pre-written macros a fair bit though.</p>
-<p><code>println!</code> will write what its given to the console (stdout on *nix systems).</p>
+<p><code>println!</code> will write what its given to the console.</p>
 <h2 id="running-and-debugging-rust"><a class="header" href="#running-and-debugging-rust">Running and Debugging Rust</a></h2>
-<p>Before we end this section, I want to quickly set uyp one of the most powerful tools we have thats going to help us
-learn incredibly quicly.</p>
-<p>First lets make a quick change to our program, by adding a variable with our name, and then saying hello to ourselves
+<p>Before we end this section, I want to quickly set up one of the most powerful tools we have thats going to help us
+learn incredibly quickly.</p>
+<p>First let's make a quick change to our program, by adding a variable with our name, and then saying hello to ourselves
 instead of the whole world</p>
 <pre><pre class="playground"><code class="language-rust">fn main() {
     let name = &quot;Daniel&quot;;
@@ -243,6 +244,7 @@ whats actually happening.</p>
 to do some magic for us. The error is because we didn't set a default run configuration, click OK and Visual Studio Code
 will ask if you want to generate one. Click &quot;yes&quot;, then press F5 again, and the program will start and then pause when
 it hits line 3.</p>
+<p>== None of this works on Mac 😡 ==</p>
 <p>If you mouse over <code>name</code> on either line 2 or line 3, you'll see its value. Being able to see whats happening in a
 running program is a programming super power.</p>
 <p><img src="./images/vscode-debug.png" alt="Breakpoints" /></p>

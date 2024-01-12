@@ -2,7 +2,7 @@ The Development Environment
 ===========================
 
 A software developers environment is something very specific to them. Some people love vim and neovim, others like Nova,
-I'm personally a big fan of IntelliK. If you've already found the tools for you, there's no wrong answer here, use
+I'm personally a big fan of IntelliJ. If you've already found the tools for you, there's no wrong answer here, use
 whatever makes you happy.
 
 If you're new to software engineering though, and not looking to fork out potentially hundreds of dollars on tooling,

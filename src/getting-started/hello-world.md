@@ -20,7 +20,7 @@ the one you want might need a little scroll. Normally for a Terminal you want to
 Navigate to an appropriate location for your projects such as your home directory or my documents, depending on your
 system.
 
-Run `cargo new hello-world`
+Run `cargo new hello-world`, and cargo will report that it has created the project
 
 Cargo is the program we'll use to run our rust programs as well as many of the rust tools that will help us along the
 way.
@@ -28,7 +28,9 @@ way.
 Now in Visual Studio Code, go to File -> Open Folder and navigate to the hello-world folder we just created.
 
 You can see that cargo has created some files for us. We're going to talk about the cargo files later but for now,
-head into the `src`` directory and open main.rs
+head into the `src` directory and open main.rs
+
+== More Pictures ==
 
 You can see the file has already been created with the following code
 
@@ -69,15 +71,15 @@ call functions in Rust, and that `println` is the function name. However, the ex
 is a macro. Macro's are very powerful and can do much more than functions, however they are an advanced topic and we
 won't be creating our own until much later. We will be using pre-written macros a fair bit though.
 
-`println!` will write what its given to the console (stdout on *nix systems).
+`println!` will write what its given to the console.
 
 Running and Debugging Rust
 --------------------------
 
-Before we end this section, I want to quickly set uyp one of the most powerful tools we have thats going to help us
-learn incredibly quicly.
+Before we end this section, I want to quickly set up one of the most powerful tools we have thats going to help us
+learn incredibly quickly.
 
-First lets make a quick change to our program, by adding a variable with our name, and then saying hello to ourselves
+First let's make a quick change to our program, by adding a variable with our name, and then saying hello to ourselves
 instead of the whole world
 
 ```rust
@@ -106,6 +108,8 @@ To debug our code press F5... and it will immediately show you an error. Don't p
 to do some magic for us. The error is because we didn't set a default run configuration, click OK and Visual Studio Code
 will ask if you want to generate one. Click "yes", then press F5 again, and the program will start and then pause when
 it hits line 3.
+
+== None of this works on Mac 😡 ==
 
 If you mouse over `name` on either line 2 or line 3, you'll see its value. Being able to see whats happening in a
 running program is a programming super power.

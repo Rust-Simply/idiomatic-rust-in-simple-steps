@@ -195,10 +195,10 @@ I certainly don't know <em>everything</em> about Rust and look forward to learni
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="why-or-why-not"><a class="header" href="#why-or-why-not">Why or Why Not</a></h1>
 <ol>
-<li><a href="getting-started/why.html#why-should-you-consider-rust">Why should you consider Rust</a></li>
+<li><a href="getting-started/why.html#why-rust">Why should you consider Rust</a></li>
 <li><a href="getting-started/why.html#why-not-rust">Why not Rust</a></li>
 </ol>
-<h2 id="why-should-you-consider-rust"><a class="header" href="#why-should-you-consider-rust">Why should you consider Rust</a></h2>
+<h2 id="why-rust"><a class="header" href="#why-rust">Why Rust</a></h2>
 <p>I could tell you that it's a &quot;blazingly fast&quot; language, that holds your hand and helps reduce bugs, that its first party
 tooling is second to none, that it has a mature ecosystem and an amazing community. These are all good reasons to
 consider using Rust for any personal or professional project. There is, however, in my mind, a singular reason everyone
@@ -268,17 +268,21 @@ cargo 1.75.0 (1d8b05cdd 2023-11-20)
 <p>Cargo is the main tool we'll use to build and work with Rust, you will need at least version <code>1.75</code> for this tutorial.</p>
 <h2 id="windows-11"><a class="header" href="#windows-11">Windows 11</a></h2>
 <p>Running Rust on Windows is a bit more challenging, but you've got this, I believe in you.</p>
-<p>All the important differences for Windows are explain on <a href="https://rustup.rs">rustup.rs</a>, however, I personally
+<p>All the important differences for Windows are explained on <a href="https://rustup.rs">rustup.rs</a>, however, I personally
 struggled a bit with this, so I'm laying it out here in my own words.</p>
 <h3 id="windows-build-tools"><a class="header" href="#windows-build-tools">Windows Build Tools</a></h3>
 <p>The first thing we're going to need are some Microsoft build tools. </p>
-<p>Head to <a href="https://visualstudio.microsoft.com/downloads/">https://visualstudio.microsoft.com/downloads/</a> and download the community tool.</p>
+<p>Head to <a href="https://visualstudio.microsoft.com/downloads/">https://visualstudio.microsoft.com/downloads/</a> and download the 
+community edition.</p>
+<p>== Add Screenshot ==</p>
 <p>The installer is the gateway to a huge number of tools and software, but we only need two things.</p>
 <p>Click through to the Individual Components tab, and search for the following: <code>C++ x64/x86 build tools</code></p>
 <p>Select the latest version.</p>
 <p>Next search for: <code>Windows 11 SDK</code></p>
 <p>Again, select the latest version.</p>
-<p>Finally, choose your language and install.</p>
+<p>Finally, click install. You may get a prompt asking if you'd like to continue without workloads, which you do,
+so continue.</p>
+<p>The installation itself can take a while so grab a tea or something ☕</p>
 <h3 id="rustup"><a class="header" href="#rustup">Rustup</a></h3>
 <p>Once the Windows build tools are installed, head back to <a href="https://rustup.rs">rustup.rs</a> and download <code>rustup-init.exe</code>.
 Running this will install the tools we need.</p>
@@ -286,7 +290,7 @@ Running this will install the tools we need.</p>
 <p>Once complete, we can check that things have been installed correctly by opening either <code>cmd</code> or <code>powershell</code> or your
 terminal of choice, and run <code>cargo version</code>.</p>
 <h3 id="gcc-optional-but-recommended"><a class="header" href="#gcc-optional-but-recommended">GCC (optional, but recommended)</a></h3>
-<p>Wait, rustup doesn't mention this!</p>
+<p>Wait, the rustup website doesn't mention this!</p>
 <p>I know, and you don't <em>necessarily</em> need to do this. However, Rust is a language that can interop with other languages.
 In particular, Rust works really well with existing C and C++ libraries, however, Windows and Linux us different C++
 libraries. This can be fixed by installing <code>gcc</code>.</p>
@@ -299,11 +303,12 @@ we need... and the installer doesn't quite do everything you need. Don't worry, 
 <a href="https://github.com/Gisleburt/idiomatic-rust-in-simple-steps">on this projects repository</a></p>
 </blockquote>
 <p>First, grab the installer and follow the instruction. MSYS2 is a little fussy about where its installed, if in doubt
-install it in the default location.</p>
-<p>Before we go further, we want to allow ourselves access to the tools that we're going to install inside MSYS2. To do
-that, you'll need to find where it was installed, then go to the ucrt64 directory, and copy the full path to the bin
-directory in there.</p>
+install it in the default location. Wherever you install it though, keep it in mind, we'll need to find it shortly.</p>
+<p>After installation but before we go further, we want to allow ourselves access to the tools that we're going to install
+inside MSYS2. To do that, you'll need to find where it was installed, then go to the <code>ucrt64</code> directory, and then <code>bin</code>.
+Copy the full path to this directory. Note, I installed mine to <code>D:/Programs/MYSYS64</code> but by default it will be <code>C:/MYSYS64</code></p>
 <p><img src="getting-started/./images/windows-msys2-bin.png" alt="MSYS2 bin path" /></p>
+<p>== Add more arrows ==</p>
 <p>Next we need to add this to a system environment variable called <code>PATH</code>, this will allow us to access any tools in that
 directory from anywhere in our system. To do this, go to the start menu, and simply type &quot;environment&quot; then click
 &quot;Edit the system environment variables&quot;</p>
@@ -319,15 +324,17 @@ sensible these days making it much harder to mess up.
 <p><img src="getting-started/./images/windows-environment-variables.png" alt="Windows System Properties" /></p>
 <p>Now hit New on the right, and paste in the path as you can see I have done below</p>
 <p><img src="getting-started/./images/windows-edit-environment-variables.png" alt="Windows System Properties" /></p>
-<p>Finally we're ready to install gcc. Run the application <code>MSYS2 UCRT64</code>. This is a specific environmental setup for MSYS
-and will be the easiest to perform the next step in.</p>
+<p>Click OK to save the new path.</p>
+<p>Finally we're ready to install gcc. Run the application <code>MSYS2 UCRT64</code> from the start menu. This is a specific
+environmental setup for MSYS and will be the easiest to perform the next step in.</p>
 <p>Enter the command <code>pacman -S mingw-w64-ucrt-x86_64-gcc</code>, hitting <code>&lt;enter&gt;</code> when it asks for confirmation. Pacman is the
 package manager for MSYS and will install <code>gcc</code> and all of its dependencies.</p>
 <p>You can check this worked by running <code>gcc --version</code></p>
-<p>Phew! Thats it, we're all set to move on.</p>
+<p>Phew! Thats it, congratulations! It took me over an hour to do this on my first attempt.</p>
+<p>If you haven't done already, its a good idea to restart your computer before moving on.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="the-development-environment"><a class="header" href="#the-development-environment">The Development Environment</a></h1>
 <p>A software developers environment is something very specific to them. Some people love vim and neovim, others like Nova,
-I'm personally a big fan of IntelliK. If you've already found the tools for you, there's no wrong answer here, use
+I'm personally a big fan of IntelliJ. If you've already found the tools for you, there's no wrong answer here, use
 whatever makes you happy.</p>
 <p>If you're new to software engineering though, and not looking to fork out potentially hundreds of dollars on tooling,
 I recommend Visual Studio Code. It's free, is perhaps the most widely used and supported editor today, and can be
@@ -369,12 +376,13 @@ the one you want might need a little scroll. Normally for a Terminal you want to
 <p><img src="getting-started/./images/vscode-any-command-terminal.png" alt="Open the terminal" /></p>
 <p>Navigate to an appropriate location for your projects such as your home directory or my documents, depending on your
 system.</p>
-<p>Run <code>cargo new hello-world</code></p>
+<p>Run <code>cargo new hello-world</code>, and cargo will report that it has created the project</p>
 <p>Cargo is the program we'll use to run our rust programs as well as many of the rust tools that will help us along the
 way.</p>
 <p>Now in Visual Studio Code, go to File -&gt; Open Folder and navigate to the hello-world folder we just created.</p>
 <p>You can see that cargo has created some files for us. We're going to talk about the cargo files later but for now,
-head into the `src`` directory and open main.rs</p>
+head into the <code>src</code> directory and open main.rs</p>
+<p>== More Pictures ==</p>
 <p>You can see the file has already been created with the following code</p>
 <pre><pre class="playground"><code class="language-rust">fn main() {
     println!(&quot;Hello, world!&quot;);
@@ -399,11 +407,11 @@ all we need to know is that the main function is called when the program starts,
 call functions in Rust, and that <code>println</code> is the function name. However, the exclamation mark actually tells us this
 is a macro. Macro's are very powerful and can do much more than functions, however they are an advanced topic and we
 won't be creating our own until much later. We will be using pre-written macros a fair bit though.</p>
-<p><code>println!</code> will write what its given to the console (stdout on *nix systems).</p>
+<p><code>println!</code> will write what its given to the console.</p>
 <h2 id="running-and-debugging-rust"><a class="header" href="#running-and-debugging-rust">Running and Debugging Rust</a></h2>
-<p>Before we end this section, I want to quickly set uyp one of the most powerful tools we have thats going to help us
-learn incredibly quicly.</p>
-<p>First lets make a quick change to our program, by adding a variable with our name, and then saying hello to ourselves
+<p>Before we end this section, I want to quickly set up one of the most powerful tools we have thats going to help us
+learn incredibly quickly.</p>
+<p>First let's make a quick change to our program, by adding a variable with our name, and then saying hello to ourselves
 instead of the whole world</p>
 <pre><pre class="playground"><code class="language-rust">fn main() {
     let name = &quot;Daniel&quot;;
@@ -426,6 +434,7 @@ whats actually happening.</p>
 to do some magic for us. The error is because we didn't set a default run configuration, click OK and Visual Studio Code
 will ask if you want to generate one. Click &quot;yes&quot;, then press F5 again, and the program will start and then pause when
 it hits line 3.</p>
+<p>== None of this works on Mac 😡 ==</p>
 <p>If you mouse over <code>name</code> on either line 2 or line 3, you'll see its value. Being able to see whats happening in a
 running program is a programming super power.</p>
 <p><img src="getting-started/./images/vscode-debug.png" alt="Breakpoints" /></p>
