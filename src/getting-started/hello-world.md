@@ -24,6 +24,11 @@ the one you want might need a little scroll. Normally for a Terminal you want to
 Navigate to an appropriate location for your projects such as your home directory or my documents, depending on your
 system.
 
+The easiest way to do this on Mac and Linux is to do `cd ~`
+
+There isn't really an equivalent on Windows, so if you aren't sure you can instead use Explorer to open My Documents,
+right-click an empty space in the window, click "More Options" then "Open in Terminal"
+
 Run `cargo new hello-world`, and cargo will report that it has created the project
 
 Cargo is the program we'll use to run our rust programs as well as many of the rust tools that will help us along the
@@ -34,9 +39,7 @@ Now in Visual Studio Code, go to File -> Open Folder and navigate to the hello-w
 You can see that cargo has created some files for us. We're going to talk about the cargo files later but for now,
 head into the `src` directory and open main.rs
 
-=== More Pictures ===
-
-You can see the file has already been created with the following code
+You can see the file has already been created with the following code:
 
 ```rust
 fn main() {
@@ -110,10 +113,12 @@ what's actually happening.
 
 To debug our code press F5... and it will immediately show you an error. Don't panic! This is where CodeLLDB is going
 to do some magic for us. The error is because we didn't set a default run configuration, click OK and Visual Studio Code
-will ask if you want to generate one. Click "yes", then press F5 again, and the program will start and then pause when
-it hits line 3.
+will ask if you want to generate one.
 
-=== Note slight differences on Mac ===
+> **Important:** Depending on your personal configuration, it may ask you want to create the configuration from. If you
+> are asked this, click `LLDB`.
+
+Click "yes", then press F5 again, and the program will start and then pause when it hits line 3.
 
 If you mouse over `name` on either line 2 or line 3, you'll see its value. Being able to see what's happening in a
 running program is a programming superpower.

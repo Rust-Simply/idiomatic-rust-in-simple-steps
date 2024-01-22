@@ -131,6 +131,7 @@ directory from anywhere in our system. To do this, go to the start menu, and sim
 
 This, weirdly, doesn't take you straight to environment variables but to system properties where you can click through
 to the Environment variables at the bottom.
+
 ![Windows System Properties](./images/windows-system-properties.png)
 
 <div class="warning">

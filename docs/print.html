@@ -358,8 +358,8 @@ directory from anywhere in our system. To do this, go to the start menu, and sim
 &quot;Edit the system environment variables&quot;</p>
 <p><img src="getting-started/./images/windows-environment.png" alt="Finding Windows Environment" /></p>
 <p>This, weirdly, doesn't take you straight to environment variables but to system properties where you can click through
-to the Environment variables at the bottom.
-<img src="getting-started/./images/windows-system-properties.png" alt="Windows System Properties" /></p>
+to the Environment variables at the bottom.</p>
+<p><img src="getting-started/./images/windows-system-properties.png" alt="Windows System Properties" /></p>
 <div class="warning">
 Be careful here and don't change anything other than what we're here to change. Luckily the UI around this is very
 sensible these days making it much harder to mess up.
@@ -435,14 +435,16 @@ the one you want might need a little scroll. Normally for a Terminal you want to
 <p><img src="getting-started/./images/vscode-any-command-terminal.png" alt="Open the terminal" /></p>
 <p>Navigate to an appropriate location for your projects such as your home directory or my documents, depending on your
 system.</p>
+<p>The easiest way to do this on Mac and Linux is to do <code>cd ~</code></p>
+<p>There isn't really an equivalent on Windows, so if you aren't sure you can instead use Explorer to open My Documents,
+right-click an empty space in the window, click &quot;More Options&quot; then &quot;Open in Terminal&quot;</p>
 <p>Run <code>cargo new hello-world</code>, and cargo will report that it has created the project</p>
 <p>Cargo is the program we'll use to run our rust programs as well as many of the rust tools that will help us along the
 way.</p>
 <p>Now in Visual Studio Code, go to File -&gt; Open Folder and navigate to the hello-world folder we just created.</p>
 <p>You can see that cargo has created some files for us. We're going to talk about the cargo files later but for now,
 head into the <code>src</code> directory and open main.rs</p>
-<p>=== More Pictures ===</p>
-<p>You can see the file has already been created with the following code</p>
+<p>You can see the file has already been created with the following code:</p>
 <pre><pre class="playground"><code class="language-rust">fn main() {
     println!(&quot;Hello, world!&quot;);
 }</code></pre></pre>
@@ -491,9 +493,12 @@ what's actually happening.</p>
 <p><img src="getting-started/./images/vscode-breakpoint.png" alt="Breakpoints" /></p>
 <p>To debug our code press F5... and it will immediately show you an error. Don't panic! This is where CodeLLDB is going
 to do some magic for us. The error is because we didn't set a default run configuration, click OK and Visual Studio Code
-will ask if you want to generate one. Click &quot;yes&quot;, then press F5 again, and the program will start and then pause when
-it hits line 3.</p>
-<p>=== Note slight differences on Mac ===</p>
+will ask if you want to generate one.</p>
+<blockquote>
+<p><strong>Important:</strong> Depending on your personal configuration, it may ask you want to create the configuration from. If you
+are asked this, click <code>LLDB</code>.</p>
+</blockquote>
+<p>Click &quot;yes&quot;, then press F5 again, and the program will start and then pause when it hits line 3.</p>
 <p>If you mouse over <code>name</code> on either line 2 or line 3, you'll see its value. Being able to see what's happening in a
 running program is a programming superpower.</p>
 <p><img src="getting-started/./images/vscode-debug.png" alt="Breakpoints" /></p>
