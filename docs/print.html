@@ -318,7 +318,7 @@ struggled a bit with this, so I'm laying it out here in my own words.</p>
 <p>The first thing we're going to need are some Microsoft build tools. </p>
 <p>Head to <a href="https://visualstudio.microsoft.com/downloads/">https://visualstudio.microsoft.com/downloads/</a> and download the 
 community edition.</p>
-<p>== Add Screenshot ==</p>
+<p><img src="getting-started/./images/windows-visual-studio-community.png" alt="windows-visual-studio-community.png" /></p>
 <p>The installer is the gateway to a huge number of tools and software, but we only need two things.</p>
 <p>Click through to the Individual Components tab, and search for the following: <code>C++ x64/x86 build tools</code></p>
 <p>Select the latest version.</p>
@@ -350,9 +350,9 @@ we need... and the installer doesn't quite do everything you need. Don't worry, 
 install it in the default location. Wherever you install it though, keep it in mind, we'll need to find it shortly.</p>
 <p>After installation but before we go further, we want to allow ourselves access to the tools that we're going to install
 inside MSYS2. To do that, you'll need to find where it was installed, then go to the <code>ucrt64</code> directory, and then <code>bin</code>.
-Copy the full path to this directory. Note, I installed mine to <code>D:/Programs/MYSYS64</code> but by default it will be <code>C:/MYSYS64</code></p>
+Copy the full path to this directory. You can do this by right-clicking the path, then clicking &quot;Copy Address&quot;</p>
 <p><img src="getting-started/./images/windows-msys2-bin.png" alt="MSYS2 bin path" /></p>
-<p>== Add more arrows ==</p>
+<p>Note, I installed mine to <code>D:/Programs/MYSYS64</code> but by default it will be <code>C:/MYSYS64</code></p>
 <p>Next we need to add this to a system environment variable called <code>PATH</code>, this will allow us to access any tools in that
 directory from anywhere in our system. To do this, go to the start menu, and simply type &quot;environment&quot; then click
 &quot;Edit the system environment variables&quot;</p>

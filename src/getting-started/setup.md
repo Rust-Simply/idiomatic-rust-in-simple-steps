@@ -68,7 +68,7 @@ The first thing we're going to need are some Microsoft build tools.
 Head to [https://visualstudio.microsoft.com/downloads/](https://visualstudio.microsoft.com/downloads/) and download the 
 community edition.
 
-== Add Screenshot ==
+![windows-visual-studio-community.png](./images/windows-visual-studio-community.png)
 
 The installer is the gateway to a huge number of tools and software, but we only need two things.
 
@@ -117,11 +117,11 @@ install it in the default location. Wherever you install it though, keep it in m
 
 After installation but before we go further, we want to allow ourselves access to the tools that we're going to install
 inside MSYS2. To do that, you'll need to find where it was installed, then go to the `ucrt64` directory, and then `bin`.
-Copy the full path to this directory. Note, I installed mine to `D:/Programs/MYSYS64` but by default it will be `C:/MYSYS64`
+Copy the full path to this directory. You can do this by right-clicking the path, then clicking "Copy Address"
 
 ![MSYS2 bin path](./images/windows-msys2-bin.png)
 
-== Add more arrows ==
+Note, I installed mine to `D:/Programs/MYSYS64` but by default it will be `C:/MYSYS64`
 
 Next we need to add this to a system environment variable called `PATH`, this will allow us to access any tools in that
 directory from anywhere in our system. To do this, go to the start menu, and simply type "environment" then click
