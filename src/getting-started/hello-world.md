@@ -4,6 +4,10 @@ Hello World
 Now that we're finally set up, lets create our first program. As is tradition, our first program is simply going to
 print the words `Hello, world!`.
 
+1. [Creating a new Rust project](#creating-a-new-rust-project) 
+2. [Anatomy of Hello World](#anatomy-of-hello-world)
+3. [Running and Debugging Rust](#running-and-debugging-rust)
+
 Creating a new Rust project
 ---------------------------
 
