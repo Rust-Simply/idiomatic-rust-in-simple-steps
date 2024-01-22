@@ -1,12 +1,12 @@
 Why or Why Not
 ==============
 
-1. [Why should you consider Rust](#why-should-you-consider-rust)
+1. [Why Rust](#why-rust)
 2. [Why not Rust](#why-not-rust)
 
 
-Why should you consider Rust
-----------------------------
+Why Rust
+--------
 
 I could tell you that it's a "blazingly fast" language, that holds your hand and helps reduce bugs, that its first party
 tooling is second to none, that it has a mature ecosystem and an amazing community. These are all good reasons to

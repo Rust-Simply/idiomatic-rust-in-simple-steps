@@ -2,7 +2,7 @@ Why or Why Not, Installation and Hello World
 ============================================
 
 1. [Mac and Linux](#mac-and-linux)
-2. [Windows](#windows)
+2. [Windows 11](#windows-11)
    1. [Windows Build Tools](#windows-build-tools)
    2. [Rustup](#rustup)
    3. [GCC (optional, but recommended)](#gcc-optional-but-recommended)
@@ -58,14 +58,17 @@ Windows 11
 
 Running Rust on Windows is a bit more challenging, but you've got this, I believe in you.
 
-All the important differences for Windows are explain on [rustup.rs](https://rustup.rs), however, I personally
+All the important differences for Windows are explained on [rustup.rs](https://rustup.rs), however, I personally
 struggled a bit with this, so I'm laying it out here in my own words.
 
 ### Windows Build Tools
 
 The first thing we're going to need are some Microsoft build tools. 
 
-Head to [https://visualstudio.microsoft.com/downloads/](https://visualstudio.microsoft.com/downloads/) and download the community tool.
+Head to [https://visualstudio.microsoft.com/downloads/](https://visualstudio.microsoft.com/downloads/) and download the 
+community edition.
+
+== Add Screenshot ==
 
 The installer is the gateway to a huge number of tools and software, but we only need two things.
 
@@ -77,7 +80,10 @@ Next search for: `Windows 11 SDK`
 
 Again, select the latest version.
 
-Finally, choose your language and install.
+Finally, click install. You may get a prompt asking if you'd like to continue without workloads, which you do,
+so continue.
+
+The installation itself can take a while so grab a tea or something ☕
 
 ### Rustup
 
@@ -91,7 +97,7 @@ terminal of choice, and run `cargo version`.
 
 ### GCC (optional, but recommended)
 
-Wait, rustup doesn't mention this!
+Wait, the rustup website doesn't mention this!
 
 I know, and you don't _necessarily_ need to do this. However, Rust is a language that can interop with other languages.
 In particular, Rust works really well with existing C and C++ libraries, however, Windows and Linux us different C++
@@ -107,13 +113,15 @@ we need... and the installer doesn't quite do everything you need. Don't worry, 
 > [on this projects repository](https://github.com/Gisleburt/idiomatic-rust-in-simple-steps)
 
 First, grab the installer and follow the instruction. MSYS2 is a little fussy about where its installed, if in doubt
-install it in the default location.
+install it in the default location. Wherever you install it though, keep it in mind, we'll need to find it shortly.
 
-Before we go further, we want to allow ourselves access to the tools that we're going to install inside MSYS2. To do
-that, you'll need to find where it was installed, then go to the ucrt64 directory, and copy the full path to the bin
-directory in there.
+After installation but before we go further, we want to allow ourselves access to the tools that we're going to install
+inside MSYS2. To do that, you'll need to find where it was installed, then go to the `ucrt64` directory, and then `bin`.
+Copy the full path to this directory. Note, I installed mine to `D:/Programs/MYSYS64` but by default it will be `C:/MYSYS64`
 
 ![MSYS2 bin path](./images/windows-msys2-bin.png)
+
+== Add more arrows ==
 
 Next we need to add this to a system environment variable called `PATH`, this will allow us to access any tools in that
 directory from anywhere in our system. To do this, go to the start menu, and simply type "environment" then click
@@ -138,12 +146,16 @@ Now hit New on the right, and paste in the path as you can see I have done below
 
 ![Windows System Properties](./images/windows-edit-environment-variables.png)
 
-Finally we're ready to install gcc. Run the application `MSYS2 UCRT64`. This is a specific environmental setup for MSYS
-and will be the easiest to perform the next step in.
+Click OK to save the new path.
+
+Finally, we're ready to install gcc. Run the application `MSYS2 UCRT64` from the start menu. This is a specific
+environmental setup for MSYS and will be the easiest to perform the next step in.
 
 Enter the command `pacman -S mingw-w64-ucrt-x86_64-gcc`, hitting `<enter>` when it asks for confirmation. Pacman is the
 package manager for MSYS and will install `gcc` and all of its dependencies.
 
 You can check this worked by running `gcc --version`
 
-Phew! Thats it, we're all set to move on.
+Phew! That's it, congratulations! It took me over an hour to do this on my first attempt.
+
+If you haven't done already, its a good idea to restart your computer before moving on.
