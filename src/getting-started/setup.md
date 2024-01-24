@@ -1,5 +1,5 @@
-Why or Why Not, Installation and Hello World
-============================================
+Getting Set Up
+==============
 
 1. [Mac and Linux](#mac-and-linux)
 2. [Windows 11](#windows-11)
