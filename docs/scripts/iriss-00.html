@@ -1,0 +1,296 @@
+<!DOCTYPE HTML>
+<html lang="en" class="light" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>Welcome to IRISS - Idiomatic Rust in Simple Steps</title>
+
+
+        <!-- Custom HTML head -->
+        
+        <meta name="description" content="Learn idiomatic Rust in simple steps even if you have no former knowledge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" href="../highlight.css">
+        <link rel="stylesheet" href="../tomorrow-night.css">
+        <link rel="stylesheet" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+
+    </head>
+    <body class="sidebar-visible no-js">
+    <div id="body-container">
+        <!-- Provide site root to javascript -->
+        <script>
+            var path_to_root = "../";
+            var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+        </script>
+
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                var theme = localStorage.getItem('mdbook-theme');
+                var sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            var theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            var html = document.querySelector('html');
+            html.classList.remove('light')
+            html.classList.add(theme);
+            var body = document.querySelector('body');
+            body.classList.remove('no-js')
+            body.classList.add('js');
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            var body = document.querySelector('body');
+            var sidebar = null;
+            var sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+            }
+            sidebar_toggle.checked = sidebar === 'visible';
+            body.classList.remove('sidebar-visible');
+            body.classList.add("sidebar-" + sidebar);
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <div class="sidebar-scrollbox">
+                <ol class="chapter"><li class="chapter-item expanded "><a href="../index.html"><strong aria-hidden="true">1.</strong> Introduction</a></li><li class="chapter-item expanded "><a href="../getting-started/index.html"><strong aria-hidden="true">2.</strong> Getting Started</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../getting-started/why.html"><strong aria-hidden="true">2.1.</strong> Why or Why Not</a></li><li class="chapter-item expanded "><a href="../getting-started/resources.html"><strong aria-hidden="true">2.2.</strong> Other Learning Resources</a></li><li class="chapter-item expanded "><a href="../getting-started/setup.html"><strong aria-hidden="true">2.3.</strong> Getting Set Up</a></li><li class="chapter-item expanded "><a href="../getting-started/environment.html"><strong aria-hidden="true">2.4.</strong> Environment</a></li><li class="chapter-item expanded "><a href="../getting-started/hello-world.html"><strong aria-hidden="true">2.5.</strong> Hello World</a></li></ol></li><li class="chapter-item expanded "><a href="../language-basics/index.html"><strong aria-hidden="true">3.</strong> Language Basics</a></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">3.1.</strong> Guessing Game</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.2.</strong> Primitives</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.3.</strong> Functions</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.4.</strong> Documentation</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.5.</strong> Tests</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.6.</strong> Clippy and Fmt</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.7.</strong> Debugging</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.8.</strong> Complex Structures</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.9.</strong> Traits</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.10.</strong> Conversions</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.11.</strong> Pattern Matching</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.12.</strong> Error Handling</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.13.</strong> Memory</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.14.</strong> Collections</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.15.</strong> Iterators</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.16.</strong> Attributes</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.17.</strong> Derive</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.18.</strong> Threads</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.19.</strong> Unsafe</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">3.20.</strong> Macros</div></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.</strong> Patterns</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">4.1.</strong> Derive</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.2.</strong> Monads</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.3.</strong> Interior Mutability</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.4.</strong> New Types</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.5.</strong> RAII / Drop and Finalise</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.6.</strong> Prefer Borrows</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.7.</strong> Type State</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">4.8.</strong> Builder</div></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.</strong> Rust Ecosystem</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">5.1.</strong> Project Structure</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.2.</strong> rustup</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.3.</strong> Error Handling with ThisError and Anyhow</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.4.</strong> log</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.5.</strong> mdbook</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.6.</strong> Itertools</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.7.</strong> Rayon</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.8.</strong> Clap and StructOpt</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.9.</strong> Async with Tokio and async_std</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.10.</strong> Serialisation with Serde</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.11.</strong> Parsing with Nom</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.12.</strong> Regex</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.13.</strong> reqwest</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.14.</strong> Crossbeam?</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.15.</strong> bitvec</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">5.16.</strong> Derive More</div></li></ol></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.</strong> Advanced Rust</div></li><li><ol class="section"><li class="chapter-item expanded "><div><strong aria-hidden="true">6.1.</strong> Foreign Function Interfaces</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.2.</strong> Proc Macro</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.3.</strong> Intro to Web Dev</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.4.</strong> Intro to Embedded</div></li><li class="chapter-item expanded "><div><strong aria-hidden="true">6.5.</strong> Intro to Game Dev</div></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><li class="part-title">Scripts</li><li class="chapter-item expanded "><div><strong aria-hidden="true">7.</strong> Rust, Simply - IRISS</div></li><li><ol class="section"><li class="chapter-item expanded "><a href="../scripts/iriss-00.html" class="active"><strong aria-hidden="true">7.1.</strong> Welcome to IRISS</a></li></ol></li></ol>
+            </div>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <!-- Track and set sidebar scroll position -->
+        <script>
+            var sidebarScrollbox = document.querySelector('#sidebar .sidebar-scrollbox');
+            sidebarScrollbox.addEventListener('click', function(e) {
+                if (e.target.tagName === 'A') {
+                    sessionStorage.setItem('sidebar-scroll', sidebarScrollbox.scrollTop);
+                }
+            }, { passive: true });
+            var sidebarScrollTop = sessionStorage.getItem('sidebar-scroll');
+            sessionStorage.removeItem('sidebar-scroll');
+            if (sidebarScrollTop) {
+                // preserve sidebar scroll position when navigating via links within sidebar
+                sidebarScrollbox.scrollTop = sidebarScrollTop;
+            } else {
+                // scroll sidebar to current active section when navigating via "next/previous chapter" buttons
+                var activeSection = document.querySelector('#sidebar .active');
+                if (activeSection) {
+                    activeSection.scrollIntoView({ block: 'center' });
+                }
+            }
+        </script>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">Idiomatic Rust in Simple Steps</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="iriss-00---welcome-to-iriss"><a class="header" href="#iriss-00---welcome-to-iriss">IRISS 00 - Welcome to IRISS</a></h1>
+<h2 id="preamble"><a class="header" href="#preamble">Preamble</a></h2>
+<p>The Rust programming language has a bit of a reputation: it’s hard to learn.</p>
+<p>Certainly, when I learned Rust in 2017, I struggled with it.</p>
+<p>But its 2024 now, I think things have changed.</p>
+<p>I’m putting my money where my mouth is and making a series teaching Rust as quickly and painlessly as possible.</p>
+<p>I’m Daniel, welcome to IRISS.</p>
+<h2 id="why--why-not"><a class="header" href="#why--why-not">Why / Why Not</a></h2>
+<p>We’re not going to jump into coding today though.</p>
+<p>Instead I want to talk about why you should or should not learn Rust, what other learning resources are out there,
+and how this course is going to compare.</p>
+<h3 id="why-rust"><a class="header" href="#why-rust">Why Rust</a></h3>
+<p>So why <em>should</em> you learn Rust?</p>
+<p>I could tell you that:</p>
+<ul>
+<li>It’s blazingly fast</li>
+<li>It holds your hand and makes it hard to make mistakes</li>
+<li>Its first party tooling is second to none</li>
+<li>It has a mature ecosystem of tools and libraries</li>
+<li>And it has an amazingly kind and supportive community</li>
+</ul>
+<p>All of these are true.</p>
+<p>All of these are great reasons to pick Rust up for your next personal or professional project.</p>
+<p>But in my mind, there’s one reason everyone should consider trying out Rust:</p>
+<p>Its. Fun.</p>
+<p>Seriously, Rust is my happy place.</p>
+<p>Sure, like any language, it has its frustrations.</p>
+<p>But when I work with Rust I <em>feel</em> smart</p>
+<p>I have less horrible surprises than other languages I use professionally.</p>
+<p>Amd I have a lot of confidence that my code will “just work”, that I won’t need to come back to fix bugs and if I do,
+I’ll be able to quickly understand old code, write new tests and fix any problems.</p>
+<p>And, I’m not alone, since its 1.0 release Rust has been Stack Overflows “most loved” language eight years in a row.</p>
+<p>This isn’t just fanatics like me saying “its great” but is the percentage of people who used the language this year,
+that still want to use it next year.</p>
+<h3 id="why-not-rust"><a class="header" href="#why-not-rust">Why Not Rust</a></h3>
+<p>Ok, but why <em>shouldn’t</em> you learn Rust.</p>
+<p>As much as I love Rust, there is a reason it may not be the language for you… and it’s a <em>big</em> one.</p>
+<p>If you are looking to learn a language to get a job (and you’re not specifically interested in Blockchain) Rust is not
+going to be a good language… for now. </p>
+<p>That said, things have been slowly changing. </p>
+<p>More businesses are picking it up due to its low cost to write, run and maintain.</p>
+<p>The biggest cost for businesses looking to adopt Rust is training people, but there are more and more of us out
+there and perhaps 2024 will finally be the tipping point. </p>
+<p>Nonetheless, right now, if you’re looking for a job, better languages to learn would be TypeScript or Python. As well
+as being more marketable, these are genuinely great languages, and Rust will still be here when the time is right for
+you.</p>
+<h2 id="other-learning-resources"><a class="header" href="#other-learning-resources">Other Learning Resources</a></h2>
+<p>My goal here is to get you into Rust, and if this course isn’t for you, or if you want to supplement IRISS with other
+resources, these are, in my mind, the (other) best ways to learn Rust</p>
+<h3 id="the-official-book"><a class="header" href="#the-official-book">The Official Book</a></h3>
+<p>The Rust Programming Language book, also known as “the living book” is where I started seven years ago, and my goodness
+has it come a long way!</p>
+<p>The main difference between the book and IRISS is that the book focuses on how the language works, while IRISS focuses
+on how its written. We will talk about how the languge works but only in the context of why we write it the way that
+we do.</p>
+<p>IRISS does follow a similar path to both the official book and Rustlings (our next resource) though, so it should be
+easy to jump between all three.</p>
+<h3 id="rustlings"><a class="header" href="#rustlings">Rustlings</a></h3>
+<p>Rustlings is a “learn by doing” guide to Rust. It works by giving you specific exercises to help you understand the
+language a bit at a time.</p>
+<p>The gamification of the course makes it really fun, and I still use Rustlings to help keep myself sharp.</p>
+<p>There is also an IntelliJ Edu adaptation of Rustlings so if you install the free Community version of IntelliJ IDEA, you
+can have an in editor tutorial.</p>
+<h3 id="rust-by-example"><a class="header" href="#rust-by-example">Rust by Example</a></h3>
+<p>Rust by Example does exactly what it says on the tin.</p>
+<p>It focuses on the implementation of the Rust language.</p>
+<p>This is great to quickly look things up if you know what you want to know, however, there’s some minor
+pseudo-anti-patterns here that if you don’t already know are anti-patterns, you might be tempted to copy-paste.</p>
+<p>Don’t worry though, we’ll cover these here but also tools like Clippy (which we’ll also cover) will be quick to point
+them out.</p>
+<h2 id="whats-next"><a class="header" href="#whats-next">Whats Next</a></h2>
+<p>In the next video we’re going to cover, installing Rust, setting up your development environment and your first hello
+world program.</p>
+<p>I’m also going to teach you one neat trick that will super charge your learning and development skills!</p>
+<p>If that’s good bait, then I look forward to seeing you next time.</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../language-basics/index.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../language-basics/index.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+
+
+    </div>
+    </body>
+</html>

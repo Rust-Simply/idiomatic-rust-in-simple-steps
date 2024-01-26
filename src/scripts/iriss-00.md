@@ -1,0 +1,135 @@
+IRISS 00 - Welcome to IRISS
+===========================
+
+
+Preamble
+--------
+
+The Rust programming language has a bit of a reputation: it's hard to learn.
+
+Certainly, when I learned Rust in 2017, I struggled with it.
+
+But its 2024 now, I think things have changed.
+
+I'm putting my money where my mouth is and making a series teaching Rust as quickly and painlessly as possible.
+
+I'm Daniel, welcome to IRISS.
+
+
+Why / Why Not
+-------------
+
+We're not going to jump into coding today though.
+
+Instead I want to talk about why you should or should not learn Rust, what other learning resources are out there,
+and how this course is going to compare.
+
+
+### Why Rust
+
+So why _should_ you learn Rust?
+
+I could tell you that:
+- It's blazingly fast
+- It holds your hand and makes it hard to make mistakes
+- Its first party tooling is second to none
+- It has a mature ecosystem of tools and libraries
+- And it has an amazingly kind and supportive community
+
+All of these are true.
+
+All of these are great reasons to pick Rust up for your next personal or professional project.
+
+But in my mind, there's one reason everyone should consider trying out Rust:
+
+Its. Fun.
+
+Seriously, Rust is my happy place.
+
+Sure, like any language, it has its frustrations.
+
+But when I work with Rust I _feel_ smart
+
+I have less horrible surprises than other languages I use professionally.
+
+Amd I have a lot of confidence that my code will "just work", that I won't need to come back to fix bugs and if I do,
+I'll be able to quickly understand old code, write new tests and fix any problems.
+
+And, I'm not alone, since its 1.0 release Rust has been Stack Overflows "most loved" language eight years in a row.
+
+This isn't just fanatics like me saying "its great" but is the percentage of people who used the language this year,
+that still want to use it next year.
+
+
+### Why Not Rust
+
+Ok, but why _shouldn't_ you learn Rust.
+
+As much as I love Rust, there is a reason it may not be the language for you... and it's a _big_ one.
+
+If you are looking to learn a language to get a job (and you're not specifically interested in Blockchain) Rust is not
+going to be a good language... for now. 
+
+That said, things have been slowly changing. 
+
+More businesses are picking it up due to its low cost to write, run and maintain.
+
+The biggest cost for businesses looking to adopt Rust is training people, but there are more and more of us out
+there and perhaps 2024 will finally be the tipping point. 
+
+Nonetheless, right now, if you're looking for a job, better languages to learn would be TypeScript or Python. As well
+as being more marketable, these are genuinely great languages, and Rust will still be here when the time is right for
+you.
+
+
+Other Learning Resources
+------------------------
+
+My goal here is to get you into Rust, and if this course isn't for you, or if you want to supplement IRISS with other
+resources, these are, in my mind, the (other) best ways to learn Rust
+
+### The Official Book
+
+The Rust Programming Language book, also known as "the living book" is where I started seven years ago, and my goodness
+has it come a long way!
+
+The main difference between the book and IRISS is that the book focuses on how the language works, while IRISS focuses
+on how its written. We will talk about how the languge works but only in the context of why we write it the way that
+we do.
+
+IRISS does follow a similar path to both the official book and Rustlings (our next resource) though, so it should be
+easy to jump between all three.
+
+### Rustlings
+
+Rustlings is a "learn by doing" guide to Rust. It works by giving you specific exercises to help you understand the
+language a bit at a time.
+
+The gamification of the course makes it really fun, and I still use Rustlings to help keep myself sharp.
+
+There is also an IntelliJ Edu adaptation of Rustlings so if you install the free Community version of IntelliJ IDEA, you
+can have an in editor tutorial.
+
+
+### Rust by Example
+
+Rust by Example does exactly what it says on the tin.
+
+It focuses on the implementation of the Rust language.
+
+This is great to quickly look things up if you know what you want to know, however, there's some minor
+pseudo-anti-patterns here that if you don't already know are anti-patterns, you might be tempted to copy-paste.
+
+Don't worry though, we'll cover these here but also tools like Clippy (which we'll also cover) will be quick to point
+them out.
+
+
+Whats Next
+----------
+
+In the next video we're going to cover, installing Rust, setting up your development environment and your first hello
+world program.
+
+I'm also going to teach you one neat trick that will super charge your learning and development skills!
+
+If that's good bait, then I look forward to seeing you next time.

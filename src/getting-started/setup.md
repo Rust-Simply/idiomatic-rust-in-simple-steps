@@ -35,7 +35,7 @@ Current installation options:
 >
 ```
 
-Choose 1 and wait for installation to complete. To immediately use rusts tools now, you will need to run the command it
+Choose 1 and wait for installation to complete. To immediately use Rust's tools now, you will need to run the command it
 tells you to run at the end of the installer, however, you should only need to do this once as the installer makes the
 changes necessary for new terminal sessions to pick up on the changes.
 

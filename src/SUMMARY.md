@@ -7,7 +7,7 @@
     - [Environment](getting-started/environment.md)
     - [Hello World](getting-started/hello-world.md)
 - [Language Basics](language-basics/README.md)
-    - [Guessing Game (alternate version)]()
+    - [Guessing Game]()
     - [Primitives]()
     - [Functions]()
     - [Documentation]()
@@ -59,3 +59,10 @@
     - [Intro to Web Dev]()
     - [Intro to Embedded]()
     - [Intro to Game Dev]()
+
+-----------------
+
+# Scripts
+
+- [Rust, Simply - IRISS]()
+    - [Welcome to IRISS](./scripts/iriss-00.md)
