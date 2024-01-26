@@ -123,6 +123,29 @@ pseudo-anti-patterns here that if you don't already know are anti-patterns, you 
 Don't worry though, we'll cover these here but also tools like Clippy (which we'll also cover) will be quick to point
 them out.
 
+### Idiomatic Rust in Simple Steps
+
+So, why use IRISS if there are these other great resources?
+
+Idiomatic Rust in Simple Steps lines up nicely with these other resources and can supplement them or vice versa. 
+
+While the other resources focus on simply learning the language, IRISS focuses on how and why we write the language the
+way we do. 
+
+This might seem like the same thing, but here we'll ramp up on idioms quickly so that you can understand other peoples
+code as well as write code that other people can understand.
+
+This matters!
+
+My biggest hot take of the software industry is that: Software engineers are not paid to write code, we're paid to
+solve problems.
+
+The best engineers I've worked with have solved problems without writing a single line of code, and the cheapest code to
+maintain is the code you didn't write. 
+
+Beyond this though, solving problems, even with code, takes understanding and collaboration. If when you join a team you
+already understand why they write code the way they do, you're going to become productive much faster.
+
 
 Whats Next
 ----------
