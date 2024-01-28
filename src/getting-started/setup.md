@@ -2,7 +2,7 @@ Getting Set Up
 ==============
 
 1. [Mac and Linux](#mac-and-linux)
-2. [Windows 11](#windows-11)
+2. [Windows](#windows)
    1. [Windows Build Tools](#windows-build-tools)
    2. [Rustup](#rustup)
    3. [GCC (optional, but recommended)](#gcc-optional-but-recommended)
@@ -53,10 +53,10 @@ cargo 1.75.0 (1d8b05cdd 2023-11-20)
 
 Cargo is the main tool we'll use to build and work with Rust, you will need at least version `1.75` for this tutorial.
 
-Windows 11
-----------
+Windows
+-------
 
-Running Rust on Windows is a bit more challenging, but you've got this, I believe in you.
+Installing Rust on Windows is a bit more challenging, but you've got this, I believe in you.
 
 All the important differences for Windows are explained on [rustup.rs](https://rustup.rs), however, I personally
 struggled a bit with this, so I'm laying it out here in my own words.
@@ -76,9 +76,9 @@ Click through to the Individual Components tab, and search for the following: `C
 
 Select the latest version.
 
-Next search for: `Windows 11 SDK`
+Next search for: `Windows SDK`
 
-Again, select the latest version.
+Select the latest version of the SDK for your version of Windows.
 
 Finally, click install. You may get a prompt asking if you'd like to continue without workloads, which you do,
 so continue.
