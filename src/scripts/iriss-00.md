@@ -11,7 +11,9 @@ Certainly, when I learned Rust in 2017, I struggled with it.
 
 But its 2024 now, I think things have changed.
 
-I'm putting my money where my mouth is and making a series teaching Rust as quickly and painlessly as possible.
+I'm putting my time where my mouth is and making a series teaching Rust as quickly and, I hope, painlessly as possible.
+
+This series has a free accompanying book, check the description below.
 
 I'm Daniel, welcome to IRISS.
 
@@ -21,8 +23,13 @@ Why / Why Not
 
 We're not going to jump into coding today though.
 
-Instead I want to talk about why you should or should not learn Rust, what other learning resources are out there,
-and how this course is going to compare.
+Sorry, in TTRPG terms, this is session zero.
+
+I want to talk about why you should or should not learn Rust
+
+what other learning resources are out there
+
+and how this series is going to compare
 
 
 ### Why Rust
@@ -36,13 +43,13 @@ I could tell you that:
 - It has a mature ecosystem of tools and libraries
 - And it has an amazingly kind and supportive community
 
-All of these are true.
+All of these statements are true.
 
-All of these are great reasons to pick Rust up for your next personal or professional project.
+And all of these are great reasons to pick Rust up for your next personal or professional project.
 
 But in my mind, there's one reason everyone should consider trying out Rust:
 
-Its. Fun.
+Because its fun!
 
 Seriously, Rust is my happy place.
 
@@ -70,34 +77,36 @@ As much as I love Rust, there is a reason it may not be the language for you... 
 If you are looking to learn a language to get a job (and you're not specifically interested in Blockchain) Rust is not
 going to be a good language... for now. 
 
-That said, things have been slowly changing. 
+That said, things have been slowly changing.
 
 More businesses are picking it up due to its low cost to write, run and maintain.
 
 The biggest cost for businesses looking to adopt Rust is training people, but there are more and more of us out
 there and perhaps 2024 will finally be the tipping point. 
 
-Nonetheless, right now, if you're looking for a job, better languages to learn would be TypeScript or Python. As well
-as being more marketable, these are genuinely great languages, and Rust will still be here when the time is right for
-you.
+Nonetheless, right now, if you're looking for a job, better languages to learn would be TypeScript or Python.
+
+As well as being more marketable, these are genuinely great languages, and Rust will still be here when the time is
+right for you.
 
 
 Other Learning Resources
 ------------------------
 
-My goal here is to get you into Rust, and if this course isn't for you, or if you want to supplement IRISS with other
+My goal here is to get you into Rust, and if this series isn't for you, or if you want to supplement IRISS with other
 resources, these are, in my mind, the (other) best ways to learn Rust
 
 ### The Official Book
 
-The Rust Programming Language book, also known as "the living book" is where I started seven years ago, and my goodness
-has it come a long way!
+The Rust Programming Language book, also known as "the living book" is where I started seven years ago, but, it's had
+seven years of growth, and its amazing.
 
 The main difference between the book and IRISS is that the book focuses on how the language works, while IRISS focuses
-on how its written. We will talk about how the languge works but only in the context of why we write it the way that
-we do.
+on how its written.
 
-IRISS does follow a similar path to both the official book and Rustlings (our next resource) though, so it should be
+We will talk about how the language works but only in the context of why we write it the way that we do.
+
+IRISS does, however, follow a similar path to both the official book and Rustlings (our next resource), so it should be
 easy to jump between all three.
 
 ### Rustlings
@@ -118,7 +127,7 @@ Rust by Example does exactly what it says on the tin.
 It focuses on the implementation of the Rust language.
 
 This is great to quickly look things up if you know what you want to know, however, there's some minor
-pseudo-anti-patterns here that if you don't already know are anti-patterns, you might be tempted to copy-paste.
+pseudo-anti-patterns here that if you don't already know are anti-patterns, you might accidentally copy.
 
 Don't worry though, we'll cover these here but also tools like Clippy (which we'll also cover) will be quick to point
 them out.
