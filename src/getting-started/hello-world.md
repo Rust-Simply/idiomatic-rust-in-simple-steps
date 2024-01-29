@@ -62,7 +62,7 @@ Hello, world!
 
 Well, that was easy 😅
 
-You'll find the Rust community has put a lot of effort into making Rust as easy to use as possible to learn and use.
+You'll find the Rust community has put a lot of effort into making Rust as easy as possible to learn and use.
 
 Anatomy of Hello World
 ----------------------
