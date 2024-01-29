@@ -101,13 +101,11 @@ We should see the currently installed version of Cargo
 #### GCC
 
 Ok, there's one more step that is... arguably optional and we (probably) won't need it for this series but as soon as
-you step outside the series, you'll run into problems without it, so lets do it now.
-
-This is a pain in the bum but I believe in you, you got this
+you step outside the series, you'll run into problems without it
 
 You see Rust is a compiled language that can talk to and use other bits of compiled code
 
-There are different ways to compile these languages and although at this point, you _can_ compile anything we're going
+There are different ways to compile code and although at this point, you _can_ compile anything we're going
 to build in this series, you won't be able to compile everything that you could compile on Windows
 
 For that we need GCC
@@ -132,6 +130,8 @@ Once its installed, we need to make sure we have the ability to access any tools
 
 We can do this by adding its binaries directory to the system path
 
+This allows Windows to use anything installed there from anywhere else
+
 First lets open the location where we installed it
 
 Then open the ucrt64 directory, then bin
@@ -139,8 +139,9 @@ Then open the ucrt64 directory, then bin
 Copy the full address to the bin directory, you can do this by right clicking the address bar and clicking "Copy
 Address"
 
-Next we need to update the system path. Go to your start menu and search for "environment", then click "Edit the system
-environment variables"
+Next we need to update the system path.
+
+Go to your start menu and search for "environment", then click "Edit the system environment variables"
 
 This, weirdly, doesn't take you straight to environment variables, but there is a button to do that at the bottom of
 this screen.
@@ -153,13 +154,13 @@ Ok, last step
 
 We're going to run the application MSYS2 UCRT64
 
-And we'll run pacman dash capital S mingw w64 ucrt x86 64 gcc
+And we'll run pacman dash capital S mingw dash w64 dash ucrt dash x86 underscore 64 dash gcc
 
 You'll be asked for confirmation, just hit enter
 
 This will install gcc and all of its dependencies
 
-Once finished we can check this worked with gcc --version
+Once finished we can check this worked with gcc dash dash version
 
 Phew, thats it, if you're still here, you are incredible!
 
@@ -272,7 +273,7 @@ Inside we'll see we can already see some code
 
 Before I go through it all, lets run the program
 
-For now we can do this from the terminal which we can do inside Code
+For now we can do this from the terminal which we can access inside Code
 
 Pro Tip for new Visual Studio Code users, if you want to do something and aren't sure how, you can hold Control (or 
 Command on Macs) Shift and hit P
@@ -293,21 +294,23 @@ You'll find that the Rust community has put a lot of effort into making Rust as 
 
 ### Anatomy of Hello World
 
-Looking out our main.rs lets break it down line by line
+Looking at our main.rs lets break it down line by line
 
 First we have this `fn main() {`
 
-In Rust, fn is how we describe a function
+In Rust, fn is how we describe a function and a function is basically just a little chunk of code
+
+We'll talk more about functions in a future video
 
 We can usually call functions anything we like but when we create an executable program, we need a function called
 "main" to be the start point
 
-The parenthesis after the name of the function is where we normally put parameters
+The parentheses after the name of the function is where we normally put parameters
 
 Parameters are how we pass data into a function, but we don't pass data into the main function so this is empty
 
-The curly bracket that opens on this line has a matching closing curly bracket, everything inside is part of the
-function
+The curly bracket that opens on this line has a matching closing curly bracket that denotes where the function ends,
+everything inside is part of the function
 
 Inside the function we have one line but lets break it into parts
 
@@ -344,7 +347,7 @@ Another quick note: if your name does not use American English characters, this 
 default and your name should be fine, however, your operating system might not be so when it writes it our, your milage
 may vary. 
 
-My Mac is fine with my cats name, Yuki, but Windows, not so much
+For example, my Mac is fine with my cats name, Yuki, but Windows, not so much
 
 Anyway, we're going to modify our print line now to include the variable
 
@@ -376,7 +379,7 @@ whole series, but you did it and that's awesome, I'm legitimately proud of you
 
 Next time we're going to make a slightly more advanced program by taking a bit of input and doing some comparisons
 
-This way we can get a feel for how Rust looks and feels.
+This way we can get a better feel for how Rust looks and feels.
 
 We won't dig too deeply into the hows and whys yet we'll have some more depth in the video after
 

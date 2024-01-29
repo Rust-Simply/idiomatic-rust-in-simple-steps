@@ -655,10 +655,9 @@ running cargo version</p>
 <p>We should see the currently installed version of Cargo</p>
 <h4 id="gcc"><a class="header" href="#gcc">GCC</a></h4>
 <p>Ok, there’s one more step that is… arguably optional and we (probably) won’t need it for this series but as soon as
-you step outside the series, you’ll run into problems without it, so lets do it now.</p>
-<p>This is a pain in the bum but I believe in you, you got this</p>
+you step outside the series, you’ll run into problems without it</p>
 <p>You see Rust is a compiled language that can talk to and use other bits of compiled code</p>
-<p>There are different ways to compile these languages and although at this point, you <em>can</em> compile anything we’re going
+<p>There are different ways to compile code and although at this point, you <em>can</em> compile anything we’re going
 to build in this series, you won’t be able to compile everything that you could compile on Windows</p>
 <p>For that we need GCC</p>
 <p>The easiest way I’ve found to install GCC is via MSYS2</p>
@@ -671,22 +670,23 @@ to build in this series, you won’t be able to compile everything that you coul
 <p>Wherever you put it, keep its location in mind, we’ll have to find it again shortly</p>
 <p>Once its installed, we need to make sure we have the ability to access any tools we install with it</p>
 <p>We can do this by adding its binaries directory to the system path</p>
+<p>This allows Windows to use anything installed there from anywhere else</p>
 <p>First lets open the location where we installed it</p>
 <p>Then open the ucrt64 directory, then bin</p>
 <p>Copy the full address to the bin directory, you can do this by right clicking the address bar and clicking “Copy
 Address”</p>
-<p>Next we need to update the system path. Go to your start menu and search for “environment”, then click “Edit the system
-environment variables”</p>
+<p>Next we need to update the system path.</p>
+<p>Go to your start menu and search for “environment”, then click “Edit the system environment variables”</p>
 <p>This, weirdly, doesn’t take you straight to environment variables, but there is a button to do that at the bottom of
 this screen.</p>
 <p>Select Path, then hit edit</p>
 <p>Click New on the right and paste in the address from earlier</p>
 <p>Ok, last step</p>
 <p>We’re going to run the application MSYS2 UCRT64</p>
-<p>And we’ll run pacman dash capital S mingw w64 ucrt x86 64 gcc</p>
+<p>And we’ll run pacman dash capital S mingw dash w64 dash ucrt dash x86 underscore 64 dash gcc</p>
 <p>You’ll be asked for confirmation, just hit enter</p>
 <p>This will install gcc and all of its dependencies</p>
-<p>Once finished we can check this worked with gcc –version</p>
+<p>Once finished we can check this worked with gcc dash dash version</p>
 <p>Phew, thats it, if you’re still here, you are incredible!</p>
 <p>The first time I tried this I honestly nearly cried</p>
 <p>If you haven’t done so already, its a good idea to restart your computer before moving on</p>
@@ -744,7 +744,7 @@ collaboration</p>
 <p>The name of the file main.rs is used to tell Rust that we’re going to make an executable program</p>
 <p>Inside we’ll see we can already see some code</p>
 <p>Before I go through it all, lets run the program</p>
-<p>For now we can do this from the terminal which we can do inside Code</p>
+<p>For now we can do this from the terminal which we can access inside Code</p>
 <p>Pro Tip for new Visual Studio Code users, if you want to do something and aren’t sure how, you can hold Control (or 
 Command on Macs) Shift and hit P</p>
 <p>This brings up a little search bar you can use to find what you want in this case a terminal</p>
@@ -756,15 +756,16 @@ top so we don’t have to do this too often</p>
 manually</p>
 <p>You’ll find that the Rust community has put a lot of effort into making Rust as easy as possible to learn an use</p>
 <h3 id="anatomy-of-hello-world-1"><a class="header" href="#anatomy-of-hello-world-1">Anatomy of Hello World</a></h3>
-<p>Looking out our main.rs lets break it down line by line</p>
+<p>Looking at our main.rs lets break it down line by line</p>
 <p>First we have this <code>fn main() {</code></p>
-<p>In Rust, fn is how we describe a function</p>
+<p>In Rust, fn is how we describe a function and a function is basically just a little chunk of code</p>
+<p>We’ll talk more about functions in a future video</p>
 <p>We can usually call functions anything we like but when we create an executable program, we need a function called
 “main” to be the start point</p>
-<p>The parenthesis after the name of the function is where we normally put parameters</p>
+<p>The parentheses after the name of the function is where we normally put parameters</p>
 <p>Parameters are how we pass data into a function, but we don’t pass data into the main function so this is empty</p>
-<p>The curly bracket that opens on this line has a matching closing curly bracket, everything inside is part of the
-function</p>
+<p>The curly bracket that opens on this line has a matching closing curly bracket that denotes where the function ends,
+everything inside is part of the function</p>
 <p>Inside the function we have one line but lets break it into parts</p>
 <p>First, the println (or print line) with an exclamation mark might look a bit like another function however, when you see
 a label like print line followed by an exclamation mark its actually something called a macro.</p>
@@ -785,7 +786,7 @@ name put an equals sign after and then the value</p>
 <p>Another quick note: if your name does not use American English characters, this type of string in Rust is UTF-8 by
 default and your name should be fine, however, your operating system might not be so when it writes it our, your milage
 may vary. </p>
-<p>My Mac is fine with my cats name, Yuki, but Windows, not so much</p>
+<p>For example, my Mac is fine with my cats name, Yuki, but Windows, not so much</p>
 <p>Anyway, we’re going to modify our print line now to include the variable</p>
 <p>There are a number of ways we can achieve this but the idiomatic way to do this is to use curly brackets and put the
 variable name inside</p>
@@ -802,7 +803,7 @@ click it</p>
 <p>And that’s it for today! It was a longer one today but honestly, just getting started might be the hardest part of the
 whole series, but you did it and that’s awesome, I’m legitimately proud of you</p>
 <p>Next time we’re going to make a slightly more advanced program by taking a bit of input and doing some comparisons</p>
-<p>This way we can get a feel for how Rust looks and feels.</p>
+<p>This way we can get a better feel for how Rust looks and feels.</p>
 <p>We won’t dig too deeply into the hows and whys yet we’ll have some more depth in the video after</p>
 <p>If thats interesting to you, don’t forget to like and subscribe</p>
 <p>In the meantime, seriously, well done, take some time to reflect on your achievement, </p>
