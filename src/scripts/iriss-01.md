@@ -20,9 +20,7 @@ I'm Daniel, welcome to IRISS
 Installing Rust
 ---------------
 
-First how do we install Rust
-
-This depends on what operating system you're using.
+How you install Rust depends on what operating system you're using.
 
 I'm going to go over Mac and Linux first as they're both the same and quite simple.
 
@@ -261,7 +259,7 @@ Now we'll use cargo, remember cargo, from what seems like forever ago, to make o
 
 cargo new hello hyphen world
 
-We'll CD into that project and open it in code by typing code dot
+We'll change directory into that project and open it in code by typing code dot
 
 As you can see, cargo has created a few files for us
 
@@ -337,6 +335,11 @@ behave anything like functions
 We still have parentheses delimiting the start and end of what we're passing to the macro, but in this case you _could_
 also use square brackets or curly brackets, but for print line parentheses are the convention
 
+Inside the print line we have a sequence of characters, surrounded by double quotes. This is, generally called a string.
+Rust actually has lots of different kinds of strings, and we'll go into them more in the next video.
+
+Feel free to change this to change the message being printed out.
+
 
 Running and Debugging
 ---------------------
@@ -391,8 +394,6 @@ whole series, but you did it and that's awesome, I'm legitimately proud of you
 Next time we're going to make a slightly more advanced program by taking a bit of input and doing some comparisons
 
 This way we can get a better feel for how Rust looks and feels.
-
-We won't dig too deeply into the hows and whys yet we'll have some more depth in the video after
 
 If thats interesting to you, don't forget to like and subscribe
 
