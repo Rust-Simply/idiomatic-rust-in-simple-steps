@@ -7,8 +7,8 @@ Preamble
 The Rust programming language:
 
 - How do you install it
-- Whats the easiest way to work with it
-- How do we write our first program
+- How do you work with it
+- How do you write our first program
 - And whats going on inside
 
 Today we'll answer all of these questions.
@@ -34,7 +34,18 @@ Use the video chapters to skip to the parts of the video that are appropriate fo
 
 ### Mac and Linux
 
-All we need to do is visit rustup dot rs
+Setting up Rust on Mac and Linux is exactly the same process... exactly the same, except for this one thing.
+
+Before we begin we need a couple of extra tools. On Mac, you'll need to install xcode-select. 
+
+We do that by opening up a terminal window and typing xcode dash select dash dash install
+
+On Linux, you'll need to get gcc. Different flavours of Linux us different package managers, but if you're using Linux
+as your daily driver, I'm hoping you already know how to use yours.
+
+To demonstrate on Raspberry Pi, I'm going to type sudo apt install gcc
+
+Everything else on these two systems is the same, so, next, head over to rustup dot rs
 
 This is the official way to install Rust but I know a lot of people, rightly, worry about running things from the net in
 their terminal, as you should when you install anything, so do whatever you need to feel confident about this.
