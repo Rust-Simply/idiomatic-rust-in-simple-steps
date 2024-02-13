@@ -28,9 +28,6 @@ specific exercises to help you understand the language a bit at a time.
 
 The gamification of the course makes it really fun, so I still use Rustlings to help keep myself sharp.
 
-There is also an [IntelliJ Edu adaptation](https://plugins.jetbrains.com/plugin/16631-learn-rust/about) of Rustlings so
-if you install the free Community version of IntelliJ IDEA, you can have an in editor tutorial.
-
 Rust by Example
 ---------------
 

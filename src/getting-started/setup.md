@@ -10,6 +10,13 @@ Getting Set Up
 Mac and Linux
 -------------
 
+Before you begin, you need to make sure you have the appropriate build tools.
+
+For Mac, make sure to run `xcode-select install`
+
+For Linux, you need to install gcc via your package manage, for example, on a Raspberry Pi, you might do 
+`sudo apt install gcc`
+
 Go to [https://rustup.rs](https://rustup.rs), copy the command displayed there into your terminal.
 
 ![Rustup Mac / Linux](images/rustup-mac.png)

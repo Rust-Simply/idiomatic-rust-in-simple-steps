@@ -4,78 +4,72 @@ Setting Up
 Preamble
 --------
 
-The Rust programming language:
+So, you want to learn the Rust programming language but where do you even start?
 
 - How do you install it
 - How do you work with it
 - How do you write our first program
 - And whats going on inside
 
-Today we'll answer all of these questions.
+Today we're gonna answer these questions.
 
-This series has a free accompanying book, check the description below.
+This series has a free accompanying book, in which you can find all the details for this tutorial, check the
+description below.
 
-I'm Daniel, welcome to IRISS
+My name is Daniel, welcome to IRISS
 
 Installing Rust
 ---------------
 
-How you install Rust depends on what operating system you're using.
+How you install Rust depends on the operating system you're using.
 
 I'm going to go over Mac and Linux first as they're both the same and quite simple.
 
 Then I'll cover Windows which is a little bit different.
 
-Afterwards we'll go over setting up our development which is roughly the same for all systems.
-
-Use the video chapters to skip to the parts of the video that are appropriate for you.
+After that we'll go over setting up our development which is roughly the same for all systems, so use the video chapters
+to skip to the parts of the video that are appropriate for you.
 
 ### Mac and Linux
 
 Setting up Rust on Mac and Linux is exactly the same process... exactly the same, except for this one thing.
 
-Before we begin we need a couple of extra tools. On Mac, you'll need to install xcode-select. 
+Before we begin, on Mac, you'll need to make sure you have xcode build tools. 
 
-We do that by opening up a terminal window and typing xcode dash select dash dash install
+Do that by opening up a terminal window and typing xcode dash select dash dash install
 
-On Linux, you'll need to get gcc. Different flavours of Linux us different package managers, but if you're using Linux
-as your daily driver, I'm hoping you already know how to use yours.
+My Mac already has xcode's tools installed, if you don't have it, but this takes a good 20 minutes, so be patient and
+come back when its done.
 
-To demonstrate on Raspberry Pi, I'm going to type sudo apt install gcc
+On Linux, you'll need to make sure you have gcc. Different flavours of Linux use different package managers, but if
+you're using Linux as your daily driver, I'm hoping you already know how to use yours.
 
-Everything else on these two systems is the same, so, next, head over to rustup dot rs
+To demonstrate on Raspberry Pi, I'm going to type sudo apt install gcc, though you can see this Pi already has it
+installed.
 
-This is the official way to install Rust but I know a lot of people, rightly, worry about running things from the net in
-their terminal, as you should when you install anything, so do whatever you need to feel confident about this.
-
-Once you're happy though, pop this in your console.
+Everything else on these two systems is the same, so, next, head over to rustup dot rs and pop this in your console.
 
 You'll be asked if you want to customize the install, I'm not going to so I'll choose 1 and press enter.
 
-After a minute or two, the installation completes and you'll see that it suggests sourcing the cargo env file.
+After a minute or two, the installation completes and it'll suggests sourcing the cargo env file.
 
-You only need to do this if you want to use Rusts tools in the current terminal session, which we will, so we'll do that
+You only need to do this if you want to use Rusts tools in the current terminal session, which we do, so lets do that
 
 Now we can check that everything has installed correctly by running cargo version
 
-And you should see something like this.
+And you should see something like this
 
-Thats it, we're ready to go. Head on to the Development Environment chapter, unless you particularly want to watch 
-a Windows user (me) suffer through that installation process.
+Thats it, we're ready to go. Head on to the Development Environment chapter unless you're particularly curious about
+the Windows install
 
 ### Windows
 
 #### Build Tools
 
-Ok, installing Rust on Windows is little bit more challenging but you've got this, I believe in you.
+Installing Rust on Windows is little bit more challenging but you've got this, I believe in you
 
-First we're going to need Microsoft build tools.
-
-To get the build tools we'll head to 
-
-visualstudio dot microsoft dot com slash downloads
-
-and download the community edition
+First we're going to need Microsoft build tools. To get them we'll head to  visualstudio dot microsoft dot com slash
+downloads and download the community edition
 
 This installer is your gateway to a lot of stuff... almost none of which we actually need.
 
@@ -94,7 +88,7 @@ grab a cup of tea.
 
 #### Rust up
 
-Now that we've got the build tools we can download the rust installer which we get from rustup dot rs
+Now that we've got the build tools we can get the rust installer which we get from rustup dot rs
 
 Download rustup-init.exe
 
@@ -105,7 +99,7 @@ I'm not going to do that so I'll choose 1.
 Once this is complete we can check that everything is working ok by opening a terminal (either cmd or powershell) and
 running cargo version
 
-We should see the currently installed version of Cargo
+And you should see something like this
 
 #### GCC
 
@@ -191,7 +185,7 @@ makes you happy.
 If you're new to software engineering though, and not looking to fork out potentially hundreds on tooling, I recommend
 Visual Studio Code. 
 
-It's free, is perhaps the most widely used and supported editor today, and can be greatly extended through plugins.
+It's free, it's perhaps the most widely used and supported editor today, and can be greatly extended through plugins.
 
 It's the editor I'll be using throughout this series as I believe it will be the most familiar to people.
 
@@ -208,19 +202,21 @@ So... what do we need?
 ### rust-analyzer
 
 First and perhaps most obviously, we need language support. Rust Analyzer will give us syntax highlighting, auto
-complete, symbol editing and will just generally make out lives a lot easier.
+complete, type hints, show documentation, allow symbol editing and will just generally make out lives a lot easier.
 
-Lets grab that
+Lets grab that by clicking install
 
 ### CodeLLDB
 
-Next, lets give ourselves super powers.
+This is the tool that's going to give us software engineering super powers
 
 Sometimes you can be working on code and its not doing what you expect
 
+"Happens to everyone all of the time, no need to worry"
+
 Wouldn't it be cool to just step over each line of code as it runs and see exactly whats happening
 
-CodeLLDB will let us do that
+LLDB will let us do that
 
 We'll cover how it works in a bit, for now lets just grab it
 
@@ -228,7 +224,7 @@ We'll cover how it works in a bit, for now lets just grab it
 
 The Rust ecosystem makes heavy use of the TOML file format
 
-We'll talk about this more much later on but now is a good time to pick up this extension
+We'll talk about this more later in the series but now is a good time to pick up this extension
 
 ### crates
 
@@ -259,7 +255,7 @@ Now we'll use cargo, remember cargo, from what seems like forever ago, to make o
 
 cargo new hello hyphen world
 
-We'll change directory into that project and open it in code by typing code dot
+Now we can open the project in visual studio code by typing code hello hyphen world
 
 As you can see, cargo has created a few files for us
 
@@ -311,8 +307,10 @@ In Rust, fn is how we describe a function and a function is basically just a lit
 
 We'll talk more about functions in a future video
 
-We can usually call functions anything we like but when we create an executable program, we need a function called
-"main" to be the start point
+The next bit "main" is the name of the funciton
+
+We can usually call functions anything we like but when we create an executable program, one that can be run on its own,
+we need a function called "main" to be the start point
 
 The parentheses after the name of the function is where we normally put parameters
 
