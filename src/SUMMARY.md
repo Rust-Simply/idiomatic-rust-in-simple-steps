@@ -1,13 +1,13 @@
 # Summary
 - [Introduction](./README.md)
+    - [Why or Why Not](introduction/why.md)
+    - [Other Learning Resources](introduction/resources.md)
 - [Getting Started](getting-started/README.md)
-    - [Why or Why Not](getting-started/why.md)
-    - [Other Learning Resources](getting-started/resources.md)
     - [Getting Set Up](getting-started/setup.md)
     - [Environment](getting-started/environment.md)
     - [Hello World](getting-started/hello-world.md)
 - [Language Basics](language-basics/README.md)
-    - [Guessing Game](language-basics/guessing-game.md)
+    - [Guessing Game (WIP)](language-basics/guessing-game.md)
     - [Primitives]()
     - [Functions]()
     - [Documentation]()
@@ -59,11 +59,3 @@
     - [Intro to Web Dev]()
     - [Intro to Embedded]()
     - [Intro to Game Dev]()
-
------------------
-
-# Scripts
-
-- [Rust, Simply - IRISS]()
-    - [Welcome to IRISS](./scripts/iriss-00.md)
-    - [Setting Up](./scripts/iriss-01.md)
