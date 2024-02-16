@@ -53,7 +53,7 @@ $ source "$HOME/.cargo/env"
 Now you can check whether everything has installed properly by running `cargo version` and you should see something
 like this:
 
-```sh
+```shell
 $ cargo version
 cargo 1.75.0 (1d8b05cdd 2023-11-20)
 ```
@@ -100,7 +100,11 @@ Running this will install the tools we need.
 Choose the default install options.
 
 Once complete, we can check that things have been installed correctly by opening either `cmd` or `powershell` or your
-terminal of choice, and run `cargo version`.
+terminal of choice, and run:
+
+```shell
+cargo version
+```
 
 ### GCC (optional, but recommended)
 
@@ -113,54 +117,14 @@ libraries. This can be fixed by installing `gcc`.
 Like Microsoft's build tools, gcc isn't packaged by itself, but unlike Microsoft's build tools there are many, many ways
 to install it.
 
-The easiest way I've found is to install [MSYS2](https://www.msys2.org/), with two caveats. This will install more than
-we need... and the installer doesn't quite do everything you need. Don't worry, we'll step through it.
+The easiest way I've found is to install the [Scoop](https://scoop.sh) package manager by following the instructions on
+their website.
 
-> 🙏🏻 If anyone knows of a friendlier way of achieving this, please do open a PR or Issue 
-> [on this projects repository](https://github.com/Gisleburt/idiomatic-rust-in-simple-steps)
+Once installed, all you need to do is run:
 
-First, grab the installer and follow the instruction. MSYS2 is a little fussy about where its installed, if in doubt
-install it in the default location. Wherever you install it though, keep it in mind, we'll need to find it shortly.
-
-After installation but before we go further, we want to allow ourselves access to the tools that we're going to install
-inside MSYS2. To do that, you'll need to find where it was installed, then go to the `ucrt64` directory, and then `bin`.
-Copy the full path to this directory. You can do this by right-clicking the path, then clicking "Copy Address"
-
-![MSYS2 bin path](./images/windows-msys2-bin.png)
-
-Note, I installed mine to `D:/Programs/MYSYS64` but by default it will be `C:/MYSYS64`
-
-Next we need to add this to a system environment variable called `PATH`, this will allow us to access any tools in that
-directory from anywhere in our system. To do this, go to the start menu, and simply type "environment" then click
-"Edit the system environment variables"
-
-![Finding Windows Environment](./images/windows-environment.png)
-
-This, weirdly, doesn't take you straight to environment variables but to system properties where you can click through
-to the Environment variables at the bottom.
-
-![Windows System Properties](./images/windows-system-properties.png)
-
-<div class="warning">
-Be careful here and don't change anything other than what we're here to change. Luckily the UI around this is very
-sensible these days making it much harder to mess up.
-</div>
-
-Select the Path variable in the top box, then hit edit.
-
-![Windows System Properties](./images/windows-environment-variables.png)
-
-Now hit New on the right, and paste in the path as you can see I have done below
-
-![Windows System Properties](./images/windows-edit-environment-variables.png)
-
-Click OK to save the new path.
-
-Finally, we're ready to install gcc. Run the application `MSYS2 UCRT64` from the start menu. This is a specific
-environmental setup for MSYS and will be the easiest to perform the next step in.
-
-Enter the command `pacman -S mingw-w64-ucrt-x86_64-gcc`, hitting `<enter>` when it asks for confirmation. Pacman is the
-package manager for MSYS and will install `gcc` and all of its dependencies.
+```shell
+scoop install main/gcc
+```
 
 You can check this worked by running `gcc --version`
 

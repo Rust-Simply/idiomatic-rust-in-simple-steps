@@ -216,7 +216,7 @@ changes necessary for new terminal sessions to pick up on the changes.</p>
 </code></pre>
 <p>Now you can check whether everything has installed properly by running <code>cargo version</code> and you should see something
 like this:</p>
-<pre><code class="language-sh">$ cargo version
+<pre><code class="language-shell">$ cargo version
 cargo 1.75.0 (1d8b05cdd 2023-11-20)
 </code></pre>
 <p>Cargo is the main tool we’ll use to build and work with Rust, you will need at least version <code>1.75</code> for this tutorial.</p>
@@ -242,7 +242,9 @@ so continue.</p>
 Running this will install the tools we need.</p>
 <p>Choose the default install options.</p>
 <p>Once complete, we can check that things have been installed correctly by opening either <code>cmd</code> or <code>powershell</code> or your
-terminal of choice, and run <code>cargo version</code>.</p>
+terminal of choice, and run:</p>
+<pre><code class="language-shell">cargo version
+</code></pre>
 <h3 id="gcc-optional-but-recommended"><a class="header" href="#gcc-optional-but-recommended">GCC (optional, but recommended)</a></h3>
 <p>Wait, the rustup website doesn’t mention this!</p>
 <p>I know, and you don’t <em>necessarily</em> need to do this. However, Rust is a language that can interop with other languages.
@@ -250,39 +252,11 @@ In particular, Rust works really well with existing C and C++ libraries, however
 libraries. This can be fixed by installing <code>gcc</code>.</p>
 <p>Like Microsoft’s build tools, gcc isn’t packaged by itself, but unlike Microsoft’s build tools there are many, many ways
 to install it.</p>
-<p>The easiest way I’ve found is to install <a href="https://www.msys2.org/" title="" target="_blank">MSYS2</a>, with two caveats. This will install more than
-we need… and the installer doesn’t quite do everything you need. Don’t worry, we’ll step through it.</p>
-<blockquote>
-<p>🙏🏻 If anyone knows of a friendlier way of achieving this, please do open a PR or Issue 
-<a href="https://github.com/Gisleburt/idiomatic-rust-in-simple-steps" title="" target="_blank">on this projects repository</a></p>
-</blockquote>
-<p>First, grab the installer and follow the instruction. MSYS2 is a little fussy about where its installed, if in doubt
-install it in the default location. Wherever you install it though, keep it in mind, we’ll need to find it shortly.</p>
-<p>After installation but before we go further, we want to allow ourselves access to the tools that we’re going to install
-inside MSYS2. To do that, you’ll need to find where it was installed, then go to the <code>ucrt64</code> directory, and then <code>bin</code>.
-Copy the full path to this directory. You can do this by right-clicking the path, then clicking “Copy Address”</p>
-<p><img src="./images/windows-msys2-bin.png" alt="MSYS2 bin path" /></p>
-<p>Note, I installed mine to <code>D:/Programs/MYSYS64</code> but by default it will be <code>C:/MYSYS64</code></p>
-<p>Next we need to add this to a system environment variable called <code>PATH</code>, this will allow us to access any tools in that
-directory from anywhere in our system. To do this, go to the start menu, and simply type “environment” then click
-“Edit the system environment variables”</p>
-<p><img src="./images/windows-environment.png" alt="Finding Windows Environment" /></p>
-<p>This, weirdly, doesn’t take you straight to environment variables but to system properties where you can click through
-to the Environment variables at the bottom.</p>
-<p><img src="./images/windows-system-properties.png" alt="Windows System Properties" /></p>
-<div class="warning">
-Be careful here and don't change anything other than what we're here to change. Luckily the UI around this is very
-sensible these days making it much harder to mess up.
-</div>
-<p>Select the Path variable in the top box, then hit edit.</p>
-<p><img src="./images/windows-environment-variables.png" alt="Windows System Properties" /></p>
-<p>Now hit New on the right, and paste in the path as you can see I have done below</p>
-<p><img src="./images/windows-edit-environment-variables.png" alt="Windows System Properties" /></p>
-<p>Click OK to save the new path.</p>
-<p>Finally, we’re ready to install gcc. Run the application <code>MSYS2 UCRT64</code> from the start menu. This is a specific
-environmental setup for MSYS and will be the easiest to perform the next step in.</p>
-<p>Enter the command <code>pacman -S mingw-w64-ucrt-x86_64-gcc</code>, hitting <code>&lt;enter&gt;</code> when it asks for confirmation. Pacman is the
-package manager for MSYS and will install <code>gcc</code> and all of its dependencies.</p>
+<p>The easiest way I’ve found is to install the <a href="https://scoop.sh" title="" target="_blank">Scoop</a> package manager by following the instructions on
+their website.</p>
+<p>Once installed, all you need to do is run:</p>
+<pre><code class="language-shell">scoop install main/gcc
+</code></pre>
 <p>You can check this worked by running <code>gcc --version</code></p>
 <p>Phew! That’s it, congratulations! It took me over an hour to do this on my first attempt.</p>
 <p>If you haven’t done already, its a good idea to restart your computer before moving on.</p>
