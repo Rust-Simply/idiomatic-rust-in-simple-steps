@@ -44,7 +44,7 @@
     - [mdbook]()
     - [Itertools]()
     - [Rayon]()
-    - [Clap and StructOpt]()
+    - [Clap]()
     - [Async with Tokio and async_std]()
     - [Serialisation with Serde]()
     - [Parsing with Nom]()
