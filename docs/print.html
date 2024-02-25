@@ -495,11 +495,11 @@ will simplify everything you learn going forward.</p>
 <h2 id="the-guessing-game"><a class="header" href="#the-guessing-game">The Guessing Game</a></h2>
 <p>To learn about memory, we’ll make a simplified version of the
 <a href="https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html" title="" target="_blank">guessing game</a> 
-from the official Rust book. We’ll start by making a new project by running this in your terminal wherever you’re 
-putting your Rust projects:</p>
-<pre><code class="language-shell">$ cargo new guessing-game
+from the official Rust book. Start by opening your terminal and navigating to where-ever your creating you projects like
+in the last chapter, then we’ll create a new project with:</p>
+<pre><code class="language-shell">cargo new guessing-game
 </code></pre>
-<p>Opening <code>src/main.rs</code> we’ll see the same code as before:</p>
+<p>Open the project in you editor and open the file <code>src/main.rs</code>. As before we’ll see the same “hello, world” program:</p>
 <pre><pre class="playground"><code class="language-rust">fn main() {
     println!(&quot;Hello, world!&quot;);
 }</code></pre></pre>
@@ -606,10 +606,10 @@ calling <code>.next()</code> on the iterator.</p>
 </span><span class="boring">   
 </span><span class="boring">   println!(&quot;Enter your guess: red, green or blue&quot;);
 </span>    let input = std::io::stdin()
-            .lines()
-            .next()
-            .expect(&quot;No input read&quot;)
-            .expect(&quot;Could not get input from stdin&quot;);
+        .lines()
+        .next()
+        .expect(&quot;No input was read&quot;)
+        .expect(&quot;There was an error when reading the input&quot;);
             
     println!(&quot;Your guess was {input}&quot;);
 <span class="boring">
@@ -618,12 +618,12 @@ calling <code>.next()</code> on the iterator.</p>
 <p>Wait wait wait, what are those <code>expect</code>s about?!</p>
 <p><code>expect()</code> is, I would say, the second-worst way you could handle something going wrong in your program. This is not
 “idiomatic” and you absolutely should not use this in anything except the most throw away software as it will 
-immediately cause the program to stop and throw a lot of information at the user. In the future we’ll talk about things
+immediately cause the program to stop and spew a lot of information at the user. In the future we’ll talk about things
 going wrong and how to better handle them, however, as this program is just for you, I think you’ll cope for now. 😊</p>
 <p>That doesn’t explain what these lines are doing, or why there are two of them though. The reason for this is that there
 are two possible ways <code>.lines()</code> might not work.</p>
 <p>The first expect then:</p>
-<pre><code class="language-rust ignore">.expect(&quot;No input read&quot;)</code></pre>
+<pre><code class="language-rust ignore">.expect(&quot;No input was read&quot;)</code></pre>
 <p>When we call <code>.next()</code> on any iterator, there either is something next or there isn’t.  In some languages this
 might return either the data you expect, or a <code>null</code> value. For example, it might return <code>&quot;red&quot;</code> or <code>null</code>. “red” is a
 string but null is not, what happens if you pass this to a function that expects a string? This means you must either
@@ -641,7 +641,7 @@ stop the program and print our message (plus a few other useful bits) to the <co
 behaviour is typically undesirable but that we can allow it for this example, at least until we learn how to deal with
 <code>Option</code> properly.</p>
 <p>The second expect is a bit different:</p>
-<pre><code class="language-rust ignore">.expect(&quot;Could not get input from stdin&quot;);</code></pre>
+<pre><code class="language-rust ignore">.expect(&quot;There was an error when reading the input&quot;);</code></pre>
 <p>If the Option we got from <code>.next()</code> contains something instead of nothing, it <em>still</em> doesn’t necessarily mean we read
 the users input correctly, reading data from <code>stdin</code> is itself fallible.</p>
 <p>Fallibility in programming is another thing we’ve traditionally handled very badly. A common way to deal with this in
@@ -651,9 +651,10 @@ it’s “caught”. Sometimes you may not even realise that some code you’ve 
 called someone else’s code, and they didn’t make it obvious that their code could fail.</p>
 <p>Rust does away with this with another type called <code>Result</code>. If your function can fail, it must return a Result type.
 Like with <code>Option</code>, <code>Result</code> is its own type that contains either the data we wanted, or an error.</p>
-<p>Again, the idiomatic way to handle this depends on what you’re trying to do; is the error recoverable, and how do we
-want to report the error back to the user. Using <code>expect</code> will, again, cause the program to immediately stop with the
-error message and other bits sent to <code>stderr</code>, and again, you can see why this is typically extremely undesirable.</p>
+<p>Again, the idiomatic way to handle this depends on what you’re trying to do; is the error recoverable (could the program
+continue despite the error), and how do we want to report the error back to the user. Using <code>expect</code> will, again, cause
+the program to immediately stop with the error message and other bits sent to <code>stderr</code>, and again, you can see why this
+is typically extremely undesirable.</p>
 <p>But anyway, we now have a working program, there is an actual color, the user guesses a color, and we print both to the
 screen.</p>
 <h2 id="memory-1"><a class="header" href="#memory-1">Memory</a></h2>
@@ -731,8 +732,8 @@ this  case we’re asking if <code>input</code> is equal to <code>actual</code>.
     let input = std::io::stdin()
             .lines()
             .next()
-            .expect(&quot;No input read&quot;)
-            .expect(&quot;Could not get input from stdin&quot;);
+            .expect(&quot;No input was read&quot;)
+            .expect(&quot;There was an error when reading the input&quot;);
             
     println!(&quot;Your guess was {input}&quot;);
     println!(&quot;The color I chose was {actual}&quot;);
@@ -751,7 +752,7 @@ this  case we’re asking if <code>input</code> is equal to <code>actual</code>.
 </li>
 <li>
 <p>The Heap is where we can store things regardless of whether we know their size at compile time (Sized and Unsized).
-We can store large amounts of data here but creating the data is a tiny bit slower.</p>
+We can store large amounts of data here but getting access to this memory initially is a tiny be slower.</p>
 </li>
 <li>
 <p>You can reference data with <code>&amp;</code> if you don’t want ownership of the data, but you do want to access it.</p>

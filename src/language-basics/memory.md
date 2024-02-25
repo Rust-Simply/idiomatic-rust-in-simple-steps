@@ -15,14 +15,14 @@ The Guessing Game
 
 To learn about memory, we'll make a simplified version of the
 [guessing game](https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html) 
-from the official Rust book. We'll start by making a new project by running this in your terminal wherever you're 
-putting your Rust projects:
+from the official Rust book. Start by opening your terminal and navigating to where-ever your creating you projects like
+in the last chapter, then we'll create a new project with:
 
 ```shell
-$ cargo new guessing-game
+cargo new guessing-game
 ```
 
-Opening `src/main.rs` we'll see the same code as before:
+Open the project in you editor and open the file `src/main.rs`. As before we'll see the same "hello, world" program:
 
 ```rust
 fn main() {
@@ -173,10 +173,10 @@ If we add this all in our code looks like this
 #    
 #    println!("Enter your guess: red, green or blue");
     let input = std::io::stdin()
-            .lines()
-            .next()
-            .expect("No input read")
-            .expect("Could not get input from stdin");
+        .lines()
+        .next()
+        .expect("No input was read")
+        .expect("There was an error when reading the input");
             
     println!("Your guess was {input}");
 #
@@ -188,7 +188,7 @@ Wait wait wait, what are those `expect`s about?!
 
 `expect()` is, I would say, the second-worst way you could handle something going wrong in your program. This is not
 "idiomatic" and you absolutely should not use this in anything except the most throw away software as it will 
-immediately cause the program to stop and throw a lot of information at the user. In the future we'll talk about things
+immediately cause the program to stop and spew a lot of information at the user. In the future we'll talk about things
 going wrong and how to better handle them, however, as this program is just for you, I think you'll cope for now. 😊
 
 That doesn't explain what these lines are doing, or why there are two of them though. The reason for this is that there
@@ -197,7 +197,7 @@ are two possible ways `.lines()` might not work.
 The first expect then:
 
 ```rust,ignore
-.expect("No input read")
+.expect("No input was read")
 ```
 
 When we call `.next()` on any iterator, there either is something next or there isn't.  In some languages this
@@ -222,7 +222,7 @@ behaviour is typically undesirable but that we can allow it for this example, at
 The second expect is a bit different:
 
 ```rust,ignore
-.expect("Could not get input from stdin");
+.expect("There was an error when reading the input");
 ```
 
 If the Option we got from `.next()` contains something instead of nothing, it _still_ doesn't necessarily mean we read
@@ -237,9 +237,10 @@ called someone else's code, and they didn't make it obvious that their code coul
 Rust does away with this with another type called `Result`. If your function can fail, it must return a Result type.
 Like with `Option`, `Result` is its own type that contains either the data we wanted, or an error.
 
-Again, the idiomatic way to handle this depends on what you're trying to do; is the error recoverable, and how do we
-want to report the error back to the user. Using `expect` will, again, cause the program to immediately stop with the
-error message and other bits sent to `stderr`, and again, you can see why this is typically extremely undesirable.
+Again, the idiomatic way to handle this depends on what you're trying to do; is the error recoverable (could the program
+continue despite the error), and how do we want to report the error back to the user. Using `expect` will, again, cause
+the program to immediately stop with the error message and other bits sent to `stderr`, and again, you can see why this
+is typically extremely undesirable.
 
 But anyway, we now have a working program, there is an actual color, the user guesses a color, and we print both to the
 screen.
@@ -343,8 +344,8 @@ fn main() {
     let input = std::io::stdin()
             .lines()
             .next()
-            .expect("No input read")
-            .expect("Could not get input from stdin");
+            .expect("No input was read")
+            .expect("There was an error when reading the input");
             
     println!("Your guess was {input}");
     println!("The color I chose was {actual}");
@@ -365,7 +366,7 @@ Today we learned specifically about the Stack and Heap:
 - The Stack is where variables live, data must be of known size at compile time (Sized), but access is very fast.
 
 - The Heap is where we can store things regardless of whether we know their size at compile time (Sized and Unsized).
-  We can store large amounts of data here but creating the data is a tiny bit slower.
+  We can store large amounts of data here but getting access to this memory initially is a tiny be slower.
 
 - You can reference data with `&` if you don't want ownership of the data, but you do want to access it.
 
