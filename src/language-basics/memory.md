@@ -3,9 +3,20 @@
 When you create a program, how does it remember things? In the last chapter, we created a variable and put our name
 inside it. Where was our name stored?
 
-We're going to make a simplified version of the 
-[guessing game](https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html) from the official Rust book to
-explore this. Lets start by making a new project by running this in your terminal
+Jumping into memory already might seem unusual. A lot of programming tutorials in any language would like to get you
+writing code before you have to worry about such things. However, I think right off the bat we have a wonderful
+opportunity to talk about how memory works in Rust and, because memory is so important to how Rust works, I think this
+will simplify everything you learn going forward.
+
+We're going to make an extremely simple program and use that as the basis to explain how Rust remembers.
+
+The Guessing Game
+-----------------
+
+To learn about memory, we'll make a simplified version of the
+[guessing game](https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html) 
+from the official Rust book. We'll start by making a new project by running this in your terminal wherever you're 
+putting your Rust projects:
 
 ```shell
 $ cargo new guessing-game
@@ -24,7 +35,7 @@ As we step through this tutorial, if you mouse over the code examples, you can s
 2. &#x23f5; Run the example via [rust playground](https://play.rust-lang.org) (where possible)
 3. &#x1f441; Show any code I've opted to hide for clarity, try this on the next block
 
-Lets quickly change our hello world message to something that welcomes us to the game.
+Let's quickly change our hello world message to something that welcomes us to the game.
 
 ```rust
 #fn main() {
@@ -32,7 +43,7 @@ Lets quickly change our hello world message to something that welcomes us to the
 #}
 ```
 
-And a ask the user to do something:
+And ask the user to do something:
 
 ```rust
 #fn main() {
@@ -41,11 +52,11 @@ And a ask the user to do something:
 #}
 ```
 
-> Because we've used a second `println!` this will appear on a new line. The new line actually comes at the end of the
-> `println!` so if you want to make both sentences appear on the same line, you can change the first one with `print!` 
-> (no "ln"). Try it out and see what else you might need to change!
+Because we've used a second `println!` this will appear on a new line. The new line actually comes at the end of the
+`println!` so if you want to make both sentences appear on the same line, you can change the first one with `print!` 
+(no "ln"). Try it out and see what else you might need to change!
 
-Lets pick a color that the user has to guess. To begin with we'll just hard code one value, later we'll make it choose
+Let's pick a color that the user has to guess. To begin with we'll just hard code one value, later we'll make it choose
 randomly. I'm going to choose blue, but you can choose whatever you like:
 
 ```rust
@@ -56,8 +67,32 @@ randomly. I'm going to choose blue, but you can choose whatever you like:
 #}
 ```
 
-Lets output the color. This will end up being the last thing in the program but we can use this to check everything is
-working ok:
+Before we move on, I want to quickly call out the "type" of the data we've just created.
+
+We're going to talk about types in the next session, but I want to quickly point some things out. The type of data
+describes a number of things but mainly, how that data is stored in memory and how it can be used. For example, is the
+data a string (like "blue"), or a number, or a boolean that represent true or false.
+
+If you're using an editor that shows type information you might see that next to `actual` its written something like 
+`: &str`, eg:
+
+![type-annotation.png](memory/type-annotation.png)
+
+This means that the variable `actual` contains a "reference" (represented by the `&`) to a "string slice" (represented
+by `str`). We'll talk about why the variable only contains a reference and not the data itself later. You could, if you
+like, manually write this `let actual: &str = "blue"` yourself, however, it's generally better to let Rust infer the
+type, and only write it yourself if either Rust is unable to decide (because it could be multiple things) or if you want
+to use something different. 
+
+This is why it's a good idea to make sure whatever you're writing Rust in shows you what
+Rust has decided a type is. For example, the default integer type in Rust is `i32` (don't worry, we'll explain this
+later), however your program might have specific requirements that make it sensible to annotate the type so that Rust
+uses a `u64` instead. (Yes, Rust has many different types for representing numbers, we'll worry about that next time 😊)
+
+![inferred-vs-annotated.png](memory/inferred-vs-annotated.png)
+
+Anyway, back to the program: let's output the color. This will end up being the last thing in the program, but we can
+use this to check everything is working ok:
 
 ```rust
 #fn main() {
@@ -81,9 +116,9 @@ lets ask them to guess
 #     println!("Welcome to the guessing game!");
 #     println!("I have chosen a color red, green or blue");
 #    
-    println!("Enter a number a color red, green or blue");
+    println!("Enter your guess: red, green or blue");
 #    
-#     println!("The number I chose was {actual}");
+#     println!("The color I chose was {actual}");
 #}
 ```
 
@@ -106,11 +141,11 @@ where we'd have to come to write things out to the terminal too, via a stream ca
 > Cargo sensibly decided that _it's_ output is not relevant to your programs normal output
 >
 > On Windows the same can be achieved in cmd using `cargo run 2> nul` (note, only one l in nul), or in powershell with
-> `cargo run 2> $null` (two l's this time and a dollar, no idea why its different)
+> `cargo run 2> $null` (two l's this time and a dollar, no idea why it's different)
 > 
 > There are more streams, denoted by numbers, but these are rarely used and are way outside the scope of this series.
 >
-> `stderr` is really useful for things like logging and we'll talk more about streams in the future.
+> `stderr` is really useful for things like logging, and we'll talk more about streams in the future.
 
 So, we get stdin using `std::io::stdin()`, this is a function call (we'll talk about functions in a couple of chapters), 
 that returns something called a "handle" that we can use for temporary access to the input stream.
@@ -131,28 +166,30 @@ If we add this all in our code looks like this
 
 ```rust,noplayground
 #fn main() {
-#     let actual = "blue";
-#     println!("Welcome to the guessing game!");
-#     println!("I have chosen a color red, green or blue");
+#    let actual = "blue";
 #    
-#     println!("Enter a red, green or blue");
+#    println!("Welcome to the guessing game!");
+#    println!("I have chosen a color red, green or blue");
+#    
+#    println!("Enter your guess: red, green or blue");
     let input = std::io::stdin()
             .lines()
             .next()
             .expect("No input read")
             .expect("Could not get input from stdin");
+            
     println!("Your guess was {input}");
-#    
-#     println!("The number I chose was {actual}");
+#
+#    println!("The color I chose was {actual}");
 #}
 ```
 
 Wait wait wait, what are those `expect`s about?!
 
-`expect()` is, I would say, the second worst way you could handle something going wrong in your program. You absolutely
-should not use this in anything except the most throw away software as it will immediately cause the program to stop
-and throw a lot of information at the user. In the future we'll talk about things going wrong and how to better handle
-them, however, as this program is just for you, I think you'll cope for now. 😊
+`expect()` is, I would say, the second-worst way you could handle something going wrong in your program. This is not
+"idiomatic" and you absolutely should not use this in anything except the most throw away software as it will 
+immediately cause the program to stop and throw a lot of information at the user. In the future we'll talk about things
+going wrong and how to better handle them, however, as this program is just for you, I think you'll cope for now. 😊
 
 That doesn't explain what these lines are doing, or why there are two of them though. The reason for this is that there
 are two possible ways `.lines()` might not work.
@@ -164,121 +201,179 @@ The first expect then:
 ```
 
 When we call `.next()` on any iterator, there either is something next or there isn't.  In some languages this
-might return either the data you expect, or a `null` value. For example it might return `"red"` or `null`. "red" is a
+might return either the data you expect, or a `null` value. For example, it might return `"red"` or `null`. "red" is a
 string but null is not, what happens if you pass this to a function that expects a string? This means you must either
 manually check the thing returned was null, or don't check, and risk your program breaking at some other point.
 Obviously many people think this ambiguity is bad, including Tony Hoare, arguably the "inventor" of this  behavior, who
 has called it his "billion-dollar mistake".
 
 Rust does not allow you to use types like this interchangeably, i.e. data can not be a string or null as these types are
-not compatible. In Rust we use a kind of container type to get around this called `Option`. Importantly, when a function
-returns an `Option` type you, the programmer, must check to see if it contains something, and then extract the thing if
-its there. There are a number of ways to do this and `.expect` is one of the worst ways to do this (we'll talk about
-better ways in the future), as it will attempt to extract the data if its there, or stop the program 
+not compatible. In Rust, we use a kind of container type to get around this called `Option`. Importantly, when a 
+function returns an `Option` type you, the programmer, must check to see if it contains something, and then extract the
+thing if it's there. There are a number of ways to do this and `.expect` is one of the worst ways to do this (we'll talk
+about better ways in the future), as it will attempt to extract the data if its there, or stop the program 
 
-For the time being we're
-going to just say we can't deal with it not being there, we don't want to continue running the program and we want the
-program to stop. We use `.expect("message")` to say, if this is nothing, we are giving up, stop the program and print
-our message (plus a few other useful bits) to the `stderr` (see above).
+For the time being we're going to just say we can't deal with it not being there, we don't want to continue running the
+program, and we want the program to stop. We use `.expect("message")` to say, if this is nothing, we are giving up,
+stop the program and print our message (plus a few other useful bits) to the `stderr` (see above). You can see why this
+behaviour is typically undesirable but that we can allow it for this example, at least until we learn how to deal with
+`Option` properly.
 
-This still isn't very idiomatic, ideally we'd convert the bad behavior into a proper error and handle it more sensibly
-but for now its passable. Maybe... we'll fix this later. :)
-
-Speaking of proper errors:
+The second expect is a bit different:
 
 ```rust,ignore
 .expect("Could not get input from stdin");
 ```
 
-If the Option we got from `.next()` contains something instead of nothing, it _still_ doesn't actually the users input.
-It turns out that reading data from `stdin` is itself fallible.
+If the Option we got from `.next()` contains something instead of nothing, it _still_ doesn't necessarily mean we read
+the users input correctly, reading data from `stdin` is itself fallible.
 
 Fallibility in programming is another thing we've traditionally handled very badly. A common way to deal with this in
-other languages is to stop executing and "throw" an error. The big problem with this is function you are calling does
-not explicitly tell you that its fallible (may fail). Worse, it may be that the person who wrote that function didn't
-even know because the fallibility is deeply nested.
+other languages is to stop executing and "throw" an error. The problem with throwing errors is that it breaks the
+flow of execution, the next thing to get executed is not obvious, it's going to be wherever the error is "caught"... if
+it's "caught". Sometimes you may not even realise that some code you've written could throw an error because you've
+called someone else's code, and they didn't make it obvious that their code could fail.
 
 Rust does away with this with another type called `Result`. If your function can fail, it must return a Result type.
 Like with `Option`, `Result` is its own type that contains either the data we wanted, or an error.
 
-Again, the idiomatic way to handle this depends on what you're trying to do, is the error recoverable, and how do we
+Again, the idiomatic way to handle this depends on what you're trying to do; is the error recoverable, and how do we
 want to report the error back to the user. Using `expect` will, again, cause the program to immediately stop with the
-error message and other bits sent to `stderr`.
+error message and other bits sent to `stderr`, and again, you can see why this is typically extremely undesirable.
 
-But anyway, we now have a working program, there is an actual number, the user guesses a number, we print both to the
+But anyway, we now have a working program, there is an actual color, the user guesses a color, and we print both to the
 screen.
 
-Going Further
--------------
+Memory
+------
 
-The input data we get from the user is a string, not a number so, if I enter a string, it just prints that as my guess.
+You might have spotted that `actual` and `input` have different types (don't worry if you didn't, when you added all the
+code associated with getting the input, it added a lot of types, so you could easily miss it). 
 
-```text
-Welcome to the guessing game!
-I have chosen a number between 1 and 100, can you guess it?
-Enter a number between 1 and 100
-obvious nonsense
-Your guess was obvious nonsense
-The number I chose was 53
+Importantly though, `actual` is a `&str`, which is a reference to a string slice. However, `input` is a `String`.
+
+What's the difference?
+
+To understand this, we have to talk a little bit about how our program runs.
+
+In Rust (and many languages in fact), programs are made up of functions; small, independent bits of code. In our
+program we only have one function for now, which is `main`, but this still applies. When we run our program, the
+operating system assigns some memory for the program to run in, called "the stack". 
+
+> Aside: Some people like to think about the stack going from top to bottom because the memory address go down like
+> lines on a page (or lines of code), but most people talk about it going from bottom to top because we talk about
+> putting things on the stack which is easier to visualise. It's an abstraction, so it doesn't really matter. I'm going
+> to explain it from bottom to top as I think this makes visualising the manipulation of the stack easier.
+
+Each time we run a function we create a new block of memory on the stack that's the exact size of everything that
+function needs to remember. So, for example, if our function has three numbers in it, then our new block on the stack
+will be exactly the size of required to store those three numbers.
+
+But... how long is a ~piece of~ string?
+
+Our three colors, "red", "blue" and "green" are 3 characters, 4 characters and 5 characters respectively. How much
+memory should we assign on the stack? What about the users input? Is that 3 characters, 4 characters or the complete
+works of Shakespeare? How much memory each function will require is decided at build time, and we don't know what the
+user is going to write until later.
+
+Anything that lives inside a variable goes on the stack, and anything on the stack must be of known size when the
+program is compiled. In Rust, we have a specific name for this "Sized". Things like numbers, characters, booleans
+and even tuples are Sized, but a string of characters is not, it is "Unsized".
+
+So where does our data live if not inside the variables?
+
+Returning to the top, you'll remember that our `actual` variable has the type `&str` which is a reference (`&`) to a
+string slice `str`. A reference is something that points to where some actual data is, this is very handy when you want
+to tell something about some data without having to give it the specific data. The data, `"blue"`, is a string
+literal, which is written to the executable file itself as a raw string. A string slice can be any part of a string
+stored somewhere else, so it can be characters 0..3 (b, l, u, e) of our string literal that's stored in the executable.
+
+Our `input`, however, is very different, we don't know what's going to be in here at all at compile time. In order to
+store the data that the user gives us, we still need to put it in memory somewhere, but it can't live on the stack.
+
+Instead, we use another kind of memory called "the Heap". At any point while the program is running, we can ask the
+operating system to allow us to access some amount of memory. We still need to know how much memory we need, but now we
+only need to know how much memory at runtime. This memory comes from the Heap. In the heap, we can store "Unsized" data
+and, then we reference it on the heap. `String` does not contain the data, but does know where the data is.
+
+Some other important differences between the Stack and the Heap. The Stack is more limited in size, you should try to
+avoid storing large amounts of data here (even if the size is known). Creating memory on the Heap takes longer than
+creating it on the Stack, this is because you have to communicate your requirements to the operating system which and
+wait for it to get back to you with that allocation. This doesn't take too long, but one thing to watch out for is
+repeatedly increasing the amount you need. If you create a string of a certain size, then ask for more memory (eg, by
+appending more data to it), then in the background Rust will ask the operating system for a new, larger block of memory,
+then it has to copy the old data to it, before adding anything else on to the end.
+
+This is all great, but why is one of them `&str` and one of them `String` if both of them are just references to data
+stored elsewhere? This actually comes down to "ownership". We'll go into ownership in more detail later in a later
+chapter but at a very high level a reference to a string slice does not own the string data. Ownership allows full
+control over the data, and most importantly, it tells the program when to clean up the data. When an `&str` is no longer
+needed, the reference is cleaned up, but the data still exists. When a `String` is no longer needed, not only is the
+reference cleaned up, but memory is returned to the operating systems control, freeing it up for something else to use.
+
+It's important to note though that `&str` and `String` are different types. The data they reference is formatted the
+same way in memory, but they are not interchangeable. Later, when we discuss functions, you'll see that if a function
+requires a `String` you can not pass it a `&str` and vice versa. You can, however, trivially go from one to another.
+
+```rust
+#fn main() {
+let name = "Daniel";                   // This is a &str pointing at a sequence of bytes in the executable
+let name_on_heap = String::from(name); // This requests memory from the operating system then copies "Daniel" into it
+let name_ref = name_on_heap.as_str();  // This is a &str pointing to a sequence of bytes on the heap
+#}
 ```
 
-Because `actual` is an "i32" and `input` is a "String", we can't simply compare them, we need to convert one type into
-the other. We can do this with a method on strings called `.parse()`. As you can probably guess `parse` is fallible and
-if we give it `"obvious nonsense"` it will error. We can deal with that with another `expect`.
+That said, they can be compared to each other (this actually goes for any data type in Rust so long as someone has told
+Rust how to do the comparison, which for `&str` and `String`, someone has).
 
-There's something else we need to do though, there are lots of things we could parse our string into, so we need to tell
-Rust what we want. There's a couple of ways to do this, but the most idiomatic way, and what we'll do here, is just tell
-Rust what the type of the variable is going to be, then Rust is smart enough to `parse` our String into that data.
+Let's return to our program one last time. Below I've written out the full program and added an `if`/`else` statement.
 
-Eg:
-
-```rust,ignore
-let guess: i32 = input.parse().expect("input was not a number");
-```
-
-That's pretty clean, right?
-
-Now that the types are the same, we can do different things depending on whether the the numbers are a match. We can
-do this with an `if` statement. You use an `if` by giving it something that will evaluate to either true or false. For
-example `guess == actual` will be true if guess is exactly equal to actual, otherwise it will be false. We can follow
-the `if` part immediately with an `else` that says what to do if the evaluation came to false.
-
-Below is the full function using this if/else:
+`if`/`else` is a form of control flow. We put an expression inside the "if" that evaluates to either true or false, in 
+this  case we're asking if `input` is equal to `actual`. If it is, then the execution continues inside the if block
+(the bit between the curly brackets), if it's not true, then instead execution continues inside the else block.
 
 ```rust,noplayground
 fn main() {
-    let actual = 53;
-
+    let actual = "blue";
+    
     println!("Welcome to the guessing game!");
-    println!("I have chosen a number between 1 and 100, can you guess it?");
-
-    println!("Enter a number between 1 and 100");
+    println!("I have chosen a color red, green or blue");
+    
+    println!("Enter your guess: red, green or blue");
     let input = std::io::stdin()
-        .lines()
-        .next()
-        .expect("No input read")
-        .expect("Could not get input from stdin");
-
+            .lines()
+            .next()
+            .expect("No input read")
+            .expect("Could not get input from stdin");
+            
+    println!("Your guess was {input}");
+    println!("The color I chose was {actual}");
+    
     if input == actual {
-        println!("Correct!")
+        println!("you win!");
     } else {
-        println!("That was not correct, try again")
+        println!("you lose!);
     }
 }
 ```
 
-Ok, not bad. This is a bit more game like. I'm not happy about that last expect though. Its quite likely that the user
-will enter something thats not a number, even if its just to "try it out". If you try it in your program, you'll see
-rather a lot of unnecessary output:
+To Review:
+----------
 
-```text
-Welcome to the guessing game!
-I have chosen a number between 1 and 100, can you guess it?
-Enter a number between 1 and 100
-obvious nonsense
-thread 'main' panicked at src\main.rs:44:36:
-input was not a number: ParseIntError { kind: InvalidDigit }
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-```
+Today we learned specifically about the Stack and Heap:
 
+- The Stack is where variables live, data must be of known size at compile time (Sized), but access is very fast.
 
+- The Heap is where we can store things regardless of whether we know their size at compile time (Sized and Unsized).
+  We can store large amounts of data here but creating the data is a tiny bit slower.
+
+- You can reference data with `&` if you don't want ownership of the data, but you do want to access it.
+
+We also learned a bit about `Option` and `Result` which we will go into more in the next chapter, and future chapters
+too.
+
+Finally, we learned that we can control the flow of execution with `if`, however, this isn't the only way we can effect
+the flow, and we'll talk more about this in a couple of chapters.
+
+Next time we're going to look more at data types; what the basic types are, how we create new types, and how we can
+merge types together.
