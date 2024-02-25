@@ -7,7 +7,7 @@
     - [Environment](getting-started/environment.md)
     - [Hello World](getting-started/hello-world.md)
 - [Language Basics](language-basics/README.md)
-    - [Guessing Game (WIP)](language-basics/guessing-game.md)
+    - [Memory (WIP)](language-basics/memory)
     - [Primitives]()
     - [Functions]()
     - [Documentation]()

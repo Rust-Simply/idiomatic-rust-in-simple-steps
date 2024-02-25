@@ -1,16 +1,17 @@
-# Guessing Game
+# Memory
 
-We're going to start in the same place as the official Rust book,
-[with a guessing game](https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html)! However, we're going to
-do things a little bit differently.
+When you create a program, how does it remember things? In the last chapter, we created a variable and put our name
+inside it. Where was our name stored?
 
-We'll start as we did with Hello World, and create a new project with cargo
+We're going to make a simplified version of the 
+[guessing game](https://doc.rust-lang.org/book/ch02-00-guessing-game-tutorial.html) from the official Rust book to
+explore this. Lets start by making a new project by running this in your terminal
 
 ```shell
 $ cargo new guessing-game
 ```
 
-Opening `src/main.rs` we#ll see the same code as before:
+Opening `src/main.rs` we'll see the same code as before:
 
 ```rust
 fn main() {
@@ -31,57 +32,56 @@ Lets quickly change our hello world message to something that welcomes us to the
 #}
 ```
 
-And a quick description:
+And a ask the user to do something:
 
 ```rust
 #fn main() {
 #     println!("Welcome to the guessing game!");
-    println!("I have chosen a number between 1 and 100, can you guess it?");
+    println!("I have chosen a color red, green or blue, can you guess which?");
 #}
 ```
 
-Lets pick a number that the user has to guess, something between 1 and 100 would be nice, and I'm going to stick this
-at the top of the function (don't forget you can click the &#x1f441; on the example to see)
+> Because we've used a second `println!` this will appear on a new line. The new line actually comes at the end of the
+> `println!` so if you want to make both sentences appear on the same line, you can change the first one with `print!` 
+> (no "ln"). Try it out and see what else you might need to change!
+
+Lets pick a color that the user has to guess. To begin with we'll just hard code one value, later we'll make it choose
+randomly. I'm going to choose blue, but you can choose whatever you like:
 
 ```rust
 #fn main() {
-    let actual = 53;
+    let actual = "blue";
 #     println!("Welcome to the guessing game!");
-#     println!("I have chosen a number between 1 and 100, can you guess it?");
+#     println!("I have chosen a color red, green or blue, can you guess which?");
 #}
 ```
 
-In Rust, variables have a "type", that is to say, they have certain behaviors and representations depending on the type.
-By default, a number is represented as an `i32`, that is a 32 bit signed integer. This means that it can represent a 
-number between `-2,147,483,648` and `2,147,483,647`.
-
-There are many other ways to represent numbers, from big to small, positive only or allowing negative numbers, allowing
-decimal places or exactly sized to system memory. We'll talk more about how to specify the type and how to decide the
-right number type for you next time, but for now an `i32` is just fine.
-
-Lets output the number (even though we haven't asked for a guess yet)
+Lets output the color. This will end up being the last thing in the program but we can use this to check everything is
+working ok:
 
 ```rust
 #fn main() {
-#     let actual = 53;
+#     let actual = "blue";
 #     println!("Welcome to the guessing game!");
-#     println!("I have chosen a number between 1 and 100, can you guess it?");
-    println!("The number I chose was {actual}");
+#     println!("I have chosen a color red, green or blue?");
+    println!("The color I chose was {actual}");
 #}
 ```
 
-Great... not much of a game is it.
+We can run this now and see that the color to be guessed was entered.
+
+Great... but not much of a game is it.
 
 In order to get some user input, we need to read from the terminal. Before we tell the user what the actual number was
 lets ask them to guess
 
 ```rust,noplayground
 #fn main() {
-#     let actual = 53;
+#     let actual = "blue";
 #     println!("Welcome to the guessing game!");
-#     println!("I have chosen a number between 1 and 100, can you guess it?");
+#     println!("I have chosen a color red, green or blue");
 #    
-    println!("Enter a number between 1 and 100");
+    println!("Enter a number a color red, green or blue");
 #    
 #     println!("The number I chose was {actual}");
 #}
@@ -91,12 +91,13 @@ We're then going to read a line of input from the user. When the program runs in
 type things, regardless of whether you are on Windows, Mac or Linux, this input is passed into the program through a
 stream of data called `stdin` (standard in).
 
-Rust comes with a "standard library" that we can access through `std`. I always say S T D, but you may also here people
-call it "stud". Inside of this is a module (a grouping) called io that deals with input and output. If we weren't using
-the `println!` macro, this is where we'd have to come to write things out to the terminal too, via a stream called 
-`stdout` (standard out). 
+Rust comes with a "standard library" (the name is unrelated to the stream) that we can access as a module called `std`.
+I pronounce this S T D, but you may also here people call it "stud". Modules in Rust are a way of grouping up other bits
+of code such as functions, data types and even other modules. We'll talk about them more in a future lesson. Inside of
+this is another module called `io` that deals with input and output. If we weren't using the `println!` macro, this is
+where we'd have to come to write things out to the terminal too, via a stream called `stdout` (standard out).
 
-> For completions sake I should mention there is one more stream called `stderr` (standard error). This is also an
+> For completion's sake I should mention there is one more stream called `stderr` (standard error). This is also an
 > output stream that we can use to separate "good" output that is relevant to the normal use of the program to really 
 > any other kind of output, whether that be errors or just information not directly relevant to the main output.
 >
@@ -107,32 +108,34 @@ the `println!` macro, this is where we'd have to come to write things out to the
 > On Windows the same can be achieved in cmd using `cargo run 2> nul` (note, only one l in nul), or in powershell with
 > `cargo run 2> $null` (two l's this time and a dollar, no idea why its different)
 > 
-> There are more streams, denoted by numbers, but these are rarely used and are way outside of the scope of this series.
+> There are more streams, denoted by numbers, but these are rarely used and are way outside the scope of this series.
 >
 > `stderr` is really useful for things like logging and we'll talk more about streams in the future.
 
-So, we get stdin using `std::io::stdin()`, this is a function call that returns a temporary handle to the input stream.
+So, we get stdin using `std::io::stdin()`, this is a function call (we'll talk about functions in a couple of chapters), 
+that returns something called a "handle" that we can use for temporary access to the input stream.
 
-The double colons just tell Rust that you're looking for something inside a module (that grouping I mentioned). We'll 
-cover modules in detail later, including how, why and when to make your own, as well as better ways to access them, but
-since we only need to write this line once, this is fine.
+The double colons just tell Rust that you're looking for something inside a module. We'll cover modules in detail later,
+including how, why and when to make your own, as well as better ways to access them, but since we only need to write
+this line once, this is the easiest way to do it.
 
-Off the back of this, we can call `.lines()` which is a method (a special type of function that belongs specifically to
-some other thing, in this case the handle to that data). Below I put this on a new line for legibility, but you don't
-need to do this.
+We could store the result of `stdin()` in a variable, however, we only use this once and then we're done with it, so,
+off the back of the function call, we can call immediately call `.lines()`. This is a method (a special type of function
+that belongs specifically to some other thing, in this case it belongs to the handle for stdin). In the example below
+I've put this on a new line for legibility, but you don't _need_ to do this.
 
-`.lines()` returns an iterator, something we can step through a bit at a time. In this case, if the input was multiple
-lines then the iterator would return one line at a time. We get the next line by calling `.next()` on the iterator.
+`.lines()` returns an iterator, allowing us to iterate (step through) each line one at a time. We get the next line by
+calling `.next()` on the iterator.
 
 If we add this all in our code looks like this
 
 ```rust,noplayground
 #fn main() {
-#     let actual = 53;
+#     let actual = "blue";
 #     println!("Welcome to the guessing game!");
-#     println!("I have chosen a number between 1 and 100, can you guess it?");
+#     println!("I have chosen a color red, green or blue");
 #    
-#     println!("Enter a number between 1 and 100");
+#     println!("Enter a red, green or blue");
     let input = std::io::stdin()
             .lines()
             .next()
@@ -146,8 +149,13 @@ If we add this all in our code looks like this
 
 Wait wait wait, what are those `expect`s about?!
 
-In software, functions can sometimes return something or nothing, and sometimes they could work or not work. These two
-expects handle one case of each.
+`expect()` is, I would say, the second worst way you could handle something going wrong in your program. You absolutely
+should not use this in anything except the most throw away software as it will immediately cause the program to stop
+and throw a lot of information at the user. In the future we'll talk about things going wrong and how to better handle
+them, however, as this program is just for you, I think you'll cope for now. 😊
+
+That doesn't explain what these lines are doing, or why there are two of them though. The reason for this is that there
+are two possible ways `.lines()` might not work.
 
 The first expect then:
 
@@ -155,18 +163,20 @@ The first expect then:
 .expect("No input read")
 ```
 
-When we call `.next()` on any iterator, there either is something next or there isn't. In some languages this
-might return either the data you expect, or a `null` value. This means you must either manually check the thing returned
-was null, or don't check, and risk your program breaking at some other point when it expected that data but got null
-instead. Obviously many people think this ambiguity is bad, including Tony Hoare, arguably the "inventor" of this kind
-of behavior, who has called it his "billion-dollar mistake".
+When we call `.next()` on any iterator, there either is something next or there isn't.  In some languages this
+might return either the data you expect, or a `null` value. For example it might return `"red"` or `null`. "red" is a
+string but null is not, what happens if you pass this to a function that expects a string? This means you must either
+manually check the thing returned was null, or don't check, and risk your program breaking at some other point.
+Obviously many people think this ambiguity is bad, including Tony Hoare, arguably the "inventor" of this  behavior, who
+has called it his "billion-dollar mistake".
 
-Rust does not allow you to use types like this interchangeably, the type can not be something or nothing, it must be
-something that represents the concept of something or nothing, in this case a type called `Option`. Importantly the
-`Option` itself is not the data you were expecting, so you are forced to check whether it contains that data before you
-can use it. 
+Rust does not allow you to use types like this interchangeably, i.e. data can not be a string or null as these types are
+not compatible. In Rust we use a kind of container type to get around this called `Option`. Importantly, when a function
+returns an `Option` type you, the programmer, must check to see if it contains something, and then extract the thing if
+its there. There are a number of ways to do this and `.expect` is one of the worst ways to do this (we'll talk about
+better ways in the future), as it will attempt to extract the data if its there, or stop the program 
 
-The idiomatic way to do this depends on whether your code can recover from the data not being there. In our case we're
+For the time being we're
 going to just say we can't deal with it not being there, we don't want to continue running the program and we want the
 program to stop. We use `.expect("message")` to say, if this is nothing, we are giving up, stop the program and print
 our message (plus a few other useful bits) to the `stderr` (see above).
@@ -249,9 +259,7 @@ fn main() {
         .expect("No input read")
         .expect("Could not get input from stdin");
 
-    let guess: i32 = input.parse().expect("input was not a number");
-
-    if guess == actual {
+    if input == actual {
         println!("Correct!")
     } else {
         println!("That was not correct, try again")
