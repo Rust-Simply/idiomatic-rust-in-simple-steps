@@ -67,11 +67,11 @@ randomly. I'm going to choose blue, but you can choose whatever you like:
 #}
 ```
 
-Before we move on, I want to quickly call out the "type" of the data we've just created.
+Before we move on, I want to call out the "type" of the data we've just created.
 
-We're going to talk about types in the next session, but I want to quickly point some things out. The type of data
-describes a number of things but mainly, how that data is stored in memory and how it can be used. For example, is the
-data a string (like "blue"), or a number, or a boolean that represent true or false.
+We're going to talk about types in the next chapter, but I want to quickly point some things out. The type of data
+describes a number of things but mainly, how that data is represented in memory and how it can be used. For example, is
+the data a string (like "blue"), or a number, or a boolean that represent true or false.
 
 If you're using an editor that shows type information you might see that next to `actual` its written something like 
 `: &str`, eg:
@@ -145,7 +145,9 @@ where we'd have to come to write things out to the terminal too, via a stream ca
 > 
 > There are more streams, denoted by numbers, but these are rarely used and are way outside the scope of this series.
 >
-> `stderr` is really useful for things like logging, and we'll talk more about streams in the future.
+> `stderr` is really useful for things like logging, and we'll talk more about streams in the future, but if you want
+> to quickly write something to this stream you can use `eprintln!` and `eprint!` the same way we use `println!` and
+> `print!`
 
 So, we get stdin using `std::io::stdin()`, this is a function call (we'll talk about functions in a couple of chapters), 
 that returns something called a "handle" that we can use for temporary access to the input stream.
