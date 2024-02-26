@@ -390,3 +390,70 @@ the flow, and we'll talk more about this in a couple of chapters.
 
 Next time we're going to look more at data types; what the basic types are, how we create new types, and how we can
 merge types together.
+
+Bonus
+-----
+
+You don't need to do this but if you want to make your `actual` value random(ish), and turn this into a proper game,
+then you could do it like this:
+
+```rust,noplayground
+#fn main() {
+    let colors = ["red", "green", "blue"];
+    let time = std::time::UNIX_EPOCH
+        .elapsed()
+        .expect("Call the doctor, time went backwards")
+        .as_millis() as usize; // We only need the least significant bits so this is safe
+    let actual = colors[time % colors.len()];
+#    
+#    println!("Welcome to the guessing game!");
+#    println!("I have chosen a color red, green or blue");
+#    
+#    println!("Enter your guess: red, green or blue");
+#    let input = std::io::stdin()
+#            .lines()
+#            .next()
+#            .expect("No input was read")
+#            .expect("There was an error when reading the input");
+#            
+#    println!("Your guess was {input}");
+#    println!("The color I chose was {actual}");
+#    
+#    if input == actual {
+#        println!("you win!");
+#    } else {
+#        println!("you lose!);
+#    }
+#}
+```
+
+First we create an array of string slices for each possible value. Arrays are of known size at build time, for example,
+this one contains three string slice references, therefore its size is 3x whatever the size of a reference is. This
+means it's Sized, therefore does exist on the stack. We'll talk more about dynamic (therefore Unsized) collections in
+the next chapter.
+
+To fake randomness we're going to take the time at the Unix Epoch (the 1st of January 1970) and find the `Duration` of
+time that has elapsed since then. Asking how much time has passed _since_ another point in time is fallible because you
+might be asking about a time in the future, this means we have to deal with a `Result`. This _shouldn't_ ever actually
+return an error, but even when you're absolutely sure, there's no harm leaving a little message in the `.expect()` for
+anyone else who happens to be looking at the code... it's even ok to get a little silly about it, so long as you're
+being useful.
+
+`.as_millis` turns the duration into a 128bit integer (`u128`), but collections (like our array) are index with a
+`usize`. The exact length in bits of a `usize` depends on the target system you're building for (usually 64bits but not
+always). Because 128bits is longer than 64bits we need to shrink it down. `as usize` will truncate the most significant
+bits. This _can_ mean your number changes, but we don't actually care for our purposes, we just want a nice big number
+that is different each time we run the program. I left myself a comment (using `//` you can write things that aren't
+code), so that if I wonder why I did this in the future, I'll know.
+
+Finally, we pick a random color from our colors array by dividing the time in milliseconds since the 1st of January 1970
+by the length of the array (3) and getting the remainder. You can do all of this with the remainder `%` operator. This
+gives us a number between 0 and 2 inclusive, so we use that number as the index in our array using the square brackets.
+
+This leaves us with one of the string slice references from the array, which one will depend on the exact time when you
+run the game.
+
+<div class="warning">
+**Important:** In some languages `%` is the [modulo operator](https://en.wikipedia.org/wiki/Modulo), in Rust it is the
+remainder operator.
+</div>
