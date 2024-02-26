@@ -154,7 +154,7 @@ The double colons just tell Rust that you're looking for something inside a modu
 including how, why and when to make your own, as well as better ways to access them, but since we only need to write
 this line once, this is the easiest way to do it.
 
-We could store the result of `stdin()` in a variable, however, we only use this once and then we're done with it, so,
+We could store the result of `stdin()` in a variable, however, we only use this once, and then we're done with it, so,
 off the back of the function call, we can call immediately call `.lines()`. This is a method (a special type of function
 that belongs specifically to some other thing, in this case it belongs to the handle for stdin). In the example below
 I've put this on a new line for legibility, but you don't _need_ to do this.
@@ -259,7 +259,7 @@ To understand this, we have to talk a little bit about how our program runs.
 
 In Rust (and many languages in fact), programs are made up of functions; small, independent bits of code. In our
 program we only have one function for now, which is `main`, but this still applies. When we run our program, the
-operating system assigns some memory for the program to run in, called "the stack". 
+operating system assigns some memory for the program to run in, called "the stack".
 
 > Aside: Some people like to think about the stack going from top to bottom because the memory address go down like
 > lines on a page (or lines of code), but most people talk about it going from bottom to top because we talk about
@@ -270,7 +270,16 @@ Each time we run a function we create a new block of memory on the stack that's 
 function needs to remember. So, for example, if our function has three numbers in it, then our new block on the stack
 will be exactly the size of required to store those three numbers.
 
-But... how long is a ~piece of~ string?
+![How the Stack works](memory/stack.gif)
+
+In the example above we're representing the memory of the stack. When the program is initialized the operating system
+assigns some memory for the stack, then, all the memory required to store all the variables in `main` (which it in this
+example is 4 addresses) is blocked off. Then, as `main` runs, it calls another function, `f1` which requires two
+more addresses. `f1` then calls another function which requires 3 addresses worth of memory, `f2`. Once `f2` has
+finished, it is removed from the stack, then `f1` finishes, and it too is removed from the stack. Finally `main` comes
+to an end and our program closes and all memory is freed.
+
+You can see that the amount of memory a function needs is very important, but... how long is a ~piece of~ string?
 
 Our three colors, "red", "blue" and "green" are 3 characters, 4 characters and 5 characters respectively. How much
 memory should we assign on the stack? What about the users input? Is that 3 characters, 4 characters or the complete
@@ -285,9 +294,10 @@ So where does our data live if not inside the variables?
 
 Returning to the top, you'll remember that our `actual` variable has the type `&str` which is a reference (`&`) to a
 string slice `str`. A reference is something that points to where some actual data is, this is very handy when you want
-to tell something about some data without having to give it the specific data. The data, `"blue"`, is a string
-literal, which is written to the executable file itself as a raw string. A string slice can be any part of a string
-stored somewhere else, so it can be characters 0..3 (b, l, u, e) of our string literal that's stored in the executable.
+to tell something about some data without having to give it the specific data. When you manually write a string between
+double quotes `"like this"`, it's called a "string literal". This applies to our variable as well as every time we've
+used in a `println!`. A "string slice" can be any part of a string stored somewhere else, so it can be characters 0 to 3
+(b, l, u, e) of our string literal that's stored in the executable.
 
 Our `input`, however, is very different, we don't know what's going to be in here at all at compile time. In order to
 store the data that the user gives us, we still need to put it in memory somewhere, but it can't live on the stack.
@@ -295,7 +305,9 @@ store the data that the user gives us, we still need to put it in memory somewhe
 Instead, we use another kind of memory called "the Heap". At any point while the program is running, we can ask the
 operating system to allow us to access some amount of memory. We still need to know how much memory we need, but now we
 only need to know how much memory at runtime. This memory comes from the Heap. In the heap, we can store "Unsized" data
-and, then we reference it on the heap. `String` does not contain the data, but does know where the data is.
+(as well as Sized which can be useful under certain circumstances) and, then because everything about the location of
+that data is Sized, we can store it in a variable on the stack. `String` does not contain the data, but does know where
+the data is.
 
 Some other important differences between the Stack and the Heap. The Stack is more limited in size, you should try to
 avoid storing large amounts of data here (even if the size is known). Creating memory on the Heap takes longer than

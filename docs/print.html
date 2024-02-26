@@ -591,7 +591,7 @@ that returns something called a “handle” that we can use for temporary acces
 <p>The double colons just tell Rust that you’re looking for something inside a module. We’ll cover modules in detail later,
 including how, why and when to make your own, as well as better ways to access them, but since we only need to write
 this line once, this is the easiest way to do it.</p>
-<p>We could store the result of <code>stdin()</code> in a variable, however, we only use this once and then we’re done with it, so,
+<p>We could store the result of <code>stdin()</code> in a variable, however, we only use this once, and then we’re done with it, so,
 off the back of the function call, we can call immediately call <code>.lines()</code>. This is a method (a special type of function
 that belongs specifically to some other thing, in this case it belongs to the handle for stdin). In the example below
 I’ve put this on a new line for legibility, but you don’t <em>need</em> to do this.</p>
@@ -665,7 +665,7 @@ code associated with getting the input, it added a lot of types, so you could ea
 <p>To understand this, we have to talk a little bit about how our program runs.</p>
 <p>In Rust (and many languages in fact), programs are made up of functions; small, independent bits of code. In our
 program we only have one function for now, which is <code>main</code>, but this still applies. When we run our program, the
-operating system assigns some memory for the program to run in, called “the stack”. </p>
+operating system assigns some memory for the program to run in, called “the stack”.</p>
 <blockquote>
 <p>Aside: Some people like to think about the stack going from top to bottom because the memory address go down like
 lines on a page (or lines of code), but most people talk about it going from bottom to top because we talk about
@@ -675,7 +675,14 @@ to explain it from bottom to top as I think this makes visualising the manipulat
 <p>Each time we run a function we create a new block of memory on the stack that’s the exact size of everything that
 function needs to remember. So, for example, if our function has three numbers in it, then our new block on the stack
 will be exactly the size of required to store those three numbers.</p>
-<p>But… how long is a <del>piece of</del> string?</p>
+<p><img src="language-basics/memory/stack.gif" alt="How the Stack works" /></p>
+<p>In the example above we’re representing the memory of the stack. When the program is initialized the operating system
+assigns some memory for the stack, then, all the memory required to store all the variables in <code>main</code> (which it in this
+example is 4 addresses) is blocked off. Then, as <code>main</code> runs, it calls another function, <code>f1</code> which requires two
+more addresses. <code>f1</code> then calls another function which requires 3 addresses worth of memory, <code>f2</code>. Once <code>f2</code> has
+finished, it is removed from the stack, then <code>f1</code> finishes, and it too is removed from the stack. Finally <code>main</code> comes
+to an end and our program closes and all memory is freed.</p>
+<p>You can see that the amount of memory a function needs is very important, but… how long is a <del>piece of</del> string?</p>
 <p>Our three colors, “red”, “blue” and “green” are 3 characters, 4 characters and 5 characters respectively. How much
 memory should we assign on the stack? What about the users input? Is that 3 characters, 4 characters or the complete
 works of Shakespeare? How much memory each function will require is decided at build time, and we don’t know what the
@@ -686,15 +693,18 @@ and even tuples are Sized, but a string of characters is not, it is “Unsized�
 <p>So where does our data live if not inside the variables?</p>
 <p>Returning to the top, you’ll remember that our <code>actual</code> variable has the type <code>&amp;str</code> which is a reference (<code>&amp;</code>) to a
 string slice <code>str</code>. A reference is something that points to where some actual data is, this is very handy when you want
-to tell something about some data without having to give it the specific data. The data, <code>&quot;blue&quot;</code>, is a string
-literal, which is written to the executable file itself as a raw string. A string slice can be any part of a string
-stored somewhere else, so it can be characters 0..3 (b, l, u, e) of our string literal that’s stored in the executable.</p>
+to tell something about some data without having to give it the specific data. When you manually write a string between
+double quotes <code>&quot;like this&quot;</code>, it’s called a “string literal”. This applies to our variable as well as every time we’ve
+used in a <code>println!</code>. A “string slice” can be any part of a string stored somewhere else, so it can be characters 0 to 3
+(b, l, u, e) of our string literal that’s stored in the executable.</p>
 <p>Our <code>input</code>, however, is very different, we don’t know what’s going to be in here at all at compile time. In order to
 store the data that the user gives us, we still need to put it in memory somewhere, but it can’t live on the stack.</p>
 <p>Instead, we use another kind of memory called “the Heap”. At any point while the program is running, we can ask the
 operating system to allow us to access some amount of memory. We still need to know how much memory we need, but now we
 only need to know how much memory at runtime. This memory comes from the Heap. In the heap, we can store “Unsized” data
-and, then we reference it on the heap. <code>String</code> does not contain the data, but does know where the data is.</p>
+(as well as Sized which can be useful under certain circumstances) and, then because everything about the location of
+that data is Sized, we can store it in a variable on the stack. <code>String</code> does not contain the data, but does know where
+the data is.</p>
 <p>Some other important differences between the Stack and the Heap. The Stack is more limited in size, you should try to
 avoid storing large amounts of data here (even if the size is known). Creating memory on the Heap takes longer than
 creating it on the Stack, this is because you have to communicate your requirements to the operating system which and
