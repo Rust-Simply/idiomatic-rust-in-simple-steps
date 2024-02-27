@@ -438,8 +438,7 @@ To fake randomness we're going to take the time at the Unix Epoch (the 1st of Ja
 time that has elapsed since then. Asking how much time has passed _since_ another point in time is fallible because you
 might be asking about a time in the future, this means we have to deal with a `Result`. This _shouldn't_ ever actually
 return an error, but even when you're absolutely sure, there's no harm leaving a little message in the `.expect()` for
-anyone else who happens to be looking at the code... it's even ok to get a little silly about it, so long as you're
-being useful.
+anyone else who happens to be looking at the code.
 
 `.as_millis` turns the duration into a 128bit integer (`u128`), but collections (like our array) are index with a
 `usize`. The exact length in bits of a `usize` depends on the target system you're building for (usually 64bits but not
@@ -455,7 +454,5 @@ gives us a number between 0 and 2 inclusive, so we use that number as the index 
 This leaves us with one of the string slice references from the array, which one will depend on the exact time when you
 run the game.
 
-<div class="warning">
-**Important:** In some languages `%` is the [modulo operator](https://en.wikipedia.org/wiki/Modulo), in Rust it is the
-remainder operator.
-</div>
+> ⚠️ **Important:** In some languages `%` is the [modulo operator](https://en.wikipedia.org/wiki/Modulo), in Rust it is the
+> remainder operator.

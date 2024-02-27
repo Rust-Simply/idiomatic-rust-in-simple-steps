@@ -814,8 +814,7 @@ the next chapter.</p>
 time that has elapsed since then. Asking how much time has passed <em>since</em> another point in time is fallible because you
 might be asking about a time in the future, this means we have to deal with a <code>Result</code>. This <em>shouldn’t</em> ever actually
 return an error, but even when you’re absolutely sure, there’s no harm leaving a little message in the <code>.expect()</code> for
-anyone else who happens to be looking at the code… it’s even ok to get a little silly about it, so long as you’re
-being useful.</p>
+anyone else who happens to be looking at the code.</p>
 <p><code>.as_millis</code> turns the duration into a 128bit integer (<code>u128</code>), but collections (like our array) are index with a
 <code>usize</code>. The exact length in bits of a <code>usize</code> depends on the target system you’re building for (usually 64bits but not
 always). Because 128bits is longer than 64bits we need to shrink it down. <code>as usize</code> will truncate the most significant
@@ -827,10 +826,11 @@ by the length of the array (3) and getting the remainder. You can do all of this
 gives us a number between 0 and 2 inclusive, so we use that number as the index in our array using the square brackets.</p>
 <p>This leaves us with one of the string slice references from the array, which one will depend on the exact time when you
 run the game.</p>
-<div class="warning">
-**Important:** In some languages `%` is the [modulo operator](https://en.wikipedia.org/wiki/Modulo), in Rust it is the
-remainder operator.
-</div>
+<blockquote>
+<p>⚠️ <strong>Important:</strong> In some languages <code>%</code> is the <a href="https://en.wikipedia.org/wiki/Modulo" title="" target="_blank">modulo operator</a>, in Rust it is the
+remainder operator.</p>
+</blockquote>
+
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
