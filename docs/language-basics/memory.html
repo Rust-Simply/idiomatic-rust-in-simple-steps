@@ -272,7 +272,6 @@ messages about your program being compiled because we redirected stderr (stream 
 Cargo sensibly decided that <em>it’s</em> output is not relevant to your programs normal output</p>
 <p>On Windows the same can be achieved in cmd using <code>cargo run 2&gt; nul</code> (note, only one l in nul), or in powershell with
 <code>cargo run 2&gt; $null</code> (two l’s this time and a dollar, no idea why it’s different)</p>
-<p>There are more streams, denoted by numbers, but these are rarely used and are way outside the scope of this series.</p>
 <p><code>stderr</code> is really useful for things like logging, and we’ll talk more about streams in the future, but if you want
 to quickly write something to this stream you can use <code>eprintln!</code> and <code>eprint!</code> the same way we use <code>println!</code> and
 <code>print!</code></p>

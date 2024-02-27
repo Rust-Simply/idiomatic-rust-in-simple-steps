@@ -142,8 +142,6 @@ where we'd have to come to write things out to the terminal too, via a stream ca
 >
 > On Windows the same can be achieved in cmd using `cargo run 2> nul` (note, only one l in nul), or in powershell with
 > `cargo run 2> $null` (two l's this time and a dollar, no idea why it's different)
-> 
-> There are more streams, denoted by numbers, but these are rarely used and are way outside the scope of this series.
 >
 > `stderr` is really useful for things like logging, and we'll talk more about streams in the future, but if you want
 > to quickly write something to this stream you can use `eprintln!` and `eprint!` the same way we use `println!` and
