@@ -324,7 +324,8 @@ has called it his “billion-dollar mistake”.</p>
 not compatible. In Rust, we use a kind of container type to get around this called <code>Option</code>. Importantly, when a 
 function returns an <code>Option</code> type you, the programmer, must check to see if it contains something, and then extract the
 thing if it’s there. There are a number of ways to do this and <code>.expect</code> is one of the worst ways to do this (we’ll talk
-about better ways in the future), as it will attempt to extract the data if its there, or stop the program </p>
+about better ways in the future), as it will attempt to extract the data if its there, or stop the program abruptly with
+the provided error message if it’s not.</p>
 <p>For the time being we’re going to just say we can’t deal with it not being there, we don’t want to continue running the
 program, and we want the program to stop. We use <code>.expect(&quot;message&quot;)</code> to say, if this is nothing, we are giving up,
 stop the program and print our message (plus a few other useful bits) to the <code>stderr</code> (see above). You can see why this
@@ -334,11 +335,12 @@ behaviour is typically undesirable but that we can allow it for this example, at
 <pre><code class="language-rust ignore">.expect(&quot;There was an error when reading the input&quot;);</code></pre>
 <p>If the Option we got from <code>.next()</code> contains something instead of nothing, it <em>still</em> doesn’t necessarily mean we read
 the users input correctly, reading data from <code>stdin</code> is itself fallible.</p>
-<p>Fallibility in programming is another thing we’ve traditionally handled very badly. A common way to deal with this in
-other languages is to stop executing and “throw” an error. The problem with throwing errors is that it breaks the
-flow of execution, the next thing to get executed is not obvious, it’s going to be wherever the error is “caught”… if
-it’s “caught”. Sometimes you may not even realise that some code you’ve written could throw an error because you’ve
-called someone else’s code, and they didn’t make it obvious that their code could fail.</p>
+<p>Fallibility, the nature that something may go wrong, in programming is another thing we’ve traditionally handled very
+badly. A common way to deal with this in other languages is to stop executing and “throw” an error. The problem with
+throwing errors is that it breaks the flow of execution, the next thing to get executed is not obvious, it’s going to
+be wherever the error is “caught”… if it’s “caught”. Sometimes you may not even realise that some code you’ve written
+could throw an error because you’ve called someone else’s code, and they didn’t make it obvious that their code could
+fail.</p>
 <p>Rust does away with this with another type called <code>Result</code>. If your function can fail, it must return a Result type.
 Like with <code>Option</code>, <code>Result</code> is its own type that contains either the data we wanted, or an error.</p>
 <p>Again, the idiomatic way to handle this depends on what you’re trying to do; is the error recoverable (could the program
@@ -352,6 +354,7 @@ screen.</p>
 code associated with getting the input, it added a lot of types, so you could easily miss it). </p>
 <p>Importantly though, <code>actual</code> is a <code>&amp;str</code>, which is a reference to a string slice. However, <code>input</code> is a <code>String</code>.</p>
 <p>What’s the difference?</p>
+<h3 id="the-stack"><a class="header" href="#the-stack">The Stack</a></h3>
 <p>To understand this, we have to talk a little bit about how our program runs.</p>
 <p>In Rust (and many languages in fact), programs are made up of functions; small, independent bits of code. In our
 program we only have one function for now, which is <code>main</code>, but this still applies. When we run our program, the
@@ -387,6 +390,7 @@ to tell something about some data without having to give it the specific data. W
 double quotes <code>&quot;like this&quot;</code>, it’s called a “string literal”. This applies to our variable as well as every time we’ve
 used in a <code>println!</code>. A “string slice” can be any part of a string stored somewhere else, so it can be characters 0 to 3
 (b, l, u, e) of our string literal that’s stored in the executable.</p>
+<h3 id="the-heap"><a class="header" href="#the-heap">The Heap</a></h3>
 <p>Our <code>input</code>, however, is very different, we don’t know what’s going to be in here at all at compile time. In order to
 store the data that the user gives us, we still need to put it in memory somewhere, but it can’t live on the stack.</p>
 <p>Instead, we use another kind of memory called “the Heap”. At any point while the program is running, we can ask the
@@ -397,7 +401,7 @@ that data is Sized, we can store it in a variable on the stack. <code>String</co
 the data is.</p>
 <p>Some other important differences between the Stack and the Heap. The Stack is more limited in size, you should try to
 avoid storing large amounts of data here (even if the size is known). Creating memory on the Heap takes longer than
-creating it on the Stack, this is because you have to communicate your requirements to the operating system which and
+creating it on the Stack, this is because you have to communicate your requirements to the operating system and
 wait for it to get back to you with that allocation. This doesn’t take too long, but one thing to watch out for is
 repeatedly increasing the amount you need. If you create a string of a certain size, then ask for more memory (eg, by
 appending more data to it), then in the background Rust will ask the operating system for a new, larger block of memory,
@@ -465,7 +469,7 @@ the flow, and we’ll talk more about this in a couple of chapters.</p>
 <p>Next time we’re going to look more at data types; what the basic types are, how we create new types, and how we can
 merge types together.</p>
 <h2 id="bonus"><a class="header" href="#bonus">Bonus</a></h2>
-<p>You don’t need to do this but if you want to make your <code>actual</code> value random(ish), and turn this into a proper game,
+<p>You don’t need to do this but if you want to make your <code>actual</code> value random(ish) and turn this into a proper game,
 then you could do it like this:</p>
 <pre><code class="language-rust noplayground"><span class="boring">fn main() {
 </span>    let colors = [&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;];

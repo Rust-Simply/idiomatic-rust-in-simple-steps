@@ -211,7 +211,8 @@ Rust does not allow you to use types like this interchangeably, i.e. data can no
 not compatible. In Rust, we use a kind of container type to get around this called `Option`. Importantly, when a 
 function returns an `Option` type you, the programmer, must check to see if it contains something, and then extract the
 thing if it's there. There are a number of ways to do this and `.expect` is one of the worst ways to do this (we'll talk
-about better ways in the future), as it will attempt to extract the data if its there, or stop the program 
+about better ways in the future), as it will attempt to extract the data if its there, or stop the program abruptly with
+the provided error message if it's not.
 
 For the time being we're going to just say we can't deal with it not being there, we don't want to continue running the
 program, and we want the program to stop. We use `.expect("message")` to say, if this is nothing, we are giving up,
@@ -228,11 +229,12 @@ The second expect is a bit different:
 If the Option we got from `.next()` contains something instead of nothing, it _still_ doesn't necessarily mean we read
 the users input correctly, reading data from `stdin` is itself fallible.
 
-Fallibility in programming is another thing we've traditionally handled very badly. A common way to deal with this in
-other languages is to stop executing and "throw" an error. The problem with throwing errors is that it breaks the
-flow of execution, the next thing to get executed is not obvious, it's going to be wherever the error is "caught"... if
-it's "caught". Sometimes you may not even realise that some code you've written could throw an error because you've
-called someone else's code, and they didn't make it obvious that their code could fail.
+Fallibility, the nature that something may go wrong, in programming is another thing we've traditionally handled very
+badly. A common way to deal with this in other languages is to stop executing and "throw" an error. The problem with
+throwing errors is that it breaks the flow of execution, the next thing to get executed is not obvious, it's going to
+be wherever the error is "caught"... if it's "caught". Sometimes you may not even realise that some code you've written
+could throw an error because you've called someone else's code, and they didn't make it obvious that their code could
+fail.
 
 Rust does away with this with another type called `Result`. If your function can fail, it must return a Result type.
 Like with `Option`, `Result` is its own type that contains either the data we wanted, or an error.
@@ -254,6 +256,8 @@ code associated with getting the input, it added a lot of types, so you could ea
 Importantly though, `actual` is a `&str`, which is a reference to a string slice. However, `input` is a `String`.
 
 What's the difference?
+
+### The Stack
 
 To understand this, we have to talk a little bit about how our program runs.
 
@@ -299,6 +303,8 @@ double quotes `"like this"`, it's called a "string literal". This applies to our
 used in a `println!`. A "string slice" can be any part of a string stored somewhere else, so it can be characters 0 to 3
 (b, l, u, e) of our string literal that's stored in the executable.
 
+### The Heap
+
 Our `input`, however, is very different, we don't know what's going to be in here at all at compile time. In order to
 store the data that the user gives us, we still need to put it in memory somewhere, but it can't live on the stack.
 
@@ -311,7 +317,7 @@ the data is.
 
 Some other important differences between the Stack and the Heap. The Stack is more limited in size, you should try to
 avoid storing large amounts of data here (even if the size is known). Creating memory on the Heap takes longer than
-creating it on the Stack, this is because you have to communicate your requirements to the operating system which and
+creating it on the Stack, this is because you have to communicate your requirements to the operating system and
 wait for it to get back to you with that allocation. This doesn't take too long, but one thing to watch out for is
 repeatedly increasing the amount you need. If you create a string of a certain size, then ask for more memory (eg, by
 appending more data to it), then in the background Rust will ask the operating system for a new, larger block of memory,
@@ -394,7 +400,7 @@ merge types together.
 Bonus
 -----
 
-You don't need to do this but if you want to make your `actual` value random(ish), and turn this into a proper game,
+You don't need to do this but if you want to make your `actual` value random(ish) and turn this into a proper game,
 then you could do it like this:
 
 ```rust,noplayground
