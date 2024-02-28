@@ -371,7 +371,7 @@ fn main() {
     if input == actual {
         println!("you win!");
     } else {
-        println!("you lose!);
+        println!("you lose!");
     }
 }
 ```
@@ -428,7 +428,7 @@ then you could do it like this:
 #    if input == actual {
 #        println!("you win!");
 #    } else {
-#        println!("you lose!);
+#        println!("you lose!");
 #    }
 #}
 ```
