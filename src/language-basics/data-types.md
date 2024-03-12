@@ -265,6 +265,29 @@ println!("After conversion: {time_u32}");
 
 ### Floating Points
 
+We've covered twelve different ways of storing whole numbers in Rust, but there are only two ways of storing numbers
+with decimal points: `f32` and `f64`.
+
+Floating point numbers are things like `0.123` or `1.23` or even `123.0`. They're called floating point because the 
+decimal point can move around (as opposed to fixed point, where there is always the same number of fractional digits).
+
+You're immediate thought here might be that you should use `f32` on 32bit systems, and `f64` on 64bit systems, but 
+actually this isn't the way to think about these numbers.
+
+You see, floating points are not perfectly accurate. The bits of a floating point number are broken into parts:
+- a sign (+/-)
+- an exponent
+- a fraction
+
+```rust
+#fn main() {
+let float_32 = 520.02_f32 - 520.04_f32;
+let float_64 = 520.02_f64 - 520.04_f64;
+println!("f32, {float_32}");
+println!("f64, {float_64}");
+#}
+```
+
 ### Characters
 
 ### Booleans
