@@ -107,7 +107,7 @@ We can run this now and see that the color to be guessed was entered.
 
 Great... but not much of a game is it.
 
-In order to get some user input, we need to read from the terminal. Before we tell the user what the actual number was
+In order to get some user input, we need to read from the terminal. Before we tell the user what the actual color was
 lets ask them to guess
 
 ```rust,noplayground
