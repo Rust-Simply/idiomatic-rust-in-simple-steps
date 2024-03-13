@@ -1,8 +1,8 @@
 Data Types
 ==========
 
-Scalar Types
-------------
+Primitive Types
+---------------
 
 Scalar types are effectively the building blocks of all other types.
 
@@ -23,6 +23,7 @@ handle on?
 | floating points   |       |        | f32    | f64    |         |              |
 | characters        |       |        |        | char   |         |              |
 | booleans          | bool  |        |        |        |         |              |
+| string slices     |       |        |        |        |         | &str         |
 
 This is how many scalar types there are in Rust! And yes, as scary as it is, you will completely understand this in
 just a few minutes!
@@ -33,14 +34,15 @@ First and most importantly, forget the above, there's really only 4 subtypes tha
 - floating points
 - characters
 - booleans
+- string slices
 
 We'll go over each of these individually, explain how they work, their variations and what you might use them for.
 
 Before we do, lets very quickly cover binary though:
 
-### Binary Primary
+### Binary Primer
 
-Don't panic! No one is expecting you to learn to count in binary. That's fun, but pretty useless. 😅
+Don't panic! No one is expecting you to learn to count in binary. Counting in binary is fun, but pretty useless. 😅
 
 All I want to do is show you how things are represented in memory because it's going to make all those Rust types make a
 lot of sense!
@@ -156,7 +158,7 @@ Wow, those numbers get big fast!
 
 There's still two types missing though; `usize` and `isize`.
 
-In this case, the `size` is also acting as the number of bits, however, unlike the other integer types, the size of 
+In this case, the `size` is also acting as the number of bits, however, unlike the other integer types, the size of
 `size` is variable.
 
 Rust is a compiled language, meaning that the code you write in Rust is transformed into instructions that a CPU can
@@ -171,9 +173,9 @@ you're reading this on an "Apple Silicon" Mac then the architecture is `arm64`.
 When you compile Rust it will compile into an instruction set for the architecture your machine uses (though you can
 also tell it what instruction set to compile for if you want to build it on one architecture but run it on another).
 
-`x86_64` and `arm64` are both 64bit architectures, so when you build for these machines, the `size` in `usize` and 
+`x86_64` and `arm64` are both 64bit architectures, so when you build for these machines, the `size` in `usize` and
 `isize` becomes `64`. However, if you were to compile for, say, a Cortex-M0 chip, then the instruction set would likely
-be `Thumb-1` which is 16bit so the `size` in `usize` and `isize` becomes `16`. 
+be `Thumb-1` which is 16bit so the `size` in `usize` and `isize` becomes `16`.
 
 #### Which integer is right for you?
 
@@ -188,11 +190,11 @@ colors are often (but not always), represented as 0 to 255 for each of red, gree
 the best way to store these. If you combine those three colors with another 8 bits for transparency (alpha), then you
 have four lots of `u8` which can be represented as a `u32`.
 
-`u8` is also a good size for representing a stream of unicode characters, which is where we get `UTF-8`, the default 
+`u8` is also a good size for representing a stream of unicode characters, which is where we get `UTF-8`, the default
 encoding for Rust strings.
 
 For larger numbers though, you still may not want to use the largest. While you can use integers that are wider than the
-architecture that you're running your program on, mathematics with those numbers will be slower. The CPU can only 
+architecture that you're running your program on, mathematics with those numbers will be slower. The CPU can only
 process so many bits at once, so when it has numbers larger than that, it has to do multiple rounds of processing to
 achieve the same results as it might have done if those numbers were stored in smaller integers.
 
@@ -205,11 +207,12 @@ let a = 10; // i32
 ```
 
 However, it is more idiomatic to be intentional about the types you use. My methodology here is roughly:
+
 - does this number represent something of a specific size like a color or ascii character, in which case, use that size
 - is this number going to be used to access an array, in which case it really ought to be a `usize`
 - am I more worried about the number slowing the program down than I am about accidentally trying to store a big number
   in a small integer, in which case `usize` or `isize`
-- otherwise, if I'm ok potentially sacrificing speed, then an `i32` or `i64` is fine 
+- otherwise, if I'm ok potentially sacrificing speed, then an `i32` or `i64` is fine
 
 You can specify what type a number is either by annotating the variable you are putting it inside:
 
@@ -240,12 +243,12 @@ let time = std::time::UNIX_EPOCH
 ```
 
 The reason for this is the number of milliseconds since that date is approximately 1,710,000,000,000 and is
-returned as a `u128`. We wanted to use this as part of a calculation to work out an index into an array. Indexes in 
+returned as a `u128`. We wanted to use this as part of a calculation to work out an index into an array. Indexes in
 arrays are always `usize`. If you were to compile this program on a 32bit architecture, then the number of milliseconds
 is greater than what would fit into a `usize` which would be a mere 4,294,967,295. When we use `as` it simply takes the
 number, whatever it is and tries to cram it into the size `as <type>`.
 
-When going from a larger size to a smaller size (in this case, from `u128` to the equivalent of `u32`) it simply cuts 
+When going from a larger size to a smaller size (in this case, from `u128` to the equivalent of `u32`) it simply cuts
 off the front of the data, leaving the least significant bits. You can see this in the following program (don't forget
 you can run this in place with the play button):
 
@@ -255,10 +258,10 @@ let time = std::time::UNIX_EPOCH
     .elapsed()
     .expect("Call the doctor, time went backwards")
     .as_millis();
-    
+
 let time_u32 = time as u32;
-    
-println!("Before conversion: {time}"); 
+
+println!("Before conversion: {time}");
 println!("After conversion: {time_u32}");
 #}
 ```
@@ -268,29 +271,100 @@ println!("After conversion: {time_u32}");
 We've covered twelve different ways of storing whole numbers in Rust, but there are only two ways of storing numbers
 with decimal points: `f32` and `f64`.
 
-Floating point numbers are things like `0.123` or `1.23` or even `123.0`. They're called floating point because the 
+Floating point numbers are things like `0.123` or `1.23` or even `123.0`. They're called floating point because the
 decimal point can move around (as opposed to fixed point, where there is always the same number of fractional digits).
 
-You're immediate thought here might be that you should use `f32` on 32bit systems, and `f64` on 64bit systems, but 
+You're immediate thought here might be that you should use `f32` on 32bit systems, and `f64` on 64bit systems, but
 actually this isn't the way to think about these numbers.
 
 You see, floating points are not perfectly accurate. The bits of a floating point number are broken into parts:
+
 - a sign (+/-)
 - an exponent
 - a fraction
 
+Without going into too much detail on floating points this gives us a way of expressing very large numbers and very
+small numbers but not every number in between (after all, there are infinite numbers between 0.0 and 1.0).
+
 ```rust
-#fn main() {
-let float_32 = 520.02_f32 - 520.04_f32;
-let float_64 = 520.02_f64 - 520.04_f64;
-println!("f32, {float_32}");
-println!("f64, {float_64}");
-#}
+# fn main() {
+    println!("520.02 - 520.04 should be -0.02");
+
+// Single Precision Floating Point
+    let float_32 = 520.02_f32 - 520.04_f32;
+    println!("f32, {float_32}");
+
+// Double Precision Floating Point
+    let float_64 = 520.02_f64 - 520.04_f64;
+    println!("f64, {float_64}");
+    #
+}
 ```
 
-### Characters
+This is why floating point numbers should not be used for anything where accuracy matters, for example, anything to do
+with money. Instead, if the currency you're representing uses "hundredths" for its minor currency like USD or GBP, then
+you can represent the total number that instead, eg of cents for dollars or pennies for pounds.
 
-### Booleans
+When should you use floats?
+
+Floating point numbers are great for more abstract mathematics where perfect precisions isn't strictly necessary, for
+example, vectors, matrices and quaternions which are often used in applications like video games.
+
+As to which you should use, you might think that it comes down to architecture again, for example, a program targeting
+a 32bit architecture should use an `f32` and a 64bit architecture should prefer an `f64`... but if that's the case,
+where is the `fsize`?
+
+Actually, 32bit architectures are usually designed to support 64bit floating point numbers just fine, the difference
+between `f32` and `f64` is that regardless of architecture, `f32` is faster, and `f64` is more "fine grain".
+
+And thats all the challenging stuff done! Now for the easy bits
+
+### char
+
+`char` represents a single unicode character and is always 4 bytes (32bits) in size. In Rust a character is always
+written between single quotes, where as string literals (as covered last chapter) are always written between double
+quotes.
+
+You can use any valid unicode character whether that's the upper or lowercase english letters A-Z, numbers 0-9, white
+space characters, word characters from languages like Chinese and Japanese, emoji, or anything else that's a "unicode
+scalar value".
+
+```rust
+# fn main() {
+    let a = 'a';
+    let five = '5';
+    let yuki = '?';
+    let happy = '😀';
+    println!("{a} - {five} - {yuki} - {happy}");
+    #
+}
+```
+
+We usually use characters in relation to finding things inside strings. You can also turn strings into a collection of
+characters and vice versa, however its important to note that a character inside a string may not take up 4 bytes (for
+example, english letters and numbers only take 1 byte), however, once turned into a character, it will take up four
+bytes.
+
+### Boolean
+
+There is only one booelan type in Rust: `bool`. It represents `true` or `false`.
+
+> Useless (but interesting!) information: In terms of how much space it uses, Rust considers it to be a single bit (an
+> i1) _however_ LLVM, which is a tool Rust uses as an intermediate compilation step, will use a full byte, though the
+> value inside the byte will still be 0 for false and 1 for true.
+>
+> Weirdly, if Rust got its way, the decimal value for a boolean as its stored in memory would be 0 for false and -1 for
+> true (remember in i numbers, the left most bit is its negative self). Not that it matters, its just interesting 😅
+
+Boolean values are usually reserved for `if` statements, and this is a good thing to look out for as finding it else
+where _might_ be a sign that the code isn't written in the best way.
+
+### String slices
+
+Our old friend the string slice! It is the only Rust primitive that isn't also a scalar value (it isn't of fixed size).
+
+You will never actually see something of the type `str`, you will usually see this as a reference to a string slice
+(`&str`).
 
 Compound Types
 --------------
