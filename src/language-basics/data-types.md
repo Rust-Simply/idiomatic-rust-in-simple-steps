@@ -319,25 +319,25 @@ between `f32` and `f64` is that regardless of architecture, `f32` is faster, and
 
 And thats all the challenging stuff done! Now for the easy bits
 
-### char
+### Characters
 
-`char` represents a single unicode character and is always 4 bytes (32bits) in size. In Rust a character is always
-written between single quotes, where as string literals (as covered last chapter) are always written between double
-quotes.
+In Rust we have a special type the represents a single character called `char. It is always 4 bytes (32bits) in size and
+can be any valid "unicode scalar value" (which is to say, any character in unicode that's not a control character).
+In Rust a character is always written between single quotes, whereas string literals (as covered last chapter) are 
+always written between double quotes.
 
 You can use any valid unicode character whether that's the upper or lowercase english letters A-Z, numbers 0-9, white
 space characters, word characters from languages like Chinese and Japanese, emoji, or anything else that's a "unicode
 scalar value".
 
 ```rust
-# fn main() {
-    let a = 'a';
-    let five = '5';
-    let yuki = '?';
-    let happy = '😀';
-    println!("{a} - {five} - {yuki} - {happy}");
-    #
-}
+#fn main() {
+let a = 'a';
+let five = '5';
+let yuki = '?';
+let happy = '😀';
+println!("{a} - {five} - {yuki} - {happy}");
+#}
 ```
 
 We usually use characters in relation to finding things inside strings. You can also turn strings into a collection of
@@ -347,7 +347,7 @@ bytes.
 
 ### Boolean
 
-There is only one booelan type in Rust: `bool`. It represents `true` or `false`.
+There is only one boolean type in Rust: `bool`. It represents `true` or `false`.
 
 > Useless (but interesting!) information: In terms of how much space it uses, Rust considers it to be a single bit (an
 > i1) _however_ LLVM, which is a tool Rust uses as an intermediate compilation step, will use a full byte, though the
@@ -361,21 +361,305 @@ where _might_ be a sign that the code isn't written in the best way.
 
 ### String slices
 
-Our old friend the string slice! It is the only Rust primitive that isn't also a scalar value (it isn't of fixed size).
+Our old friend the string slice! 
 
 You will never actually see something of the type `str`, you will usually see this as a reference to a string slice
-(`&str`).
+(`&str`), which makes it unique amongst the primitive types. `str` should always be a UTF-8 string (see ⚠️ `below),
+which means that the length of a string in bytes may not necessarily be the same as its length in characters. 
+
+For example (don't worry about the code yet):
+
+```rust
+#fn main() {
+let yuki = "";
+  
+let byte_length = yuki.len();
+println!("Length in bytes: {byte_length}");
+
+let char_length = yuki.chars().count();
+println!("Length in characters: {char_length}"); 
+#}
+```
+
+Its also worth remembering that when you turn a string into characters, each of those characters will take up 4 bytes
+of memory, even though inside the string they might have only taken up one byte (again, don't worry about the code in
+the next example we'll talk about it soon):
+
+```rust
+#fn main() {
+let hello = "hello";
+
+let string_size = hello.len();
+println!("Size as string slice: {string_size}");
+
+let char_size =hello.chars().as_ref().map(std::mem::size_of_val).sum();
+println!("Size as characters: {char_size}"); 
+#}
+```
+
+> ⚠️ It is _possible_ to create a string slice that is not a valid UTF-8 string so you should be mindful that this isn't
+> a guarantee, but you also shouldn't make the effort to check the validity everywhere its used. It _should_ be a UTF-8
+> string, but if you are constructing your own from raw data, or if there are security implications to the use of a
+> string slice, you should be careful.
+
+The size of a string slice depends on what's in it, which is why you won't see it on the stack (string slices live in
+either the compiled output as string literals, or on the Heap inside a String). A string slice reference is made up of
+two pieces of data, a pointer to where the string slice starts, and a length, both of which are of known size but depend
+on the system architecture.
+
+Fun fact about that reference though: you might wonder if it's just a pointer and a length, does that mean you can
+have a reference to a string slice that exists inside of a string slice, and the answer is: yes! Just be careful when
+taking a slice inside of a slice to make sure that the sub slice is a valid UTF-8 string.
+```rust
+let hello = "hello";
+let hell = hello[0..4];
+```
 
 Compound Types
 --------------
 
 ### Arrays
 
+Arrays are a collection of a single type. You might see arrays in two forms, either as a sized array on the stack, or
+as a reference to another collection (also called an array slice). 
+
+When sized, arrays are annotated with the type `[T; N]` where `T` is the type of every item in the array and `N` is its
+size. For example:
+
+```rust
+let hello: [char; 5] = ['H', 'e', 'l', 'l', 'o'];
+```
+
+When referenced as an array slice, you do not need to specify the size because, just like with references to string
+slices, the reference not only contains a pointer to the underlying data, but also contains the size. We write this in
+the form `&[T]` where `T` is the type of every item in the array.
+
+```rust
+#let hello: [char; 5] = ['H', 'e', 'l', 'l', 'o'];
+let hell: &[char] = hello[0..4]; // Creates an array slice referencing the previous array
+```
+
+You can access elements inside the array directly by using an index value between square brackets. In Rust, indexing 
+starts at 0. So:
+
+```rust
+let hello: [char; 5] = ['H', 'e', 'l', 'l', 'o'];
+let h = hello[0]; // H
+let e = hello[1]; // e 
+let l = hello[2]; // l 
+```
+
 ### Tuples
+
+Tuples are similar to arrays in that they are a collection of items, however each item in the collection can be a 
+different type. This adds some flexibility but also some restrictions. For example, you can iterate over each item in
+an array, but not a tuple. 
+
+Tuples are written between brackets, and are only considered the same type if the types inside the tuple match.
+
+For example:
+
+```rust
+let char_int_1: (char, i32) = ('a', 1);
+let char_int_2: (char, i32) = ('b', 2); // This type is the same as the previous one.
+let int_char_1: (i32, char) = (3, 'c'); // This type is different 
+```
+
+Another difference from arrays is how you access a single item in the tuple, which you do with a dot `.`, followed by
+the number element you want. Again, this starts from 0.
+
+
+```rust
+let char_int: (char, i32) = ('a', 1);
+let a = char_int.0;
+let one = char_int.1;
+```
+
+#### The Unit Type
+
+The Unit Type is a zero length tuple `()` that is Rust's way to represent nothing. It is zero bytes, does not exist on
+the stack at runtime, and unlike other languages with types like `null` or `void`, can not be used interchangeably with
+other types.
 
 ### Structs
 
+Structs are similar to tuples in that they are a type made up of other types. Unlike tuples they are named though. There
+are three types of structs, structs with named fields, tuple structs and unit structs.
+
+> **Note:** types like structs and enums must be declared outside of functions.
+
+#### Tuple Struct 
+
+As we just covered tuples, lets quickly talk about tuple structs. They look a bit like they're simply "named" tuples,
+and indeed they can be accessed the same way:
+
+```rust
+struct Vector3(f64, f64, f64);
+
+fn main() {
+    let vec = Vector3(10.0, 2.0, 3.33);
+    let ten = vec.0;
+    let two = vec.1;
+}
+```
+
+Similar to tuples, this kind of struct can be accessed with a `.` and a numbered value, _however_ unlike structs,
+structs have a concept of "visibility". Unless explicitly marked as public the fields of a struct are only accessible
+in the module in which it is defined, or its descendents. We'll talk more about modules later, however, to make the
+fields of a struct public, you can simply mark them as `pub`.
+
+```rust
+struct Vector3(pub f64, pub f64, pub f64);
+```
+
+You don't have to make every field public though, if you'd some parts of the struct to be public and others to be 
+private.
+
+#### Named Fields
+
+Named fields work pretty much the same as tuple structs except instead of having a numbered field, its named. You
+can access the named field with a `.` and the name.
+
+```rust
+struct Cell {
+    x: u64,
+    y: u64,
+    alive: bool,
+}
+
+fn main() {
+    let cell = Cell {
+      x: 10,
+      y: 123,
+      alive: true,
+    };
+    
+    let is_alive = cell.alive;
+}
+```
+
+#### Unit Structs
+
+Unit structs are an interesting case that you probably won't find much use for until we get into more advanced Rust and
+some of the cooler patterns and idioms that we use. A Unit struct has no value, it only represents a type.
+
+```rust
+struct ExampleUnitStruct;
+
+fn main() {
+   let unit_struct = ExampleUnitStruct;
+}
+```
+
+Unit Structs have zero size and don't exist on the stack at runtime, but they can have functionality added to them
+through Traits, or be used as markers.
+
 ### Enums
+
+Enums are for when you want to represent one of a finite number of possible values. For example
+
+```rust
+enum TrafficLightState {
+  Red,
+  Amber,
+  Green,
+}
+
+fn main() {
+  let green = TrafficLightState::Green;
+  // let purple = TrafficLightState::Purple; // Won't compile
+}
+```
+
+Many programing languages have this concept of enums, but what makes Rust enums especially awesome is that the variants
+can additionally contain values. We've already talked about two such enums `Option` and `Result` which are two of the
+most important and widely used types in the entire ecosystem, and we'll talk more about them in the Generic Types
+section below. As an example though, enums variants can be structured in either a tuple stype or a struct style:
+
+```rust
+enum ContrivedEnum {
+  SimpleVariantNoData,
+  TupleStyleData(u64, i32),
+  NamedFields {
+    time: i128,
+    place: String,
+  }
+}
+
+fn main() {
+  let simple_variant = ContrivedEnum::SimpleVariantNoData;
+  let tuple_style = ContrivedEnum::TupleStyleData(10, -20);
+  let named_fields = ContrivedEnum::NamedFields {
+    time: 1_710_000_000_000,
+    place: "Here".to_string(),
+  };
+}
+```
+
+In terms of memory usage, on the stack an enum will take up as much space as its largest variant, regardless of which
+variant it actually is.
 
 Generic Types
 -------------
+
+Generics in Rust allow the creation of entirely new types at compile time by combining types together. We've talked
+a bit about Option and how Rust uses it to represent Some value or None. Option is an enum with two variants, it is
+literally just this:
+
+```rust
+enum Option<T> {
+  None,
+  Some(T),
+}
+```
+
+Note that after the name of the enum we have `<T>`. The triangle brackets express that this enum has a type (or types) 
+that can be decided later, the `T` is a marker for that type. For example, say we want to create a type that represents
+either a single character, or nothing.
+
+```rust
+// The type of possible_character is inferred to be Option<char>
+let possible_character = Some('r');
+
+// The type of no_character can not be inferred, but you can annotate it yourself
+let no_character: Option<char> = None;
+```
+
+Normally when accessing the variants of an enum, you must use the name followed by the variant (eg `Option::Some('r')`),
+however Option and Result are so ubiquitous that their variants are globally accessible in any rust code.
+
+Another generic we've covered before is Result which usually represents either the success or failure of a function. It
+has two types that can be decided later `T`, which should represent what type of data you expected to get back, and `E`,
+which will be the type of the Error.
+
+```rust
+enum Result<T, E> {
+  Ok(T),
+  Err(E),
+}
+```
+
+We'll talk more about functions in the next chapter, but in order to explain Result in context, the following example
+shows the fully described Result type as the return type of the function, which is how we'd typically use this enum,
+though, not only have I 
+
+```rust
+fn example_function() -> Result<String, String> {
+  let time =     std::time::UNIX_EPOCH
+          .elapsed()
+          .expect("Call the doctor, time went backwards")
+          .as_millis();
+  
+  if function_that_fails_half_the_time() {
+    Ok("The function succeeded".to_string())
+  } else {
+    Err("The function failed".to_string())
+  }
+} 
+```
+
+When we start talking about adding functionality to traits in the next chapter, we'll also talk about how you can 
+restrict what types are allowed to be used in generics through the use of trait bounds.
+
+Collections
+-----------
