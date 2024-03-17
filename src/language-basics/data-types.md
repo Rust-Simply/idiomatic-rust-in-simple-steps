@@ -83,7 +83,7 @@ In binary our columns are a bit different:
 - 2^3 = 8
 - etc
 
-So if we want to represent the number 11 in base 2, we can see it contains one 8, one 2, and one 1.
+So if we want to represent the number eleven in base 2, we can see it contains one 8, one 2, and one 1.
 
 | Columns: | 8 | 4 | 2 | 1 |
 |----------|---|---|---|---|
@@ -92,7 +92,7 @@ So if we want to represent the number 11 in base 2, we can see it contains one 8
 Sometimes when we want to write something in binary and be explicit that that is the system we're using we might write:
 `0b1011`. This makes it clear that this number represents "eleven" and not "one thousand and eleven".
 
-Each column is a ***b***inary dig***it***, which is where we get the term "bit".
+Each 1 or 0 is a ***b***inary dig***it***, which is where we get the term "bit".
 
 Eight bits is a byte, and can represent the numbers from `0b0000_0000` (zero) to `0b1111_1111` (two hundred and 
 fifty-five, again, I'm not expecting anyone to be able to _read_ this). Also note that I'm using an underscore as a 
