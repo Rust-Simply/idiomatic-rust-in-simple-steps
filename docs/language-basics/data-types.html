@@ -414,6 +414,8 @@ actually this isn’t the way to think about these numbers.</p>
 </ul>
 <p>Without going into too much detail on floating points this gives us a way of expressing very large numbers and very
 small numbers but not every number in between (after all, there are infinite numbers between 0.0 and 1.0).</p>
+<p>Imagine using a floating point number to represent money. Someone comes into a store to buy a $520.04 item, and they
+have a coupon for $520.02. The remainder that they need to pay is 2 cents, right? Try running the next bit of code:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>println!(&quot;520.04 - 520.02 should be 0.02&quot;);
 
@@ -425,32 +427,29 @@ println!(&quot;f32, {float_32}&quot;);
 let float_64 = 520.04_f64 - 520.02_f64;
 println!(&quot;f64, {float_64}&quot;);
 <span class="boring">}</span></code></pre></pre>
-<p>This is why floating point numbers should not be used for anything where accuracy matters, for example, anything to do
-with money. Instead, if the currency you’re representing uses “hundredths” for its minor currency like USD or GBP, then
-you can represent the total number that instead, eg of cents for dollars or pennies for pounds.</p>
+<p>Instead, if the currency you’re representing uses “hundredths” for its minor currency like USD or GBP, then you can
+represent the total number that instead, eg of cents for dollars or pennies for pounds.</p>
 <p>When should you use floats?</p>
 <p>Floating point numbers are great for more abstract mathematics where perfect precisions isn’t strictly necessary, for
-example, vectors, matrices and quaternions which are often used in applications like video games.</p>
+example, vectors, matrices and quaternions which are often used in applications like video games and scientific models.</p>
 <p>As to which you should use, you might think that it comes down to architecture again, for example, a program targeting
 a 32bit architecture should use an <code>f32</code> and a 64bit architecture should prefer an <code>f64</code>… but if that’s the case,
 where is the <code>fsize</code>?</p>
 <p>Actually, 32bit architectures are usually designed to support 64bit floating point numbers just fine, the difference
 between <code>f32</code> and <code>f64</code> is that regardless of architecture, <code>f32</code> is faster, and <code>f64</code> is more “fine grain”.</p>
-<p>And thats all the challenging stuff done! Now for the easy bits</p>
 <h3 id="characters"><a class="header" href="#characters">Characters</a></h3>
-<p>In Rust we have a special type the represents a single character called `char. It is always 4 bytes (32bits) in size and
-can be any valid “unicode scalar value” (which is to say, any character in unicode that’s not a control character).
-In Rust a character is always written between single quotes, whereas string literals (as covered last chapter) are
-always written between double quotes.</p>
+<p>In Rust, we have a special type the represents a single character called <code>char</code>. It is always 4 bytes (32bits) in size
+and can be any valid “unicode scalar value” (which is to say, any character in unicode that’s not a control character).
+In Rust a character is always written between single quotes, whereas string literals are always written between double
+quotes.</p>
 <p>You can use any valid unicode character whether that’s the upper or lowercase english letters A-Z, numbers 0-9, white
 space characters, word characters from languages like Chinese and Japanese, emoji, or anything else that’s a “unicode
 scalar value”.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
-</span>let a = 'a';
-let five = '5';
+</span>let i = 'I';
+let love = '💖';
 let yuki = '雪';
-let happy = '😀';
-println!(&quot;{a} - {five} - {yuki} - {happy}&quot;); 
+println!(&quot;{i} {love} {yuki}&quot;); 
 <span class="boring">}</span></code></pre></pre>
 <p>We usually use characters in relation to finding things inside strings. You can also turn strings into a collection of
 characters and vice versa, however its important to note that a character inside a string may not take up 4 bytes (for
@@ -463,56 +462,59 @@ bytes.</p>
 i1) <em>however</em> LLVM, which is a tool Rust uses as an intermediate compilation step, will use a full byte, though the
 value inside the byte will still be 0 for false and 1 for true.</p>
 <p>Weirdly, if Rust got its way, the decimal value for a boolean as its stored in memory would be 0 for false and -1 for
-true (remember in i numbers, the left most bit is its negative self). Not that it matters, its just interesting 😅</p>
+true (remember in <code>i</code> numbers, the left most bit is its negative self). None of that matters, its just interesting 😅</p>
 </blockquote>
 <p>Boolean values are usually reserved for <code>if</code> statements, and this is a good thing to look out for as finding it else
 where <em>might</em> be a sign that the code isn’t written in the best way.</p>
 <h3 id="string-slices"><a class="header" href="#string-slices">String slices</a></h3>
 <p>Our old friend the string slice!</p>
-<p>You will never actually see something of the type <code>str</code>, you will usually see this as a reference to a string slice
-(<code>&amp;str</code>), which makes it unique amongst the primitive types. <code>str</code> should always be a UTF-8 string (see ⚠️ `below),
-which means that the length of a string in bytes may not necessarily be the same as its length in characters.</p>
+<p>The type for a string slice is <code>str</code>, but you’ll never see anything with the <code>str</code> type, you will usually see this
+as a reference to a string slice (<code>&amp;str</code>), which makes it unique amongst the primitive types. <code>str</code> should always be a
+UTF-8 string (see ⚠️ below), which means that the length of a string in bytes may not necessarily be the same as its
+length in characters.</p>
 <p>For example (don’t worry about the code yet):</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
-</span>    let yuki = &quot;&quot;;
+</span>let yuki = &quot;雪&quot;;
 
-    let byte_length = yuki.len();
-    println!(&quot;Length in bytes: {byte_length}&quot;);
+let byte_length = yuki.len();
+println!(&quot;Length in bytes: {byte_length}&quot;);
 
-    let char_length = yuki.chars().count();
-    println!(&quot;Length in characters: {char_length}&quot;);
-<span class="boring">    
-</span>}</code></pre></pre>
+let char_length = yuki.chars().count();
+println!(&quot;Length in characters: {char_length}&quot;);
+<span class="boring">}</span></code></pre></pre>
 <p>Its also worth remembering that when you turn a string into characters, each of those characters will take up 4 bytes
 of memory, even though inside the string they might have only taken up one byte (again, don’t worry about the code in
 the next example we’ll talk about it soon):</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
-</span>    let hello = &quot;hello&quot;;
+<pre><pre class="playground"><code class="language-rust"><span class="boring">use std::mem::size_of_val;
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span>let hello = &quot;hello&quot;;
 
-    let string_size = hello.len();
-    println!(&quot;Size as string slice: {string_size}&quot;);
+let string_size = size_of_val(hello);
+println!(&quot;Size as string slice: {string_size} bytes&quot;);
 
-    let char_size = hello.chars().as_ref().map(std::mem::size_of_val).sum();
-    println!(&quot;Size as characters: {char_size}&quot;);
-<span class="boring">    
-</span>}</code></pre></pre>
+// Convert the string slice to chars, get the size of each char, and sum them
+let  char_size: usize = hello.chars().map(|c| size_of_val(&amp;c)).sum();
+println!(&quot;Size as characters: {char_size} bytes&quot;);
+<span class="boring">}</span></code></pre></pre>
+<p>The size of a string slice depends on what’s in it, which is why you won’t see it on the stack (string slices live in
+either the compiled output as string literals, or on the Heap inside a String). A string slice reference is made up of
+two pieces of data, a pointer to where the string slice starts, and a length, both of which are of known size but depend
+on the system architecture.</p>
+<p>Fun fact about that reference though: you might wonder if it’s just a pointer and a length, does that mean you can
+have a reference to a string slice that exists inside a string slice, and the answer is: yes! Just be careful when
+taking a slice inside a slice to make sure that the sub slice is a valid UTF-8 string.</p>
 <blockquote>
 <p>⚠️ It is <em>possible</em> to create a string slice that is not a valid UTF-8 string so you should be mindful that this isn’t
 a guarantee, but you also shouldn’t make the effort to check the validity everywhere its used. It <em>should</em> be a UTF-8
 string, but if you are constructing your own from raw data, or if there are security implications to the use of a
 string slice, you should be careful.</p>
 </blockquote>
-<p>The size of a string slice depends on what’s in it, which is why you won’t see it on the stack (string slices live in
-either the compiled output as string literals, or on the Heap inside a String). A string slice reference is made up of
-two pieces of data, a pointer to where the string slice starts, and a length, both of which are of known size but depend
-on the system architecture.</p>
-<p>Fun fact about that reference though: you might wonder if it’s just a pointer and a length, does that mean you can
-have a reference to a string slice that exists inside of a string slice, and the answer is: yes! Just be careful when
-taking a slice inside of a slice to make sure that the sub slice is a valid UTF-8 string.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>let hello = &quot;hello&quot;;
-let hell = hello[0..4];
+// hell is a reference to a substring, range 0..4 is exclusive so 0, 1, 2, 3 but not 4
+let hell = &amp;hello[0..4]; 
+println!(&quot;{hell}&quot;);
 <span class="boring">}</span></code></pre></pre>
 <h2 id="compound-types"><a class="header" href="#compound-types">Compound Types</a></h2>
 <h3 id="arrays"><a class="header" href="#arrays">Arrays</a></h3>
@@ -527,10 +529,13 @@ size. For example:</p>
 <p>When referenced as an array slice, you do not need to specify the size because, just like with references to string
 slices, the reference not only contains a pointer to the underlying data, but also contains the size. We write this in
 the form <code>&amp;[T]</code> where <code>T</code> is the type of every item in the array.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span><span class="boring">let hello: [char; 5] = ['H', 'e', 'l', 'l', 'o'];
-</span>let hell: &amp; [char] = hello[0..4]; // Creates an array slice referencing the previous array
+</span>// hell is a reference to a sub-array, range 0..=3 is inclusive so 0, 1, 2, and 3
+let hell: &amp;[char] = &amp;hello[0..=3];
+
+// This is another way of printing variables with debug that we haven't covered yet 
+print!(&quot;{:?}&quot;, hell);
 <span class="boring">}</span></code></pre></pre>
 <p>You can access elements inside the array directly by using an index value between square brackets. In Rust, indexing
 starts at 0. So:</p>

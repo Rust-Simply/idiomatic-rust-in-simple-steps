@@ -303,6 +303,9 @@ You see, floating points are not perfectly accurate. The bits of a floating poin
 Without going into too much detail on floating points this gives us a way of expressing very large numbers and very
 small numbers but not every number in between (after all, there are infinite numbers between 0.0 and 1.0).
 
+Imagine using a floating point number to represent money. Someone comes into a store to buy a $520.04 item, and they
+have a coupon for $520.02. The remainder that they need to pay is 2 cents, right? Try running the next bit of code:
+
 ```rust
 #fn main() {
 println!("520.04 - 520.02 should be 0.02");
@@ -317,14 +320,13 @@ println!("f64, {float_64}");
 #}
 ```
 
-This is why floating point numbers should not be used for anything where accuracy matters, for example, anything to do
-with money. Instead, if the currency you're representing uses "hundredths" for its minor currency like USD or GBP, then
-you can represent the total number that instead, eg of cents for dollars or pennies for pounds.
+Instead, if the currency you're representing uses "hundredths" for its minor currency like USD or GBP, then you can
+represent the total number that instead, eg of cents for dollars or pennies for pounds.
 
 When should you use floats?
 
 Floating point numbers are great for more abstract mathematics where perfect precisions isn't strictly necessary, for
-example, vectors, matrices and quaternions which are often used in applications like video games.
+example, vectors, matrices and quaternions which are often used in applications like video games and scientific models.
 
 As to which you should use, you might think that it comes down to architecture again, for example, a program targeting
 a 32bit architecture should use an `f32` and a 64bit architecture should prefer an `f64`... but if that's the case,
@@ -333,14 +335,12 @@ where is the `fsize`?
 Actually, 32bit architectures are usually designed to support 64bit floating point numbers just fine, the difference
 between `f32` and `f64` is that regardless of architecture, `f32` is faster, and `f64` is more "fine grain".
 
-And thats all the challenging stuff done! Now for the easy bits
-
 ### Characters
 
-In Rust we have a special type the represents a single character called `char. It is always 4 bytes (32bits) in size and
-can be any valid "unicode scalar value" (which is to say, any character in unicode that's not a control character).
-In Rust a character is always written between single quotes, whereas string literals (as covered last chapter) are
-always written between double quotes.
+In Rust, we have a special type the represents a single character called `char`. It is always 4 bytes (32bits) in size
+and can be any valid "unicode scalar value" (which is to say, any character in unicode that's not a control character).
+In Rust a character is always written between single quotes, whereas string literals are always written between double
+quotes.
 
 You can use any valid unicode character whether that's the upper or lowercase english letters A-Z, numbers 0-9, white
 space characters, word characters from languages like Chinese and Japanese, emoji, or anything else that's a "unicode
@@ -348,11 +348,10 @@ scalar value".
 
 ```rust
 #fn main() {
-let a = 'a';
-let five = '5';
+let i = 'I';
+let love = '💖';
 let yuki = '雪';
-let happy = '😀';
-println!("{a} - {five} - {yuki} - {happy}"); 
+println!("{i} {love} {yuki}"); 
 #}
 ```
 
@@ -370,7 +369,7 @@ There is only one boolean type in Rust: `bool`. It represents `true` or `false`.
 > value inside the byte will still be 0 for false and 1 for true.
 >
 > Weirdly, if Rust got its way, the decimal value for a boolean as its stored in memory would be 0 for false and -1 for
-> true (remember in i numbers, the left most bit is its negative self). Not that it matters, its just interesting 😅
+> true (remember in `i` numbers, the left most bit is its negative self). None of that matters, its just interesting 😅
 
 Boolean values are usually reserved for `if` statements, and this is a good thing to look out for as finding it else
 where _might_ be a sign that the code isn't written in the best way.
@@ -379,23 +378,23 @@ where _might_ be a sign that the code isn't written in the best way.
 
 Our old friend the string slice!
 
-You will never actually see something of the type `str`, you will usually see this as a reference to a string slice
-(`&str`), which makes it unique amongst the primitive types. `str` should always be a UTF-8 string (see ⚠️ `below),
-which means that the length of a string in bytes may not necessarily be the same as its length in characters.
+The type for a string slice is `str`, but you'll never see anything with the `str` type, you will usually see this
+as a reference to a string slice (`&str`), which makes it unique amongst the primitive types. `str` should always be a
+UTF-8 string (see ⚠️ below), which means that the length of a string in bytes may not necessarily be the same as its
+length in characters.
 
 For example (don't worry about the code yet):
 
 ```rust
-# fn main() {
-    let yuki = "";
+#fn main() {
+let yuki = "雪";
 
-    let byte_length = yuki.len();
-    println!("Length in bytes: {byte_length}");
+let byte_length = yuki.len();
+println!("Length in bytes: {byte_length}");
 
-    let char_length = yuki.chars().count();
-    println!("Length in characters: {char_length}");
-    #
-}
+let char_length = yuki.chars().count();
+println!("Length in characters: {char_length}");
+#}
 ```
 
 Its also worth remembering that when you turn a string into characters, each of those characters will take up 4 bytes
@@ -403,22 +402,19 @@ of memory, even though inside the string they might have only taken up one byte 
 the next example we'll talk about it soon):
 
 ```rust
-# fn main() {
-    let hello = "hello";
+#use std::mem::size_of_val;
+#
+#fn main() {
+let hello = "hello";
 
-    let string_size = hello.len();
-    println!("Size as string slice: {string_size}");
+let string_size = size_of_val(hello);
+println!("Size as string slice: {string_size} bytes");
 
-    let char_size = hello.chars().as_ref().map(std::mem::size_of_val).sum();
-    println!("Size as characters: {char_size}");
-    #
-}
+// Convert the string slice to chars, get the size of each char, and sum them
+let  char_size: usize = hello.chars().map(|c| size_of_val(&c)).sum();
+println!("Size as characters: {char_size} bytes");
+#}
 ```
-
-> ⚠️ It is _possible_ to create a string slice that is not a valid UTF-8 string so you should be mindful that this isn't
-> a guarantee, but you also shouldn't make the effort to check the validity everywhere its used. It _should_ be a UTF-8
-> string, but if you are constructing your own from raw data, or if there are security implications to the use of a
-> string slice, you should be careful.
 
 The size of a string slice depends on what's in it, which is why you won't see it on the stack (string slices live in
 either the compiled output as string literals, or on the Heap inside a String). A string slice reference is made up of
@@ -426,12 +422,21 @@ two pieces of data, a pointer to where the string slice starts, and a length, bo
 on the system architecture.
 
 Fun fact about that reference though: you might wonder if it's just a pointer and a length, does that mean you can
-have a reference to a string slice that exists inside of a string slice, and the answer is: yes! Just be careful when
-taking a slice inside of a slice to make sure that the sub slice is a valid UTF-8 string.
+have a reference to a string slice that exists inside a string slice, and the answer is: yes! Just be careful when
+taking a slice inside a slice to make sure that the sub slice is a valid UTF-8 string.
+
+> ⚠️ It is _possible_ to create a string slice that is not a valid UTF-8 string so you should be mindful that this isn't
+> a guarantee, but you also shouldn't make the effort to check the validity everywhere its used. It _should_ be a UTF-8
+> string, but if you are constructing your own from raw data, or if there are security implications to the use of a
+> string slice, you should be careful.
 
 ```rust
+#fn main() {
 let hello = "hello";
-let hell = hello[0..4];
+// hell is a reference to a substring, range 0..4 is exclusive so 0, 1, 2, 3 but not 4
+let hell = &hello[0..4]; 
+println!("{hell}");
+#}
 ```
 
 Compound Types
@@ -454,8 +459,14 @@ slices, the reference not only contains a pointer to the underlying data, but al
 the form `&[T]` where `T` is the type of every item in the array.
 
 ```rust
+#fn main() {
 # let hello: [char; 5] = ['H', 'e', 'l', 'l', 'o'];
-let hell: & [char] = hello[0..4]; // Creates an array slice referencing the previous array
+// hell is a reference to a sub-array, range 0..=3 is inclusive so 0, 1, 2, and 3
+let hell: &[char] = &hello[0..=3];
+
+// This is another way of printing variables with debug that we haven't covered yet 
+print!("{:?}", hell);
+#}
 ```
 
 You can access elements inside the array directly by using an index value between square brackets. In Rust, indexing
