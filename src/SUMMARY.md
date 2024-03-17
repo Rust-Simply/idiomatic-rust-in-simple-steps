@@ -13,8 +13,6 @@
     - [Documentation]()
     - [Tests]()
     - [Clippy and Fmt]()
-    - [Debugging]()
-    - [Complex Structures]()
     - [Traits]()
     - [Conversions]()
     - [Pattern Matching]()
