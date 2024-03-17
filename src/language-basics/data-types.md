@@ -641,25 +641,37 @@ enum Result<T, E> {
 
 We'll talk more about functions in the next chapter, but in order to explain Result in context, the following example
 shows the fully described Result type as the return type of the function, which is how we'd typically use this enum,
-though, not only have I 
+though, you wouldn't typically use a String as an Error type, and we'll talk more about that when we get to Error 
+handling later.
 
 ```rust
-fn example_function() -> Result<String, String> {
-  let time =     std::time::UNIX_EPOCH
-          .elapsed()
-          .expect("Call the doctor, time went backwards")
-          .as_millis();
-  
-  if function_that_fails_half_the_time() {
-    Ok("The function succeeded".to_string())
-  } else {
-    Err("The function failed".to_string())
-  }
+fn function_that_fails_half_the_time() -> Result<u128, String> { // Note the return type for a function comes after ->
+    let time = std::time::UNIX_EPOCH
+      .elapsed()
+      .expect("Call the doctor, time went backwards") // We can do something cooler here but that's for another time
+      .as_millis();
+    
+    if time % 2 == 0 {
+        Ok(time) // implicit return
+    } else {
+        Err("The function failed".to_string()) // implicit return
+    }
 } 
 ```
 
 When we start talking about adding functionality to traits in the next chapter, we'll also talk about how you can 
 restrict what types are allowed to be used in generics through the use of trait bounds.
 
-Collections
------------
+Conclusion
+----------
+
+That is (almost) everything you need to know about types! The main thing we're still missing in ownership, but we'll
+come to that later. The main things to remember are:
+- We have our primitive types that represent binary data. There's a lot of choice here, but that's a good thing!
+- We can represent more complex types with compound types, each with its own use
+- We can "fill in the blank" with compound types later using generics
+- We talked a bit about two of the most common generics, Option (representing something or nothing) and Result 
+  (representing a successful value or an error)
+
+In the next chapter we're going to talk about controlling the flow of our program with branches and loops as well as 
+introducing functions.

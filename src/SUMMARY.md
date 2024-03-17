@@ -8,7 +8,7 @@
     - [Hello World](getting-started/hello-world.md)
 - [Language Basics](language-basics/README.md)
     - [Memory](language-basics/memory.md)
-    - [Data Types]()
+    - [Data Types](language-basics/data-types.md)
     - [Functions]()
     - [Documentation]()
     - [Tests]()
