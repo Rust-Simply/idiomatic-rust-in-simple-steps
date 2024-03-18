@@ -34,7 +34,7 @@ handle on?
 This is how many primitive types there are in Rust! And yes, as scary as it is, you will completely understand this in
 just a few minutes!
 
-First and most importantly, forget the above, there's really only five subtypes that we actually care about:
+First and most importantly, forget the above, there's really only five type categories that we actually care about:
 
 | types           |
 |-----------------|
@@ -64,21 +64,45 @@ For example, the number 123 contains one lot of 100, two lots of 10, and three l
 |----------|-----|----|---|
 | Count:   | 1   | 2  | 3 |
 
-When we add numbers to the columns, if the column goes over 9, then we add to the next column along.
+When we add numbers to the columns, if the column goes over 9, then we change it back to 0 and add 1 to the next 
+column along.
 
-So, if we add 1 to 9, it goes to 10, 19 goes to 20, and 99 goes to 100 (because the roll-over from the right most 9 adds
-to the next 9 also causing it to roll over).
+So, if we add 1 to 9, it goes to 10,
 
-((Add pictures or tables))
+| Columns: | 10 | 1 |
+|---------:|----|---|
+|      1 + | 0  | 9 |
+|        = | 1  | 0 |
 
-This counting system is called base 10 by the way as each of those columns is 10 raised to the power of which column it
-is, starting at 0:
+19 goes to 20
+
+| Columns: | 10 | 1 |
+|---------:|----|---|
+|      1 + | 1  | 9 |
+|        = | 2  | 0 |
+
+and 99 goes to 100 because the roll-over from the right most 9 adds to the next 9 also causing it to roll over.
+
+| Columns: | 100 | 10 | 1 |
+|---------:|-----|----|---|
+|      1 + | 0   | 9  | 9 |
+|        = | 1   | 0  | 0 |
+
+This counting system is called base 10 as each of those columns is 10 raised to the power of which column it is,
+starting at 0:
 
 - 10^0 = 1
 - 10^1 = 10
 - 10^2 = 100
 - 10^3 = 1000
 - etc
+
+Eg:
+
+| Column number: | 3    | 2    | 1    | 0    |
+|----------------|------|------|------|------|
+| As power:      | 10^3 | 10^2 | 10^1 | 10^0 |
+| Column value:  | 1000 | 100  | 10   | 1    |
 
 Electronics, and by extension computers, can only really cope reliably with things that are `on` or `off` though. How do
 you count with only on or off? Well, what if instead of having ten possible values in each column (0-9 or base 10), we
@@ -100,8 +124,8 @@ mark those columns as one's and the others as zeros we get:
 | Count:   | 1 | 1 | 0 | 1 |
 
 Sometimes when we want to write something in binary and be explicit that that is the system we're using we might write:
-`0b1101`. The `0b` at the start makes it clear that a number like `0b1011` represents "eleven" and not "one thousand and
-eleven". 
+`0b1101`. The `0b` at the start makes it clear that a number like `0b1101` represents "thirteen" and not "one thousand
+one hundred and one.
 
 Each 1 or 0 is a ***b***inary dig***it***, which is where we get the term "bit".
 
@@ -113,8 +137,8 @@ spacer between numbers to help legibility, this also works in Rust, as does the 
 #fn main() {
 let min_byte: u8 = 0b0000_0000;
 let max_byte: u8 = 0b1111_1111;
-println!("min_byte: {min_byte}");
-println!("max_byte: {max_byte}");
+println!("min_byte: {min_byte}"); // 0
+println!("max_byte: {max_byte}"); // 255
 #}
 ```
 
@@ -298,8 +322,8 @@ let time = std::time::UNIX_EPOCH
 
 let time_u32 = time as u32;
 
-println!("Before conversion: {time}");
-println!("After conversion: {time_u32}");
+println!("Before conversion: {time}"); // approx: 1710771427971
+println!("After conversion: {time_u32}"); // approx: 1374444163
 #}
 ```
 
@@ -332,16 +356,16 @@ println!("520.04 - 520.02 should be 0.02");
 
 // Single Precision Floating Point
 let float_32 = 520.04_f32 - 520.02_f32;
-println!("f32, {float_32}");
+println!("But, using f32 it's: {float_32}");  // 0.019958496
 
 // Double Precision Floating Point
 let float_64 = 520.04_f64 - 520.02_f64;
-println!("f64, {float_64}");
+println!("And, using f64 it's: {float_64}"); // 0.01999999999998181
 #}
 ```
 
 Instead, if the currency you're representing uses "hundredths" for its minor currency like USD or GBP, then you can
-represent the total number that instead, eg of cents for dollars or pennies for pounds.
+represent the total number of that instead, eg of cents for dollars or pennies for pounds, using integers instead.
 
 When should you use floats?
 
@@ -357,7 +381,7 @@ between `f32` and `f64` is that regardless of architecture, `f32` is faster, and
 
 ### Characters
 
-In Rust, we have a special type the represents a single character called `char`. It is always 4 bytes (32bits) in size
+In Rust, we have a special type that represents a single character called `char`. It is always 4 bytes (32bits) in size
 and can be any valid "unicode scalar value" (which is to say, any character in unicode that's not a control character).
 In Rust a character is always written between single quotes, whereas string literals are always written between double
 quotes.
@@ -371,7 +395,7 @@ scalar value".
 let i = 'I';
 let love = '💖';
 let yuki = '雪';
-println!("{i} {love} {yuki}"); 
+println!("{i} {love} {yuki}"); // I 💖 雪
 #}
 ```
 
@@ -411,10 +435,10 @@ For example (don't worry about the code yet):
 let yuki = "雪";
 
 let byte_length = yuki.len();
-println!("{yuki} length in bytes: {byte_length}");
+println!("{yuki} length in bytes: {byte_length}"); // 3
 
 let char_length = yuki.chars().count();
-println!("{yuki} length in characters: {char_length}");
+println!("{yuki} length in characters: {char_length}"); // 1
 #}
 ```
 
@@ -429,11 +453,11 @@ the next example we'll talk about it soon):
 let hello = "hello";
 
 let string_size = size_of_val(hello);
-println!("Size as string slice: {string_size} bytes");
+println!("Size as string slice: {string_size} bytes"); // 5
 
 // Convert the string slice to chars, get the size of each char, and sum them
 let  char_size: usize = hello.chars().map(|c| size_of_val(&c)).sum();
-println!("Size as characters: {char_size} bytes");
+println!("Size as characters: {char_size} bytes"); // 20
 #}
 ```
 
@@ -451,7 +475,7 @@ taking a slice inside a slice to make sure that the sub slice is a valid UTF-8 s
 let hello = "hello";
 // hell is a reference to a substring, range 0..4 is exclusive so 0, 1, 2, 3 but not 4
 let hell = &hello[0..4]; 
-println!("{hell}");
+println!("{hell}"); // hell
 #}
 ```
 
@@ -486,7 +510,7 @@ the form `&[T]` where `T` is the type of every item in the array.
 let hell: &[char] = &hello[0..=3];
 
 // This is another way of printing variables with debug that we haven't covered yet 
-print!("{:?}", hell);
+print!("{:?}", hell); // ['H', 'e', 'l', 'l']
 #}
 ```
 
@@ -521,8 +545,8 @@ the number element you want. Again, this starts from 0.
 
 ```rust
 let char_int: (char, i32) = ('a', 1);
-let a = char_int.0;
-let one = char_int.1;
+let a = char_int.0; // 'a'
+let one = char_int.1; // 1
 ```
 
 #### The Unit Type
@@ -530,6 +554,8 @@ let one = char_int.1;
 The Unit Type is a zero length tuple `()` that is Rust's way to represent nothing. It is zero bytes, does not exist on
 the stack at runtime, and unlike other languages with types like `null` or `void`, can not be used interchangeably with
 other types.
+
+You might use this type in conjunction with generics which we'll come to in a bit.
 
 ### Structs
 
@@ -548,12 +574,12 @@ struct Vector3(f64, f64, f64);
 
 fn main() {
     let vec = Vector3(10.0, 2.0, 3.33);
-    let ten = vec.0;
-    let two = vec.1;
+    let ten = vec.0; // 10.0
+    let two = vec.1; // 2.0
 }
 ```
 
-Similar to tuples, this kind of struct can be accessed with a `.` and a numbered value, _however_ unlike structs,
+Similar to tuples, this kind of struct can be accessed with a `.` and a numbered value, _however_ unlike tuples,
 structs have a concept of "visibility". Unless explicitly marked as public the fields of a struct are only accessible
 in the module in which it is defined, or its descendents. We'll talk more about modules later, however, to make the
 fields of a struct public, you can simply mark them as `pub`.
@@ -584,7 +610,7 @@ fn main() {
         alive: true,
     };
 
-    let is_alive = cell.alive;
+    let is_alive = cell.alive; // true
 }
 ```
 
@@ -715,7 +741,7 @@ restrict what types are allowed to be used in generics through the use of trait 
 Conclusion
 ----------
 
-That is (almost) everything you need to know about types! The main thing we're still missing in ownership, but we'll
+That is (almost) everything you need to know about types! The main thing we're still missing is ownership, but we'll
 come to that later. The main things to remember are:
 
 - We have our primitive types that represent binary data. There's a lot of choice here, but that's a good thing!
@@ -725,4 +751,4 @@ come to that later. The main things to remember are:
   (representing a successful value or an error)
 
 In the next chapter we're going to talk about controlling the flow of our program with branches and loops as well as
-introducing functions.
+pattern matching which and expressions.

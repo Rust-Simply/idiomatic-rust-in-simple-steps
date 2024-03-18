@@ -198,7 +198,7 @@ handle on?</p>
 </div>
 <p>This is how many primitive types there are in Rust! And yes, as scary as it is, you will completely understand this in
 just a few minutes!</p>
-<p>First and most importantly, forget the above, there’s really only five subtypes that we actually care about:</p>
+<p>First and most importantly, forget the above, there’s really only five type categories that we actually care about:</p>
 <div class="table-wrapper"><table><thead><tr><th>types</th></tr></thead><tbody>
 <tr><td>integers</td></tr>
 <tr><td>floating points</td></tr>
@@ -220,12 +220,28 @@ where each column represents how many 1s, 10s, 100s, etc there are in the number
 <tr><td>Count:</td><td>1</td><td>2</td><td>3</td></tr>
 </tbody></table>
 </div>
-<p>When we add numbers to the columns, if the column goes over 9, then we add to the next column along.</p>
-<p>So, if we add 1 to 9, it goes to 10, 19 goes to 20, and 99 goes to 100 (because the roll-over from the right most 9 adds
-to the next 9 also causing it to roll over).</p>
-<p>((Add pictures or tables))</p>
-<p>This counting system is called base 10 by the way as each of those columns is 10 raised to the power of which column it
-is, starting at 0:</p>
+<p>When we add numbers to the columns, if the column goes over 9, then we change it back to 0 and add 1 to the next 
+column along.</p>
+<p>So, if we add 1 to 9, it goes to 10,</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: right">Columns:</th><th>10</th><th>1</th></tr></thead><tbody>
+<tr><td style="text-align: right">1 +</td><td>0</td><td>9</td></tr>
+<tr><td style="text-align: right">=</td><td>1</td><td>0</td></tr>
+</tbody></table>
+</div>
+<p>19 goes to 20</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: right">Columns:</th><th>10</th><th>1</th></tr></thead><tbody>
+<tr><td style="text-align: right">1 +</td><td>1</td><td>9</td></tr>
+<tr><td style="text-align: right">=</td><td>2</td><td>0</td></tr>
+</tbody></table>
+</div>
+<p>and 99 goes to 100 because the roll-over from the right most 9 adds to the next 9 also causing it to roll over.</p>
+<div class="table-wrapper"><table><thead><tr><th style="text-align: right">Columns:</th><th>100</th><th>10</th><th>1</th></tr></thead><tbody>
+<tr><td style="text-align: right">1 +</td><td>0</td><td>9</td><td>9</td></tr>
+<tr><td style="text-align: right">=</td><td>1</td><td>0</td><td>0</td></tr>
+</tbody></table>
+</div>
+<p>This counting system is called base 10 as each of those columns is 10 raised to the power of which column it is,
+starting at 0:</p>
 <ul>
 <li>10^0 = 1</li>
 <li>10^1 = 10</li>
@@ -233,6 +249,12 @@ is, starting at 0:</p>
 <li>10^3 = 1000</li>
 <li>etc</li>
 </ul>
+<p>Eg:</p>
+<div class="table-wrapper"><table><thead><tr><th>Column number:</th><th>3</th><th>2</th><th>1</th><th>0</th></tr></thead><tbody>
+<tr><td>As power:</td><td>10^3</td><td>10^2</td><td>10^1</td><td>10^0</td></tr>
+<tr><td>Column value:</td><td>1000</td><td>100</td><td>10</td><td>1</td></tr>
+</tbody></table>
+</div>
 <p>Electronics, and by extension computers, can only really cope reliably with things that are <code>on</code> or <code>off</code> though. How do
 you count with only on or off? Well, what if instead of having ten possible values in each column (0-9 or base 10), we
 only have two (0-1 or base 2). This is binary.</p>
@@ -251,8 +273,8 @@ mark those columns as one’s and the others as zeros we get:</p>
 </tbody></table>
 </div>
 <p>Sometimes when we want to write something in binary and be explicit that that is the system we’re using we might write:
-<code>0b1101</code>. The <code>0b</code> at the start makes it clear that a number like <code>0b1011</code> represents “eleven” and not “one thousand and
-eleven”. </p>
+<code>0b1101</code>. The <code>0b</code> at the start makes it clear that a number like <code>0b1101</code> represents “thirteen” and not “one thousand
+one hundred and one.</p>
 <p>Each 1 or 0 is a <em><strong>b</strong></em>inary dig<em><strong>it</strong></em>, which is where we get the term “bit”.</p>
 <p>Eight bits is a byte, and can represent the numbers from <code>0b0000_0000</code> (zero) to <code>0b1111_1111</code> (two hundred and 
 fifty-five, again, I’m not expecting anyone to be able to <em>read</em> this). Btw, I’m using an underscore as a 
@@ -260,8 +282,8 @@ spacer between numbers to help legibility, this also works in Rust, as does the 
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>let min_byte: u8 = 0b0000_0000;
 let max_byte: u8 = 0b1111_1111;
-println!(&quot;min_byte: {min_byte}&quot;);
-println!(&quot;max_byte: {max_byte}&quot;);
+println!(&quot;min_byte: {min_byte}&quot;); // 0
+println!(&quot;max_byte: {max_byte}&quot;); // 255
 <span class="boring">}</span></code></pre></pre>
 <p>The reason why a byte is eight bits has a lot of history, but it basically comes down to character encoding: with 7
 bits, you can represent 127 characters which covers english lowercase, uppercase, numbers 0-9, various whitespace and
@@ -410,8 +432,8 @@ you can run this in place with the play button):</p>
 
 let time_u32 = time as u32;
 
-println!(&quot;Before conversion: {time}&quot;);
-println!(&quot;After conversion: {time_u32}&quot;);
+println!(&quot;Before conversion: {time}&quot;); // approx: 1710771427971
+println!(&quot;After conversion: {time_u32}&quot;); // approx: 1374444163
 <span class="boring">}</span></code></pre></pre>
 <h3 id="floating-points"><a class="header" href="#floating-points">Floating Points</a></h3>
 <p>We’ve covered twelve different ways of storing whole numbers in Rust, but there are only two ways of storing numbers
@@ -435,14 +457,14 @@ have a coupon for $520.02. The remainder that they need to pay is 2 cents, right
 
 // Single Precision Floating Point
 let float_32 = 520.04_f32 - 520.02_f32;
-println!(&quot;f32, {float_32}&quot;);
+println!(&quot;But, using f32 it's: {float_32}&quot;);  // 0.019958496
 
 // Double Precision Floating Point
 let float_64 = 520.04_f64 - 520.02_f64;
-println!(&quot;f64, {float_64}&quot;);
+println!(&quot;And, using f64 it's: {float_64}&quot;); // 0.01999999999998181
 <span class="boring">}</span></code></pre></pre>
 <p>Instead, if the currency you’re representing uses “hundredths” for its minor currency like USD or GBP, then you can
-represent the total number that instead, eg of cents for dollars or pennies for pounds.</p>
+represent the total number of that instead, eg of cents for dollars or pennies for pounds, using integers instead.</p>
 <p>When should you use floats?</p>
 <p>Floating point numbers are great for more abstract mathematics where perfect precisions isn’t strictly necessary, for
 example, vectors, matrices and quaternions which are often used in applications like video games and scientific models.</p>
@@ -452,7 +474,7 @@ where is the <code>fsize</code>?</p>
 <p>Actually, 32bit architectures are usually designed to support 64bit floating point numbers just fine, the difference
 between <code>f32</code> and <code>f64</code> is that regardless of architecture, <code>f32</code> is faster, and <code>f64</code> is more “fine grain”.</p>
 <h3 id="characters"><a class="header" href="#characters">Characters</a></h3>
-<p>In Rust, we have a special type the represents a single character called <code>char</code>. It is always 4 bytes (32bits) in size
+<p>In Rust, we have a special type that represents a single character called <code>char</code>. It is always 4 bytes (32bits) in size
 and can be any valid “unicode scalar value” (which is to say, any character in unicode that’s not a control character).
 In Rust a character is always written between single quotes, whereas string literals are always written between double
 quotes.</p>
@@ -463,7 +485,7 @@ scalar value”.</p>
 </span>let i = 'I';
 let love = '💖';
 let yuki = '雪';
-println!(&quot;{i} {love} {yuki}&quot;); 
+println!(&quot;{i} {love} {yuki}&quot;); // I 💖 雪
 <span class="boring">}</span></code></pre></pre>
 <p>We usually use characters in relation to finding things inside strings. You can also turn strings into a collection of
 characters and vice versa, however its important to note that a character inside a string may not take up 4 bytes (for
@@ -491,10 +513,10 @@ necessarily be the same as its length in characters.</p>
 </span>let yuki = &quot;雪&quot;;
 
 let byte_length = yuki.len();
-println!(&quot;{yuki} length in bytes: {byte_length}&quot;);
+println!(&quot;{yuki} length in bytes: {byte_length}&quot;); // 3
 
 let char_length = yuki.chars().count();
-println!(&quot;{yuki} length in characters: {char_length}&quot;);
+println!(&quot;{yuki} length in characters: {char_length}&quot;); // 1
 <span class="boring">}</span></code></pre></pre>
 <p>Its also worth remembering that when you turn a string into characters, each of those characters will take up 4 bytes
 of memory, even though inside the string they might have only taken up one byte (again, don’t worry about the code in
@@ -505,11 +527,11 @@ the next example we’ll talk about it soon):</p>
 </span>let hello = &quot;hello&quot;;
 
 let string_size = size_of_val(hello);
-println!(&quot;Size as string slice: {string_size} bytes&quot;);
+println!(&quot;Size as string slice: {string_size} bytes&quot;); // 5
 
 // Convert the string slice to chars, get the size of each char, and sum them
 let  char_size: usize = hello.chars().map(|c| size_of_val(&amp;c)).sum();
-println!(&quot;Size as characters: {char_size} bytes&quot;);
+println!(&quot;Size as characters: {char_size} bytes&quot;); // 20
 <span class="boring">}</span></code></pre></pre>
 <p>The size of a string slice depends on what’s in it, which is why you won’t see it on the stack (string slices live in
 either the compiled output as string literals, or on the Heap inside a String). A string slice reference is made up of
@@ -522,7 +544,7 @@ taking a slice inside a slice to make sure that the sub slice is a valid UTF-8 s
 </span>let hello = &quot;hello&quot;;
 // hell is a reference to a substring, range 0..4 is exclusive so 0, 1, 2, 3 but not 4
 let hell = &amp;hello[0..4]; 
-println!(&quot;{hell}&quot;);
+println!(&quot;{hell}&quot;); // hell
 <span class="boring">}</span></code></pre></pre>
 <blockquote>
 <p>⚠️ It is <em>possible</em> to create a string slice that is not a valid UTF-8 string so you should be mindful that this isn’t
@@ -549,7 +571,7 @@ the form <code>&amp;[T]</code> where <code>T</code> is the type of every item in
 let hell: &amp;[char] = &amp;hello[0..=3];
 
 // This is another way of printing variables with debug that we haven't covered yet 
-print!(&quot;{:?}&quot;, hell);
+print!(&quot;{:?}&quot;, hell); // ['H', 'e', 'l', 'l']
 <span class="boring">}</span></code></pre></pre>
 <p>You can access elements inside the array directly by using an index value between square brackets. In Rust, indexing
 starts at 0. So:</p>
@@ -577,13 +599,14 @@ the number element you want. Again, this starts from 0.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let char_int: (char, i32) = ('a', 1);
-let a = char_int.0;
-let one = char_int.1;
+let a = char_int.0; // 'a'
+let one = char_int.1; // 1
 <span class="boring">}</span></code></pre></pre>
 <h4 id="the-unit-type"><a class="header" href="#the-unit-type">The Unit Type</a></h4>
 <p>The Unit Type is a zero length tuple <code>()</code> that is Rust’s way to represent nothing. It is zero bytes, does not exist on
 the stack at runtime, and unlike other languages with types like <code>null</code> or <code>void</code>, can not be used interchangeably with
 other types.</p>
+<p>You might use this type in conjunction with generics which we’ll come to in a bit.</p>
 <h3 id="structs"><a class="header" href="#structs">Structs</a></h3>
 <p>Structs are similar to tuples in that they are a type made up of other types. Unlike tuples they are named though. There
 are three types of structs, structs with named fields, tuple structs and unit structs.</p>
@@ -597,10 +620,10 @@ and indeed they can be accessed the same way:</p>
 
 fn main() {
     let vec = Vector3(10.0, 2.0, 3.33);
-    let ten = vec.0;
-    let two = vec.1;
+    let ten = vec.0; // 10.0
+    let two = vec.1; // 2.0
 }</code></pre></pre>
-<p>Similar to tuples, this kind of struct can be accessed with a <code>.</code> and a numbered value, <em>however</em> unlike structs,
+<p>Similar to tuples, this kind of struct can be accessed with a <code>.</code> and a numbered value, <em>however</em> unlike tuples,
 structs have a concept of “visibility”. Unless explicitly marked as public the fields of a struct are only accessible
 in the module in which it is defined, or its descendents. We’ll talk more about modules later, however, to make the
 fields of a struct public, you can simply mark them as <code>pub</code>.</p>
@@ -626,7 +649,7 @@ fn main() {
         alive: true,
     };
 
-    let is_alive = cell.alive;
+    let is_alive = cell.alive; // true
 }</code></pre></pre>
 <h4 id="unit-structs"><a class="header" href="#unit-structs">Unit Structs</a></h4>
 <p>Unit structs are an interesting case that you probably won’t find much use for until we get into more advanced Rust and
@@ -729,7 +752,7 @@ handling later.</p>
 <p>When we start talking about adding functionality to traits in the next chapter, we’ll also talk about how you can
 restrict what types are allowed to be used in generics through the use of trait bounds.</p>
 <h2 id="conclusion"><a class="header" href="#conclusion">Conclusion</a></h2>
-<p>That is (almost) everything you need to know about types! The main thing we’re still missing in ownership, but we’ll
+<p>That is (almost) everything you need to know about types! The main thing we’re still missing is ownership, but we’ll
 come to that later. The main things to remember are:</p>
 <ul>
 <li>We have our primitive types that represent binary data. There’s a lot of choice here, but that’s a good thing!</li>
@@ -739,7 +762,7 @@ come to that later. The main things to remember are:</p>
 (representing a successful value or an error)</li>
 </ul>
 <p>In the next chapter we’re going to talk about controlling the flow of our program with branches and loops as well as
-introducing functions.</p>
+pattern matching which and expressions.</p>
 
                     </main>
 
