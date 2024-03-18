@@ -83,7 +83,7 @@ In binary our columns are a bit different:
 - 2^3 = 8
 - etc
 
-So if we want to represent the number 11 in base 2, we can see it contains one 8, one 2, and one 1.
+So if we want to represent the number eleven in base 2, we can see it contains one 8, one 2, and one 1.
 
 | Columns: | 8 | 4 | 2 | 1 |
 |----------|---|---|---|---|
@@ -92,11 +92,20 @@ So if we want to represent the number 11 in base 2, we can see it contains one 8
 Sometimes when we want to write something in binary and be explicit that that is the system we're using we might write:
 `0b1011`. This makes it clear that this number represents "eleven" and not "one thousand and eleven".
 
-Each column is a ***b***inary dig***it***, which is where we get the term "bit".
+Each 1 or 0 is a ***b***inary dig***it***, which is where we get the term "bit".
 
 Eight bits is a byte, and can represent the numbers from `0b0000_0000` (zero) to `0b1111_1111` (two hundred and 
-fifty-five, again, I'm not expecting anyone to be able to _read_ this). Also note that I'm using an underscore as a 
+fifty-five, again, I'm not expecting anyone to be able to _read_ this). Btw, I'm using an underscore as a 
 spacer between numbers to help legibility, this also works in Rust, as does the `0b` notation!
+
+```rust
+#fn main() {
+let min_byte: u8 = 0b0000_0000;
+let max_byte: u8 = 0b1111_1111;
+println!("min_byte: {min_byte}");
+println!("max_byte: {max_byte}");
+#}
+```
 
 The reason why a byte is eight bits has a lot of history, but it basically comes down to character encoding: with 7
 bits, you can represent 127 characters which covers english lowercase, uppercase, numbers 0-9, various whitespace and
@@ -291,7 +300,7 @@ with decimal points: `f32` and `f64`.
 Floating point numbers are things like `0.123` or `1.23` or even `123.0`. They're called floating point because the
 decimal point can move around (as opposed to fixed point, where there is always the same number of fractional digits).
 
-You're immediate thought here might be that you should use `f32` on 32bit systems, and `f64` on 64bit systems, but
+Your immediate thought here might be that you should use `f32` on 32bit systems, and `f64` on 64bit systems, but
 actually this isn't the way to think about these numbers.
 
 You see, floating points are not perfectly accurate. The bits of a floating point number are broken into parts:
