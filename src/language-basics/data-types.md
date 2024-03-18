@@ -364,8 +364,8 @@ println!("And, using f64 it's: {float_64}"); // 0.01999999999998181
 #}
 ```
 
-Instead, if the currency you're representing uses "hundredths" for its minor currency like USD or GBP, then you can
-represent the total number of that instead, eg of cents for dollars or pennies for pounds, using integers instead.
+Instead, if the currency you're representing uses "hundredths" for its minor currency like USD or GBP, then you can (and
+maybe should) represent the total number of that, eg of cents for dollars or pennies for pounds, using integers instead.
 
 When should you use floats?
 

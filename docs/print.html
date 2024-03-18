@@ -1123,8 +1123,8 @@ println!(&quot;But, using f32 it's: {float_32}&quot;);  // 0.019958496
 let float_64 = 520.04_f64 - 520.02_f64;
 println!(&quot;And, using f64 it's: {float_64}&quot;); // 0.01999999999998181
 <span class="boring">}</span></code></pre></pre>
-<p>Instead, if the currency you’re representing uses “hundredths” for its minor currency like USD or GBP, then you can
-represent the total number of that instead, eg of cents for dollars or pennies for pounds, using integers instead.</p>
+<p>Instead, if the currency you’re representing uses “hundredths” for its minor currency like USD or GBP, then you can (and
+maybe should) represent the total number of that, eg of cents for dollars or pennies for pounds, using integers instead.</p>
 <p>When should you use floats?</p>
 <p>Floating point numbers are great for more abstract mathematics where perfect precisions isn’t strictly necessary, for
 example, vectors, matrices and quaternions which are often used in applications like video games and scientific models.</p>
