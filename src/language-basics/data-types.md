@@ -1,6 +1,13 @@
 Data Types
 ==========
 
+In programming a Type describes what kind of data or values can be used in a particular circumstance.
+
+In Rust, we use Types to describe variables, parameters, properties or anywhere else you can have a value, so that the
+compiler knows what the data at that point will look like inside the running program, and how it will behave. This can
+include how the where in memory the data lives, how it's represented in memory, and what functionality can be assigned
+to the data (though we'll cover that last part in the upcoming Functions chapter).
+
 Primitive Types
 ---------------
 
