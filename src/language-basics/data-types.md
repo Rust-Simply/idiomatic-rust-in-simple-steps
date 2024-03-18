@@ -735,7 +735,7 @@ fn function_that_fails_half_the_time() -> Result<u128, String> { // Note the ret
 } 
 ```
 
-When we start talking about adding functionality to traits in the next chapter, we'll also talk about how you can
+When we start talking about adding functionality to types in the functions chapter, we'll also talk about how you can
 restrict what types are allowed to be used in generics through the use of trait bounds.
 
 Conclusion
