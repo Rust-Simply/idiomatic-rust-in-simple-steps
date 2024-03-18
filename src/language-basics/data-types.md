@@ -69,6 +69,8 @@ When we add numbers to the columns, if the column goes over 9, then we add to th
 So, if we add 1 to 9, it goes to 10, 19 goes to 20, and 99 goes to 100 (because the roll-over from the right most 9 adds
 to the next 9 also causing it to roll over).
 
+((Add pictures or tables))
+
 This counting system is called base 10 by the way as each of those columns is 10 raised to the power of which column it
 is, starting at 0:
 
@@ -90,14 +92,16 @@ In binary our columns are a bit different:
 - 2^3 = 8
 - etc
 
-So if we want to represent the number eleven in base 2, we can see it contains one 8, one 2, and one 1.
+So if we want to represent the number 13 in base 2, we can see it contains one 8, one 4, and one 1 (8+4+1 = 13). If we
+mark those columns as one's and the others as zeros we get:
 
 | Columns: | 8 | 4 | 2 | 1 |
 |----------|---|---|---|---|
-| Count:   | 1 | 0 | 1 | 1 |
+| Count:   | 1 | 1 | 0 | 1 |
 
 Sometimes when we want to write something in binary and be explicit that that is the system we're using we might write:
-`0b1011`. This makes it clear that this number represents "eleven" and not "one thousand and eleven".
+`0b1101`. The `0b` at the start makes it clear that a number like `0b1011` represents "eleven" and not "one thousand and
+eleven". 
 
 Each 1 or 0 is a ***b***inary dig***it***, which is where we get the term "bit".
 
@@ -442,11 +446,6 @@ Fun fact about that reference though: you might wonder if it's just a pointer an
 have a reference to a string slice that exists inside a string slice, and the answer is: yes! Just be careful when
 taking a slice inside a slice to make sure that the sub slice is a valid UTF-8 string.
 
-> ⚠️ It is _possible_ to create a string slice that is not a valid UTF-8 string so you should be mindful that this isn't
-> a guarantee, but you also shouldn't make the effort to check the validity everywhere its used. It _should_ be a UTF-8
-> string, but if you are constructing your own from raw data, or if there are security implications to the use of a
-> string slice, you should be careful.
-
 ```rust
 #fn main() {
 let hello = "hello";
@@ -455,6 +454,11 @@ let hell = &hello[0..4];
 println!("{hell}");
 #}
 ```
+
+> ⚠️ It is _possible_ to create a string slice that is not a valid UTF-8 string so you should be mindful that this isn't
+> a guarantee, but you also shouldn't make the effort to check the validity everywhere its used. It _should_ be a UTF-8
+> string, but if you are constructing your own from raw data, or if there are security implications to the use of a
+> string slice, you should be careful.
 
 Compound Types
 --------------

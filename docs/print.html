@@ -883,6 +883,7 @@ where each column represents how many 1s, 10s, 100s, etc there are in the number
 <p>When we add numbers to the columns, if the column goes over 9, then we add to the next column along.</p>
 <p>So, if we add 1 to 9, it goes to 10, 19 goes to 20, and 99 goes to 100 (because the roll-over from the right most 9 adds
 to the next 9 also causing it to roll over).</p>
+<p>((Add pictures or tables))</p>
 <p>This counting system is called base 10 by the way as each of those columns is 10 raised to the power of which column it
 is, starting at 0:</p>
 <ul>
@@ -903,13 +904,15 @@ only have two (0-1 or base 2). This is binary.</p>
 <li>2^3 = 8</li>
 <li>etc</li>
 </ul>
-<p>So if we want to represent the number eleven in base 2, we can see it contains one 8, one 2, and one 1.</p>
+<p>So if we want to represent the number 13 in base 2, we can see it contains one 8, one 4, and one 1 (8+4+1 = 13). If we
+mark those columns as one’s and the others as zeros we get:</p>
 <div class="table-wrapper"><table><thead><tr><th>Columns:</th><th>8</th><th>4</th><th>2</th><th>1</th></tr></thead><tbody>
-<tr><td>Count:</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+<tr><td>Count:</td><td>1</td><td>1</td><td>0</td><td>1</td></tr>
 </tbody></table>
 </div>
 <p>Sometimes when we want to write something in binary and be explicit that that is the system we’re using we might write:
-<code>0b1011</code>. This makes it clear that this number represents “eleven” and not “one thousand and eleven”.</p>
+<code>0b1101</code>. The <code>0b</code> at the start makes it clear that a number like <code>0b1011</code> represents “eleven” and not “one thousand and
+eleven”. </p>
 <p>Each 1 or 0 is a <em><strong>b</strong></em>inary dig<em><strong>it</strong></em>, which is where we get the term “bit”.</p>
 <p>Eight bits is a byte, and can represent the numbers from <code>0b0000_0000</code> (zero) to <code>0b1111_1111</code> (two hundred and 
 fifty-five, again, I’m not expecting anyone to be able to <em>read</em> this). Btw, I’m using an underscore as a 
@@ -1175,18 +1178,18 @@ on the system architecture.</p>
 <p>Fun fact about that reference though: you might wonder if it’s just a pointer and a length, does that mean you can
 have a reference to a string slice that exists inside a string slice, and the answer is: yes! Just be careful when
 taking a slice inside a slice to make sure that the sub slice is a valid UTF-8 string.</p>
-<blockquote>
-<p>⚠️ It is <em>possible</em> to create a string slice that is not a valid UTF-8 string so you should be mindful that this isn’t
-a guarantee, but you also shouldn’t make the effort to check the validity everywhere its used. It <em>should</em> be a UTF-8
-string, but if you are constructing your own from raw data, or if there are security implications to the use of a
-string slice, you should be careful.</p>
-</blockquote>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>let hello = &quot;hello&quot;;
 // hell is a reference to a substring, range 0..4 is exclusive so 0, 1, 2, 3 but not 4
 let hell = &amp;hello[0..4]; 
 println!(&quot;{hell}&quot;);
 <span class="boring">}</span></code></pre></pre>
+<blockquote>
+<p>⚠️ It is <em>possible</em> to create a string slice that is not a valid UTF-8 string so you should be mindful that this isn’t
+a guarantee, but you also shouldn’t make the effort to check the validity everywhere its used. It <em>should</em> be a UTF-8
+string, but if you are constructing your own from raw data, or if there are security implications to the use of a
+string slice, you should be careful.</p>
+</blockquote>
 <h2 id="compound-types"><a class="header" href="#compound-types">Compound Types</a></h2>
 <h3 id="arrays"><a class="header" href="#arrays">Arrays</a></h3>
 <p>Arrays are a collection of a single type. You might see arrays in two forms, either as a sized array on the stack, or
