@@ -379,9 +379,10 @@ where _might_ be a sign that the code isn't written in the best way.
 Our old friend the string slice!
 
 The type for a string slice is `str`, but you'll never see anything with the `str` type, you will usually see this
-as a reference to a string slice (`&str`), which makes it unique amongst the primitive types. `str` should always be a
-UTF-8 string (see ⚠️ below), which means that the length of a string in bytes may not necessarily be the same as its
-length in characters.
+as a reference to a string slice `&str`, which makes it unique amongst the primitive types. 
+
+`str` should always be a UTF-8 string (see ⚠️ below), which means that the length of a string in bytes may not
+necessarily be the same as its length in characters.
 
 For example (don't worry about the code yet):
 
@@ -390,10 +391,10 @@ For example (don't worry about the code yet):
 let yuki = "雪";
 
 let byte_length = yuki.len();
-println!("Length in bytes: {byte_length}");
+println!("{yuki} length in bytes: {byte_length}");
 
 let char_length = yuki.chars().count();
-println!("Length in characters: {char_length}");
+println!("{yuki} length in characters: {char_length}");
 #}
 ```
 

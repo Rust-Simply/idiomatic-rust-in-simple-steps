@@ -1129,18 +1129,18 @@ where <em>might</em> be a sign that the code isn’t written in the best way.</p
 <h3 id="string-slices"><a class="header" href="#string-slices">String slices</a></h3>
 <p>Our old friend the string slice!</p>
 <p>The type for a string slice is <code>str</code>, but you’ll never see anything with the <code>str</code> type, you will usually see this
-as a reference to a string slice (<code>&amp;str</code>), which makes it unique amongst the primitive types. <code>str</code> should always be a
-UTF-8 string (see ⚠️ below), which means that the length of a string in bytes may not necessarily be the same as its
-length in characters.</p>
+as a reference to a string slice <code>&amp;str</code>, which makes it unique amongst the primitive types. </p>
+<p><code>str</code> should always be a UTF-8 string (see ⚠️ below), which means that the length of a string in bytes may not
+necessarily be the same as its length in characters.</p>
 <p>For example (don’t worry about the code yet):</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>let yuki = &quot;雪&quot;;
 
 let byte_length = yuki.len();
-println!(&quot;Length in bytes: {byte_length}&quot;);
+println!(&quot;{yuki} length in bytes: {byte_length}&quot;);
 
 let char_length = yuki.chars().count();
-println!(&quot;Length in characters: {char_length}&quot;);
+println!(&quot;{yuki} length in characters: {char_length}&quot;);
 <span class="boring">}</span></code></pre></pre>
 <p>Its also worth remembering that when you turn a string into characters, each of those characters will take up 4 bytes
 of memory, even though inside the string they might have only taken up one byte (again, don’t worry about the code in
