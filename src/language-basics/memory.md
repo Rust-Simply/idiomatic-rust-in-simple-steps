@@ -408,7 +408,7 @@ then you could do it like this:
     let colors = ["red", "green", "blue"];
     let time = std::time::UNIX_EPOCH
         .elapsed()
-        .expect("Call the doctor, time went backwards")
+        .expect("Call the Doctor, time went backwards")
         .as_millis() as usize; // We only need the least significant bits so this is safe
     let actual = colors[time % colors.len()];
 #    

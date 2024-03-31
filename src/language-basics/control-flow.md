@@ -462,12 +462,217 @@ Looping
 
 ### Loop
 
-- no finish, only loop
-- labels
+The most basic loop is, well, `loop`.
+
+When you enter a loop, the code inside it will run until its explicitly told to stop. For example:
+
+```rust
+#fn main() {
+#let mut protect_the_loop: u8 = 0;
+loop {
+    println!("These lines will print out forever");
+    println!("Unless the program is interrupted, eg, with Ctrl + C");
+#     protect_the_loop = protect_the_loop + 1;
+#     if protect_the_loop >= 10 {
+#         println!("I hid a break in this code as you can't Ctrl + C if you run this on Rust Playground / via the book");
+#         break;
+#     } 
+}
+#}
+```
+
+This might seem a little bit unhelpful, surely you never want to get trapped inside a loop forever, but actually, we
+often want to keep a program running inside a loop.
+
+You can manually exit the loop using the `break` keyword. Like other languages, you can simply break from a loop, but
+remember that blocks can be expressions, and this applies to loops too! That means we can have a loop that does some
+work, and once the work is done, break with the value we want to take from the loop.
+
+In the example below, we run a loop until we find some cool number (note the use of `if let`), then break with that
+value. The Type of found is an `u64` (don't forget you can expand the code in the example if you're curious), and by
+breaking with that value, the Type of the whole loop becomes `u64` too!
+
+```rust
+# fn find_a_cool_number() -> Option<u64> {
+#     let secs = std::time::UNIX_EPOCH
+#         .elapsed()
+#         .expect("Call the Doctor, time went backwards")
+#         .as_secs();
+#     (secs % 3 == 0).then_some(secs / 3)
+# }
+# 
+# fn main() {
+let some_cool_number = loop {
+    println!("Looking for a cool number...");
+
+    if let Some(found) = find_a_cool_number() {
+        break found;
+    }
+};
+
+println!("The number we found was {some_cool_number}");
+# }
+```
+
+Another useful keyword when looping is `continue`. Imagine you have a series of things that need to be processed but
+you can skip over _some_ of those things.
+
+The following example will continuously get images, and run a time-consuming `process_image` function, unless the image
+is an SVG, in which cas it will skip it. 
+
+```rust
+#use std::{
+#    io::{stdout, Write},
+#    thread::sleep,
+#    time::{Duration, UNIX_EPOCH}
+#};
+#
+#fn main() {
+#     let mut protect_the_loop: u8 = 0;
+loop {
+    let image = get_image();
+    if image.is_svg {
+        println!("Skipping SVG");
+        continue;
+    }
+    process_image(image);
+#
+#         protect_the_loop = protect_the_loop + 1;
+#         if protect_the_loop >= 10 {
+#             println!("Protecting the loop again, this is only for demo purposes");
+#             break;
+#         }
+}
+# }
+# 
+# 
+# struct Image {
+#     is_svg: bool,
+# }
+# 
+# fn get_image() -> Image {
+#     let micros = UNIX_EPOCH
+#         .elapsed()
+#         .expect("Call the Doctor, time went backwards")
+#         .as_micros();
+#     Image {
+#         is_svg: micros % 3 == 0,
+#     }
+# }
+# 
+# fn process_image(_image: Image) {
+#     print!("Processing Image, please wait... ");
+#     stdout().flush().expect("Something went wrong with stdout");
+#     sleep(Duration::from_millis(1000)); // wait half a second
+#     println!("done");
+# }
+```
+
+There's one more neat trick up Rust's sleeve. As with most languages, Rust of course supports nested loops, but to aid
+with things like `break` and `continue` it also supports labels.
+
+Labels start with a single quote `'` and mark the loop they are for with a colon.
+
+This very contrived example steps through a set of instructions. See if you can guess the what will happen (see below 
+for the answer).
+
+```rust
+enum LoopInstructions {
+    DoNothing,
+    ContinueInner,
+    ContinueOuter,
+    BreakInner,
+    BreakOuter,
+}
+
+fn main() {
+    let sequence = [
+        LoopInstructions::DoNothing,
+        LoopInstructions::ContinueInner,
+        LoopInstructions::ContinueOuter,
+        LoopInstructions::BreakInner,
+        LoopInstructions::BreakOuter
+    ];
+
+    // This lets us get one bit of the sequence at a time
+    // Don't worry too much about it for now!
+    let mut iter = sequence.iter();
+
+    'outer: loop {
+        println!("Start outer");
+        'inner: loop {
+            println!("Start inner");
+
+            match iter.next() {
+                Some(LoopInstructions::ContinueInner) => continue 'inner,
+                Some(LoopInstructions::ContinueOuter) => continue 'outer,
+                Some(LoopInstructions::BreakInner) => break 'inner,
+                Some(LoopInstructions::BreakOuter) => break 'outer,
+                _ => {}
+            }
+
+            println!("End inner");
+        }
+        println!("End outer");
+    }
+}
+```
+
+1. The outer loop starts so we get **"Start outer"**
+2. We enter the inner loop so we see **"Start inner"**
+3. The **first** instruction `DoNothing` is read, it matches the last arm which does nothing so we continue
+4. After the match we hit **"End inner"**
+5. The inner loop starts again so we get **"Start inner"**
+6. The **second** instruction `ContinueInner` matches, we execute `contine 'inner` so we start the inner loop again
+7. We've started the inner loop again due to the previous instruction and get **"Start inner"**
+8. The third instruction `ContinueOuter` matches, we execute `continue 'outer` so go to the beginning of that loop
+9. We're back at the start so we see **"Start outer"**
+10. And re-enter the inner loop **"Start inner"**
+11. The **fourth** instruction is `BreakInner` so we execute `break 'inner`, when exits the inner loop
+12. We exit the inner loop and continue from that point so we finally see **"End outer"**
+13. The outer loop starts over so we see **"Start outer"**
+14. We enter the inner loop and see **"Start inner"**
+15. The **final** instruction `BreakOuter` matches so we execute `break 'outer`, which exits the outer loop and ends 
+    the program
 
 ### While
 
-- exit condition in loop
+While `loop` is great for programs that actually do want to try to keep running forever (or perhaps has many exit
+conditions), we often only want to loop over something `while` something is true. The `while` loop takes an expression
+that evaluates to true or false. The expression is checked at the start of each iteration through the loop, if its
+true, the loop will execute.
+
+```rust
+# fn get_seconds() -> u64 {
+#     UNIX_EPOCH
+#         .elapsed()
+#         .expect("Call the Doctor, time went backwards")
+#         .as_seconds()
+# }
+
+# fn main() {
+while get_seconds() % 3 == 0 {
+    println!("The time in seconds is not divisible by 3");
+}
+println!("The time was successfully divided by 3!");
+# }
+```
+
+The above is a very contrived example, however, you can do all of the tricks we've learned above, including pattern
+matching with `while let`.
+
+```rust
+# fn main() {
+# let messages = "The quick brown fox jumped over the lazy dog".split(" ");
+# let mut get_message = move || messages.next();
+while let Some(message) = get_message() {
+    println!("Message received: {message}")
+}
+println!("All messages processed");
+# }
+```
+
+`while let` is extremely useful, and we'll see it more in the future, particularly when we deal with async await later.
 
 ### For In
 

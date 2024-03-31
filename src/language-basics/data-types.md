@@ -299,7 +299,7 @@ of January 1970, and then immediately used `as usize`:
 ```rust
 let time = std::time::UNIX_EPOCH
     .elapsed()
-    .expect("Call the doctor, time went backwards")
+    .expect("Call the Doctor, time went backwards")
     .as_millis() as usize; // We only need the least significant bits so this is safe
 ```
 
@@ -317,7 +317,7 @@ you can run this in place with the play button):
 #fn main() {
 let time = std::time::UNIX_EPOCH
     .elapsed()
-    .expect("Call the doctor, time went backwards")
+    .expect("Call the Doctor, time went backwards")
     .as_millis();
 
 let time_u32 = time as u32;
@@ -724,7 +724,7 @@ handling later.
 fn function_that_fails_half_the_time() -> Result<u128, String> { // Note the return type for a function comes after ->
     let time = std::time::UNIX_EPOCH
         .elapsed()
-        .expect("Call the doctor, time went backwards") // We can do something cooler here but that's for another time
+        .expect("Call the Doctor, time went backwards") // We can do something cooler here but that's for another time
         .as_millis();
 
     if time % 2 == 0 {

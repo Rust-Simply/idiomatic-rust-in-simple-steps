@@ -786,7 +786,7 @@ then you could do it like this:</p>
 </span>    let colors = ["red", "green", "blue"];
     let time = std::time::UNIX_EPOCH
         .elapsed()
-        .expect("Call the doctor, time went backwards")
+        .expect("Call the Doctor, time went backwards")
         .as_millis() as usize; // We only need the least significant bits so this is safe
     let actual = colors[time % colors.len()];
 <span class="boring">   
@@ -1073,7 +1073,7 @@ of January 1970, and then immediately used <code>as usize</code>:</p>
 </span><span class="boring">fn main() {
 </span>let time = std::time::UNIX_EPOCH
     .elapsed()
-    .expect("Call the doctor, time went backwards")
+    .expect("Call the Doctor, time went backwards")
     .as_millis() as usize; // We only need the least significant bits so this is safe
 <span class="boring">}</span></code></pre></pre>
 <p>The reason for this is the number of milliseconds since that date is approximately 1,710,000,000,000 and is
@@ -1087,7 +1087,7 @@ you can run this in place with the play button):</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>let time = std::time::UNIX_EPOCH
     .elapsed()
-    .expect("Call the doctor, time went backwards")
+    .expect("Call the Doctor, time went backwards")
     .as_millis();
 
 let time_u32 = time as u32;
@@ -1399,7 +1399,7 @@ handling later.</p>
 </span>fn function_that_fails_half_the_time() -&gt; Result&lt;u128, String&gt; { // Note the return type for a function comes after -&gt;
     let time = std::time::UNIX_EPOCH
         .elapsed()
-        .expect("Call the doctor, time went backwards") // We can do something cooler here but that's for another time
+        .expect("Call the Doctor, time went backwards") // We can do something cooler here but that's for another time
         .as_millis();
 
     if time % 2 == 0 {
