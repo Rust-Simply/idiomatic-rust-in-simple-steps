@@ -9,7 +9,7 @@
 - [Language Basics](language-basics/README.md)
     - [Memory](language-basics/memory.md)
     - [Data Types](language-basics/data-types.md)
-    - [Control Flow]()
+    - [Control Flow](language-basics/control-flow.md)
     - [Functions]()
     - [Documentation]()
     - [Tests]()

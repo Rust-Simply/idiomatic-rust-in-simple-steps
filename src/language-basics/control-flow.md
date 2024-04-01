@@ -676,4 +676,90 @@ println!("All messages processed");
 
 ### For In
 
-- 
+A very common reason for looping in software is because we want to loop over every item in a collection and perform the
+same set of instructions for each. This is where `for ... in ...` comes in.
+
+For In allows you to step through an `Iterator`, or anything that implements `IntoIterator`, both of which we'll talk
+more about in a later chapter. Simply put though, this lets us step over each item in a collection, stream or series of
+data, even series' that might be infinite!
+
+Often times you might want to do this with a collection such as an [Array](data-types.md#arrays). For example:
+
+```rust
+# fn main() {
+let messages: &[str] = ["Hello", "world"];
+for message in messages {
+    println!("Message received: {message}")
+}
+println!("All messages processed");
+# }
+```
+
+#### Range
+
+Another neat Rust type that works really well here is the Range. We haven't covered Range yet but if you've been peaking
+at the code samples throughout the last few chapters, you might have spotted a few!
+
+Range's allow you to specify a "closed" or "half open" range of numbers... kinda, see below.
+
+> Actually, Range's allow you to specify a range of anything so long as it implements the traits `PartialEq` and 
+> `PartialOrd`. I've personally never seen this done for anything except numbers and characters, but its worth pointing
+> out. We'll talk more about PartialEq and PartialOrd in a later chapter.
+
+We write Ranges in the form `start..end` where `start` is inclusive and `end` is `exclusive`. This means that `2..5`
+includes 2 but not 5. If you want to create a range that includes the final number, prefix that number with `=`, eg
+`2..=5`:
+
+```rust
+# fn main() {
+let exclusive = 0..5;
+let inclusive = 0..=5;
+    
+// This is another way of using variables in println!
+// We use empty curly brackets as a positional marker
+// and then fill those markers in with values after string slice
+println!("Does exclusive range contain end: {}", exclusive.contains(&5)); 
+println!("Does inclusive range contain end: {}", inclusive.contains(&5));
+# }
+```
+
+As mentioned, Range's can be "half open" which means you can get away with specifying only the start or the end. This is
+where the Type of the start and end really start to matter though.
+
+```rust
+# fn main() {
+let u8_range = 0u8..; // this Range is explicitly defined with a u8
+let i8_range = ..0i8; // this Range is defined with an i8
+# }
+```
+
+A big warning here though: half open Ranges are dangerous when it comes to `for ... in ... ` loops. Ranges with no start
+can't be used at all, and Ranges with no end will continue to try to produce numbers beyond the upper limits of the
+type being used at which point your program will crash.
+
+They're great though, if we just want to do something 10 times.
+
+```rust
+# fn main() {
+for i in 0..10 {
+    println!("Loop: {i}");
+}
+# }
+```
+
+Homework
+--------
+
+The best way to learn anything is to practice it. For this section, I'd like you create a program call Fizz Buzz.
+
+In Fizz Buzz we want to run through a series of numbers (say 1 to 100 inclusive). For each number:
+- if the number is divisible by 3, print the word Fizz
+- if the number is divisible by 5, print the word Buzz
+- if the number is divisible by both 3 and 5, print FizzBuzz
+- otherwise, just print the number
+
+You can do this a few ways, but you'll need to loop over each number and then choose what to do with it with those 
+numbers. As a starting point, you could use a range to generate the numbers, then use a `for ... in ...` loop to get
+each number one at a time, then some `if`/`else` statements to get the output.
+
+Can you work out any other ways to do it?
