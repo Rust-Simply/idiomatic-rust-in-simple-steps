@@ -182,25 +182,31 @@ control flow.</p>
 <h2 id="patterns"><a class="header" href="#patterns">Patterns</a></h2>
 <p>In the last chapter we talked about compound types. Tuples, Structs, and Enums allow the construction of more complex
 data from less complex data. However, if we want to extract any of the component parts of that data we can do that!</p>
-<p>Patterns can be used to extract the data from tuples is pretty trivial:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+<p>Patterns can be used to “destructure” compound data types like tuples fairly trivially:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
 </span>let point = (123, 456);
 let (x, y) = point;
 println!(&quot;The point was at x: {x} and y: {y}&quot;);
 <span class="boring">}</span></code></pre></pre>
-<p>It’s important to note though, that the original data will no longer be accessible:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
-</span>// TODO: Test this, might need something that isn't Copy!
-let point = (123, 456)
+<blockquote>
+<p>It’s important to note though, that the original data will no longer be accessible if it doesn’t implement <code>Copy</code>:</p>
+<pre><pre class="playground"><code class="language-rust compile_fail"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// This code won't compile!
+let point = (123.to_string(), 456.to_string());
 let (x, y) = point;
 let this_wont_work = point.0;
-<span class="boring">}</span></code></pre></pre>
-<p>This pattern also works for Tuple Structs, however, you need to specify the name of the struct like you’re doing a weird
-backwards struct instantiation. </p>
+<span class="boring">println!(&quot;using these variable to remove irrelevant warnings {x}, {y}, {this_wont_work}&quot;);
+</span><span class="boring">}</span></code></pre></pre>
+<p>We’ll talk more about copy, ownership and move semantics later in the book.</p>
+</blockquote>
+<p>Destructuring with patterns also works for Tuple Structs, however, you need to specify the name of the struct like
+you’re doing a weird backwards struct instantiation. </p>
 <pre><pre class="playground"><code class="language-rust">struct Point (u64, u64);
 
 fn main() {
-    let point = Point(123, 123);
+    let point = Point(123, 456);
     
     let Point(x, y) = point;
     
@@ -213,7 +219,7 @@ fn main() {
 }
 
 fn main() {
-    let point = Point { x: 123, y: 123 };
+    let point = Point { x: 123, y: 456 };
     
     let Point { x, y } = point;
     
@@ -228,7 +234,7 @@ we’ve renamed <code>x</code> to <code>width</code> and <code>y</code> to <code
 </span><span class="boring">}
 </span><span class="boring">
 </span><span class="boring">fn main() {
-</span><span class="boring">   let rect = Point { x: 123, y: 123 };
+</span><span class="boring">   let rect = Point { x: 123, y: 456 };
 </span><span class="boring">
 </span>let Point { x: width, y: height } = rect;
 
@@ -236,8 +242,9 @@ println!(&quot;The rect was {width} wide and {height} high&quot;);
 <span class="boring">}</span></code></pre></pre>
 <p>Unfortunately, you can not extract data from Enums this way as the value of an Enum is one of a set of, not only values,
 but potentially subtypes or shapes or however you’d like to describe them. Take for example the humble Options:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
-</span>let maybe_yuki: Option&lt;char&gt; = Option('雪');
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let maybe_yuki: Option&lt;char&gt; = Some('雪');
 let maybe_not: Option&lt;char&gt; = None;
 <span class="boring">}</span></code></pre></pre>
 <p>How can we extract a <code>char</code> from <code>Option&lt;char&gt;</code> if we don’t know whether the variable is <code>Some</code> or <code>None</code>… well, 
@@ -251,12 +258,14 @@ and <code>b</code> are the same, this results in a value of <code>true</code> or
 <code>if a == b { ... }</code>, however, Rust also allows you to use a block (code between <code>{</code> and <code>}</code>) as an expression <em>and</em> the
 final value of that block can itself be an expression.</p>
 <p>Here’s a very contrived example:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
 </span>let c = {
-    let a = result_of_a();
-    let b = result_of_b();
+    let a = 3;
+    let b = 5;
     a + b
 };
+println!(&quot;{c}&quot;);
 <span class="boring">}</span></code></pre></pre>
 <p>Some cool things to note:</p>
 <ul>
@@ -279,7 +288,8 @@ expression evaluates to <code>true</code>, then the code in the block will be ru
 </code></pre>
 <p>For example, we could create an expression that evaluates to a boolean by comparing if two numbers are the same, using
 double equals:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
 </span>let a = 1;
 let b = 1;
     
@@ -290,7 +300,8 @@ println!(&quot;regardless of whether expression was true print this&quot;);
 <span class="boring">}</span></code></pre></pre>
 <p>If you want to run some code if the expression is <code>true</code>, but some different code if its <code>false</code>, then you can extend
 <code>if</code> with <code>else</code>. Here we compare if the first number is greater than the second number.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
 </span>let a = 1;
 let b = 1;
     
@@ -301,7 +312,8 @@ if a &gt; b {
 }
 <span class="boring">}</span></code></pre></pre>
 <p>You can chain <code>if</code>/<code>else</code> statements to create more complex branches.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
 </span>let a = 1;
 let b = 1;
     
@@ -315,7 +327,8 @@ if a &gt; b {
 <span class="boring">}</span></code></pre></pre>
 <p>Remember though, code blocks, including those in <code>if</code> and <code>else</code> are themselves expressions. This means they can 
 effectively return their own values</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
 </span>let a = 1;
 let b = 1;
     
@@ -340,8 +353,9 @@ println!(&quot;{message}&quot;);
 <p>There is another way you can branch with <code>if</code> that doesn’t require a boolean expression, pattern matching.</p>
 <p>There are two ways to do this <code>if let ...</code> and <code>let ... else</code>.</p>
 <p>Let’s go back to that Option from earlier:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
-</span>let maybe_yuki: Option&lt;char&gt; = Option('雪');
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let maybe_yuki: Option&lt;char&gt; = Some('雪');
 let maybe_not: Option&lt;char&gt; = None;
     
 if let Some(c) = maybe_yuki {
@@ -359,21 +373,21 @@ if let Some(c) = maybe_not {
 the block), the variable <code>c</code> has the value from inside the <code>Some</code> variant of the <code>Option</code>.</p>
 <p>This may be easier to observe with our own enum type. Imagine the following:</p>
 <pre><pre class="playground"><code class="language-rust">enum Vector {
-    Two(usize, usize),
-    Three(usize, usize, usize),
+    Two(f64, f64),
+    Three(f64, f64, f64),
 }
 
 fn main() {
-    let v = Vector::Three(3, 4, 5);
+    let v = Vector::Three(3.0, 4.0, 5.0);
     
     if let Vector::Two(x, y) = v {
         // This line will not be printed
-        println!(&quot;The 2D vector has the magnitude '{}'&quot;, x * y);
+        println!(&quot;The 2D vector has the magnitude '{}'&quot;, (x*x + y*y).sqrt());
     }
     
     if let Vector::Three(x, y, z) = v {
         // This line will
-        println!(&quot;The 3D vector has the magnitude '{}'&quot;, x * y * z);
+        println!(&quot;The 3D vector has the magnitude '{}'&quot;, (x*x + y*y + z*z).sqrt());
     }
 }</code></pre></pre>
 <p>This example is a little contrived, there are better ways to do this.</p>
@@ -383,7 +397,7 @@ from a function or breaking from a loop</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn some_function() {
-    let maybe_yuki: Option&lt;char&gt; = Option('雪');
+    let maybe_yuki: Option&lt;char&gt; = Some('雪');
         
     let Some(c) = maybe_yuki else {
         // This code is executed if the maybe_yuki was None
@@ -393,7 +407,8 @@ from a function or breaking from a loop</p>
     // From this point forward, the contents of the Option has been extracted into the variable `c`
     println!(&quot;The character was '{}'&quot;, c);
 }
-<span class="boring">}</span></code></pre></pre>
+<span class="boring">some_function();
+</span><span class="boring">}</span></code></pre></pre>
 <h3 id="match"><a class="header" href="#match">Match</a></h3>
 <p>This pattern matching stuff is really handy, right?!</p>
 <p>Well the creators of Rust thought so too, in fact, they made a whole control flow mechanism around it!</p>
@@ -401,127 +416,132 @@ from a function or breaking from a loop</p>
 <code>if</code>, it will match against multiple possibilities, allows match guards for fine grain control of pattern matching, and
 its exhaustive, meaning that a match <em>must</em> deal with every possibility.</p>
 <p>Lets look at our Vector example again:</p>
-<pre><pre class="playground"><code class="language-rust">enum Vector {
-    Two(usize, usize),
-    Three(usize, usize, usize),
-}
-
-fn main() {
-    let v = Vector::Three(3, 4, 5);
-    
-    match v {
-        Vector::Two(x, y) =&gt; println!(&quot;The 2D vector has the magnitude '{}'&quot;, x * y),
-        Vector::Three(x, y, z) =&gt; println!(&quot;The 3D vector has the magnitude '{}'&quot;, x * y * z),
-    }
-}</code></pre></pre>
-<p>First of all, you can see that this pattern is <em>much</em> cleaner than having a lot of <code>if let</code>s. We’re matching against
-the variants of an enum, and can immediately extract the contents from each variant. We could also use match as an
-expression:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">enum Vector {
-</span><span class="boring">   Two(usize, usize),
-</span><span class="boring">   Three(usize, usize, usize),
+</span><span class="boring">    Two(f64, f64),
+</span><span class="boring">    Three(f64, f64, f64),
 </span><span class="boring">}
 </span><span class="boring">
 </span><span class="boring">fn main() {
-</span><span class="boring">   let v = Vector::Three(3, 4, 5);
-</span><span class="boring">   
-</span>let magnitude = match v {
-    Vector::Two(x, y) =&gt; x * y,
-    Vector::Three(x, y, z) =&gt; x * y * z,
+</span>let v = Vector::Three(3.0, 4.0, 5.0);
+
+match v {
+    Vector::Two(x, y) =&gt; println!(&quot;The 2D vector has magnitude '{}'&quot;, (x*x + y*y).sqrt()),
+    Vector::Three(x, y, z) =&gt; println!(&quot;The 3D vector has magnitude '{}'&quot;, (x*x + y*y + z*z).sqrt()),
+}
+<span class="boring">}</span></code></pre></pre>
+<p>First of all, you can see that this pattern is <em>much</em> cleaner than having a lot of <code>if let</code>s. We’re matching against
+the variants of an enum, and can immediately extract the contents from each variant. We could also use match as an
+expression:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">enum Vector {
+</span><span class="boring">    Two(f64, f64),
+</span><span class="boring">    Three(f64, f64, f64),
+</span><span class="boring">}
+</span><span class="boring">
+</span>let v = Vector::Three(3.0, 4.0, 5.0);
+    
+let magnitude = match v {
+    Vector::Two(x, y) =&gt; (x*x + y*y).sqrt(),
+    Vector::Three(x, y, z) =&gt; (x*x + y*y + z*z).sqrt(),
 };
+
 println!(&quot;The vector has the magnitude '{}'&quot;, magnitude);
-<span class="boring">
-</span><span class="boring">}</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>(This gets even more exciting when we get into functions)</p>
 <p>What happens if we add another variant to the enum though? Well, that <code>match</code> statement will see that not every case is
 handled, and cause an error.</p>
-<pre><pre class="playground"><code class="language-rust">enum Vector {
-    Two(usize, usize),
-    Three(usize, usize, usize),
-    Four(usize, usize, usize, usize),
+<pre><pre class="playground"><code class="language-rust compile_fail">enum Vector {
+    Two(f64, f64),
+    Three(f64, f64, f64),
+    Four(f64, f64, f64, f64),
 }
 
 fn main() {
-    let v = Vector::Three(3, 4, 5);
+    let v = Vector::Three(3.0, 4.0, 5.0);
     
     // This match will no longer compile
     let magnitude = match v {
-        Vector::Two(x, y) =&gt; x * y,
-        Vector::Three(x, y, z) =&gt; x * y * z,
+        Vector::Two(x, y) =&gt; (x*x + y*y).sqrt(),
+        Vector::Three(x, y, z) =&gt; (x*x + y*y + z*z).sqrt(),
     };
+
     println!(&quot;The vector has the magnitude '{}'&quot;, magnitude);
 }</code></pre></pre>
 <p>We can deal with this by either adding the missing case, or using <code>_</code>, which is a special variable that immediately 
 discards whatever is put into it and will match anything.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">enum Vector {
-</span><span class="boring">   Two(usize, usize),
-</span><span class="boring">   Three(usize, usize, usize),
-</span><span class="boring">   Four(usize, usize, usize, usize),
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">enum Vector {
+</span><span class="boring">   Two(f64, f64),
+</span><span class="boring">   Three(f64, f64, f64),
+</span><span class="boring">   Four(f64, f64, f64, f64),
 </span><span class="boring">}
 </span><span class="boring">
-</span><span class="boring">fn main() {
-</span><span class="boring">   let v = Vector::Three(3, 4, 5);
+</span><span class="boring">let v = Vector::Three(3.0, 4.0, 5.0);
 </span><span class="boring">
 </span>let magnitude = match v {
-    Vector::Two(x, y) =&gt; x * y,
-    Vector::Three(x, y, z) =&gt; x * y * z,
+    Vector::Two(x, y) =&gt; (x*x + y*y).sqrt(),
+    Vector::Three(x, y, z) =&gt; (x*x + y*y + z*z).sqrt(),
     // This specific example isn't great, now any variant that doesn't match will return zero, an error might be better
-    _ =&gt; 0,
+    _ =&gt; 0.0,
 };
-<span class="boring">   println!(&quot;The vector has the magnitude '{}'&quot;, magnitude);
+<span class="boring">println!(&quot;The vector has the magnitude '{}'&quot;, magnitude);
 </span><span class="boring">}</span></code></pre></pre>
 <p>Patterns on match arms are tested from top to bottom happen from top to bottom, and you can also match on more specific
 patterns, like values:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">enum Vector {
-</span><span class="boring">   Two(usize, usize),
-</span><span class="boring">   Three(usize, usize, usize),
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">enum Vector {
+</span><span class="boring">    Two(f64, f64),
+</span><span class="boring">    Three(f64, f64, f64),
 </span><span class="boring">}
 </span><span class="boring">
-</span><span class="boring">fn main() {
-</span>let v = Vector::Two(0, 0);
+</span>let v = Vector::Two(0.0, 0.0);
 
 let magnitude = match v {
     // This arm will match, print the statement and return 0
-    Vector::Two(0, y) =&gt;  {
+    Vector::Two(0.0, y) =&gt;  {
         println!(&quot;Hey, did you know that x was zero?&quot;);
-        0
+        y
     },
     // Although `v` does match this arm, because we already matched on the previous arm, this block won't be run
-    Vector::Two(x, 0) =&gt; {
+    Vector::Two(x, 0.0) =&gt; {
         println!(&quot;Hey, did you know that y was zero?&quot;);
-        0
+        x
     }
     // Nor will this one
-    Vector::Two(x, y) =&gt; x * y,
-    Vector::Three(x, y, z) =&gt; x * y * z,
+    Vector::Two(x, y) =&gt; (x*x + y*y).sqrt(),
+    Vector::Three(x, y, z) =&gt; (x*x + y*y + z*z).sqrt(),
 };
 <span class="boring">   println!(&quot;The vector has the magnitude '{}'&quot;, magnitude);
 </span><span class="boring">}</span></code></pre></pre>
 <p>There’s one more trick up <code>match</code>’s sleeve which is match guards. Say we want to do something similar to the above, but
 instead of matching on exactly zero, we want to match on values less than 10. We could make an arm for every variant, or
 we could use a match guard which is like a mini if statement:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">enum Vector {
-</span><span class="boring">   Two(usize, usize),
-</span><span class="boring">   Three(usize, usize, usize),
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span><span class="boring">enum Vector {
+</span><span class="boring">   Two(f64, f64),
+</span><span class="boring">   Three(f64, f64, f64),
 </span><span class="boring">}
 </span><span class="boring">
-</span><span class="boring">fn main() {
-</span>let v = Vector::Two(0, 0);
+</span>let v = Vector::Two(0.0, 0.0);
 
 let magnitude = match v {
     // This arm will match, print the statement and return 0
-    Vector::Two(x, y) if x &lt; 10 =&gt;  {
+    Vector::Two(x, y) if x &lt; 10.0 =&gt;  {
         println!(&quot;Hey, did you know that x was small?&quot;);
-        x * y
+        (x*x + y*y).sqrt()
     },
     // Although `v` does match this arm, because we already matched on the previous arm, this block won't be run
-    Vector::Two(x, y)  if y &lt; 10  =&gt; {
+    Vector::Two(x, y)  if y &lt; 10.0  =&gt; {
         println!(&quot;Hey, did you know that y was small?&quot;);
-        x * y
+        (x*x + y*y).sqrt()
     }
     // Nor will this one
-    Vector::Two(x, y) =&gt; x * y,
-    Vector::Three(x, y, z) =&gt; x * y * z,
+    Vector::Two(x, y) =&gt; (x*x + y*y).sqrt(),
+    Vector::Three(x, y, z) =&gt; (x*x + y*y + z*z).sqrt(),
 };
 <span class="boring">   println!(&quot;The vector has the magnitude '{}'&quot;, magnitude);
 </span><span class="boring">}</span></code></pre></pre>
@@ -529,7 +549,8 @@ let magnitude = match v {
 <h3 id="loop"><a class="header" href="#loop">Loop</a></h3>
 <p>The most basic loop is, well, <code>loop</code>.</p>
 <p>When you enter a loop, the code inside it will run until its explicitly told to stop. For example:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
 </span><span class="boring">let mut protect_the_loop: u8 = 0;
 </span>loop {
     println!(&quot;These lines will print out forever&quot;);
@@ -549,12 +570,26 @@ work, and once the work is done, break with the value we want to take from the l
 <p>In the example below, we run a loop until we find some cool number (note the use of <code>if let</code>), then break with that
 value. The Type of found is an <code>u64</code> (don’t forget you can expand the code in the example if you’re curious), and by
 breaking with that value, the Type of the whole loop becomes <code>u64</code> too!</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">fn find_a_cool_number() -&gt; Option&lt;u64&gt; {
-</span><span class="boring">    let secs = std::time::UNIX_EPOCH
+<pre><pre class="playground"><code class="language-rust"><span class="boring">use std::time::*;
+</span><span class="boring">use std::thread::*;
+</span><span class="boring">fn prep() {
+</span><span class="boring">    loop {    
+</span><span class="boring">        let secs = UNIX_EPOCH
+</span><span class="boring">            .elapsed()
+</span><span class="boring">            .expect(&quot;Call the Doctor, time went backwards&quot;)
+</span><span class="boring">            .as_secs();
+</span><span class="boring">        if secs % 2 == 1 {
+</span><span class="boring">            break;
+</span><span class="boring">        } 
+</span><span class="boring">        sleep(Duration::from_millis(100));
+</span><span class="boring">    }   
+</span><span class="boring">}
+</span><span class="boring">fn find_a_cool_number() -&gt; Option&lt;u64&gt; {
+</span><span class="boring">    let secs = UNIX_EPOCH
 </span><span class="boring">        .elapsed()
 </span><span class="boring">        .expect(&quot;Call the Doctor, time went backwards&quot;)
 </span><span class="boring">        .as_secs();
-</span><span class="boring">    (secs % 3 == 0).then_some(secs / 3)
+</span><span class="boring">    (secs % 2 == 0).then_some(secs / 2)
 </span><span class="boring">}
 </span><span class="boring">
 </span><span class="boring">fn main() {
@@ -564,7 +599,8 @@ breaking with that value, the Type of the whole loop becomes <code>u64</code> to
     if let Some(found) = find_a_cool_number() {
         break found;
     }
-};
+<span class="boring">   sleep(Duration::from_millis(100));
+</span>};
 
 println!(&quot;The number we found was {some_cool_number}&quot;);
 <span class="boring">}</span></code></pre></pre>
@@ -573,9 +609,9 @@ you can skip over <em>some</em> of those things.</p>
 <p>The following example will continuously get images, and run a time-consuming <code>process_image</code> function, unless the image
 is an SVG, in which cas it will skip it. </p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">use std::{
-</span><span class="boring">   io::{stdout, Write},
-</span><span class="boring">   thread::sleep,
-</span><span class="boring">   time::{Duration, UNIX_EPOCH}
+</span><span class="boring">    io::{stdout, Write},
+</span><span class="boring">    thread::sleep,
+</span><span class="boring">    time::{Duration, UNIX_EPOCH}
 </span><span class="boring">};
 </span><span class="boring">
 </span><span class="boring">fn main() {
@@ -612,15 +648,12 @@ is an SVG, in which cas it will skip it. </p>
 </span><span class="boring">}
 </span><span class="boring">
 </span><span class="boring">fn process_image(_image: Image) {
-</span><span class="boring">    print!(&quot;Processing Image, please wait... &quot;);
-</span><span class="boring">    stdout().flush().expect(&quot;Something went wrong with stdout&quot;);
-</span><span class="boring">    sleep(Duration::from_millis(1000)); // wait half a second
-</span><span class="boring">    println!(&quot;done&quot;);
+</span><span class="boring">    println!(&quot;Processing Image, please wait... done&quot;);
 </span><span class="boring">}</span></code></pre></pre>
 <p>There’s one more neat trick up Rust’s sleeve. As with most languages, Rust of course supports nested loops, but to aid
 with things like <code>break</code> and <code>continue</code> it also supports labels.</p>
 <p>Labels start with a single quote <code>'</code> and mark the loop they are for with a colon.</p>
-<p>This very contrived example steps through a set of instructions. See if you can guess the what will happen (see below 
+<p>This very contrived example steps through a set of instructions. See if you can guess what will happen (see below 
 for the answer).</p>
 <pre><pre class="playground"><code class="language-rust">enum LoopInstructions {
     DoNothing,
@@ -684,23 +717,33 @@ the program</li>
 conditions), we often only want to loop over something <code>while</code> something is true. The <code>while</code> loop takes an expression
 that evaluates to true or false. The expression is checked at the start of each iteration through the loop, if its
 true, the loop will execute.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>let mut counter = 0;
+while counter &lt; 10 {
+    println!(&quot;The counter is at {counter}&quot;);
+    counter += 1;
+}
+println!(&quot;The loop has finished&quot;);
+<span class="boring">}</span></code></pre></pre>
+<p>The above is actually not a great way to loop over numbers, imagine if we forgot to add to counter!</p>
+<p>Here’s a different example where we call a function until we’re happy with the result.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn get_seconds() -&gt; u64 {
-</span><span class="boring">    UNIX_EPOCH
+</span><span class="boring">    std::time::UNIX_EPOCH
 </span><span class="boring">        .elapsed()
 </span><span class="boring">        .expect(&quot;Call the Doctor, time went backwards&quot;)
-</span><span class="boring">        .as_seconds()
+</span><span class="boring">        .as_secs()
 </span><span class="boring">}
-</span>
-<span class="boring">fn main() {
+</span><span class="boring">
+</span><span class="boring">fn main() {
 </span>while get_seconds() % 3 == 0 {
     println!(&quot;The time in seconds is not divisible by 3&quot;);
 }
 println!(&quot;The time was successfully divided by 3!&quot;);
 <span class="boring">}</span></code></pre></pre>
-<p>The above is a very contrived example, however, you can do all of the tricks we’ve learned above, including pattern
-matching with <code>while let</code>.</p>
+<p>What’s really cool though is that you can do all the tricks we’ve learned above, including pattern matching with
+<code>while let</code>.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
-</span><span class="boring">let messages = &quot;The quick brown fox jumped over the lazy dog&quot;.split(&quot; &quot;);
+</span><span class="boring">let mut messages = &quot;The quick brown fox jumped over the lazy dog&quot;.split(&quot; &quot;);
 </span><span class="boring">let mut get_message = move || messages.next();
 </span>while let Some(message) = get_message() {
     println!(&quot;Message received: {message}&quot;)
@@ -716,7 +759,7 @@ more about in a later chapter. Simply put though, this lets us step over each it
 data, even series’ that might be infinite!</p>
 <p>Often times you might want to do this with a collection such as an <a href="data-types.html#arrays">Array</a>. For example:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
-</span>let messages: &amp;[str] = [&quot;Hello&quot;, &quot;world&quot;];
+</span>let messages: [&amp;str;2] = [&quot;Hello&quot;, &quot;world&quot;];
 for message in messages {
     println!(&quot;Message received: {message}&quot;)
 }

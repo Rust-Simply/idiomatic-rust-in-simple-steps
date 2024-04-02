@@ -15,35 +15,34 @@ Patterns
 In the last chapter we talked about compound types. Tuples, Structs, and Enums allow the construction of more complex
 data from less complex data. However, if we want to extract any of the component parts of that data we can do that!
 
-Patterns can be used to extract the data from tuples is pretty trivial:
+Patterns can be used to "destructure" compound data types like tuples fairly trivially:
 
 ```rust
-#fn main() {
 let point = (123, 456);
 let (x, y) = point;
 println!("The point was at x: {x} and y: {y}");
-#}
 ```
 
-It's important to note though, that the original data will no longer be accessible:
+> It's important to note though, that the original data will no longer be accessible if it doesn't implement `Copy`:
+> 
+> ```rust,compile_fail
+> // This code won't compile!
+> let point = (123.to_string(), 456.to_string());
+> let (x, y) = point;
+> let this_wont_work = point.0;
+> # println!("using these variable to remove irrelevant warnings {x}, {y}, {this_wont_work}");
+> ```
+> 
+> We'll talk more about copy, ownership and move semantics later in the book.
 
-```rust
-#fn main() {
-// TODO: Test this, might need something that isn't Copy!
-let point = (123, 456)
-let (x, y) = point;
-let this_wont_work = point.0;
-#}
-```
-
-This pattern also works for Tuple Structs, however, you need to specify the name of the struct like you're doing a weird
-backwards struct instantiation. 
+Destructuring with patterns also works for Tuple Structs, however, you need to specify the name of the struct like
+you're doing a weird backwards struct instantiation. 
 
 ```rust
 struct Point (u64, u64);
 
 fn main() {
-    let point = Point(123, 123);
+    let point = Point(123, 456);
     
     let Point(x, y) = point;
     
@@ -60,7 +59,7 @@ struct Point {
 }
 
 fn main() {
-    let point = Point { x: 123, y: 123 };
+    let point = Point { x: 123, y: 456 };
     
     let Point { x, y } = point;
     
@@ -73,28 +72,26 @@ names were appropriate. However, it might be better in the context of your progr
 we've renamed `x` to `width` and `y` to `height`:
 
 ```rust
-#struct Point {
+# struct Point {
 #    x: u64,
 #    y: u64,
-#}
+# }
 #
-#fn main() {
-#    let rect = Point { x: 123, y: 123 };
+# fn main() {
+#    let rect = Point { x: 123, y: 456 };
 #
 let Point { x: width, y: height } = rect;
 
 println!("The rect was {width} wide and {height} high");
-#}
+# }
 ```
 
 Unfortunately, you can not extract data from Enums this way as the value of an Enum is one of a set of, not only values,
 but potentially subtypes or shapes or however you'd like to describe them. Take for example the humble Options:
 
 ```rust
-#fn main() {
-let maybe_yuki: Option<char> = Option('雪');
+let maybe_yuki: Option<char> = Some('雪');
 let maybe_not: Option<char> = None;
-#}
 ```
 
 How can we extract a `char` from `Option<char>` if we don't know whether the variable is `Some` or `None`... well, 
@@ -116,13 +113,12 @@ final value of that block can itself be an expression.
 Here's a very contrived example:
 
 ```rust
-#fn main() {
 let c = {
-    let a = result_of_a();
-    let b = result_of_b();
+    let a = 3;
+    let b = 5;
     a + b
 };
-#}
+println!("{c}");
 ```
 
 Some cool things to note:
@@ -155,7 +151,6 @@ For example, we could create an expression that evaluates to a boolean by compar
 double equals:
 
 ```rust
-#fn main() {
 let a = 1;
 let b = 1;
     
@@ -163,14 +158,12 @@ if a == b {
     println!("if expression is true print this");
 }
 println!("regardless of whether expression was true print this");
-#}
 ```
 
 If you want to run some code if the expression is `true`, but some different code if its `false`, then you can extend
 `if` with `else`. Here we compare if the first number is greater than the second number.
 
 ```rust
-#fn main() {
 let a = 1;
 let b = 1;
     
@@ -179,13 +172,11 @@ if a > b {
 } else {
     println!("if expression is false print this instead");
 }
-#}
 ```
 
 You can chain `if`/`else` statements to create more complex branches.
 
 ```rust
-#fn main() {
 let a = 1;
 let b = 1;
     
@@ -196,14 +187,12 @@ if a > b {
 } else {
     println!("a must be less than b");
 }
-#}
 ```
 
 Remember though, code blocks, including those in `if` and `else` are themselves expressions. This means they can 
 effectively return their own values
 
 ```rust
-#fn main() {
 let a = 1;
 let b = 1;
     
@@ -216,7 +205,6 @@ let message = if a > b {
 };
     
 println!("{message}");
-#}
 ```
 
 Some important things to note:
@@ -234,8 +222,7 @@ There are two ways to do this `if let ...` and `let ... else`.
 Let's go back to that Option from earlier:
 
 ```rust
-#fn main() {
-let maybe_yuki: Option<char> = Option('雪');
+let maybe_yuki: Option<char> = Some('雪');
 let maybe_not: Option<char> = None;
     
 if let Some(c) = maybe_yuki {
@@ -247,7 +234,6 @@ if let Some(c) = maybe_not {
     // This line will not
     println!("The character was '{}'", c);
 }
-#}
 ```
 
 In the line `if let Some(c) = maybe_yuki` we are pattern matching on the Option, if it matches the pattern of 
@@ -258,21 +244,21 @@ This may be easier to observe with our own enum type. Imagine the following:
 
 ```rust
 enum Vector {
-    Two(usize, usize),
-    Three(usize, usize, usize),
+    Two(f64, f64),
+    Three(f64, f64, f64),
 }
 
 fn main() {
-    let v = Vector::Three(3, 4, 5);
+    let v = Vector::Three(3.0, 4.0, 5.0);
     
     if let Vector::Two(x, y) = v {
         // This line will not be printed
-        println!("The 2D vector has the magnitude '{}'", x * y);
+        println!("The 2D vector has the magnitude '{}'", (x*x + y*y).sqrt());
     }
     
     if let Vector::Three(x, y, z) = v {
         // This line will
-        println!("The 3D vector has the magnitude '{}'", x * y * z);
+        println!("The 3D vector has the magnitude '{}'", (x*x + y*y + z*z).sqrt());
     }
 }
 ```
@@ -285,7 +271,7 @@ from a function or breaking from a loop
 
 ```rust
 fn some_function() {
-    let maybe_yuki: Option<char> = Option('雪');
+    let maybe_yuki: Option<char> = Some('雪');
         
     let Some(c) = maybe_yuki else {
         // This code is executed if the maybe_yuki was None
@@ -295,6 +281,7 @@ fn some_function() {
     // From this point forward, the contents of the Option has been extracted into the variable `c`
     println!("The character was '{}'", c);
 }
+# some_function();
 ```
 
 ### Match
@@ -310,19 +297,19 @@ its exhaustive, meaning that a match _must_ deal with every possibility.
 Lets look at our Vector example again:
 
 ```rust
-enum Vector {
-    Two(usize, usize),
-    Three(usize, usize, usize),
-}
+# enum Vector {
+#     Two(f64, f64),
+#     Three(f64, f64, f64),
+# }
+#
+# fn main() {
+let v = Vector::Three(3.0, 4.0, 5.0);
 
-fn main() {
-    let v = Vector::Three(3, 4, 5);
-    
-    match v {
-        Vector::Two(x, y) => println!("The 2D vector has the magnitude '{}'", x * y),
-        Vector::Three(x, y, z) => println!("The 3D vector has the magnitude '{}'", x * y * z),
-    }
+match v {
+    Vector::Two(x, y) => println!("The 2D vector has magnitude '{}'", (x*x + y*y).sqrt()),
+    Vector::Three(x, y, z) => println!("The 3D vector has magnitude '{}'", (x*x + y*y + z*z).sqrt()),
 }
+# }
 ```
 
 First of all, you can see that this pattern is _much_ cleaner than having a lot of `if let`s. We're matching against
@@ -330,21 +317,19 @@ the variants of an enum, and can immediately extract the contents from each vari
 expression:
 
 ```rust
-#enum Vector {
-#    Two(usize, usize),
-#    Three(usize, usize, usize),
-#}
+# enum Vector {
+#     Two(f64, f64),
+#     Three(f64, f64, f64),
+# }
 #
-#fn main() {
-#    let v = Vector::Three(3, 4, 5);
-#    
+let v = Vector::Three(3.0, 4.0, 5.0);
+    
 let magnitude = match v {
-    Vector::Two(x, y) => x * y,
-    Vector::Three(x, y, z) => x * y * z,
+    Vector::Two(x, y) => (x*x + y*y).sqrt(),
+    Vector::Three(x, y, z) => (x*x + y*y + z*z).sqrt(),
 };
+
 println!("The vector has the magnitude '{}'", magnitude);
-#
-#}
 ```
 
 (This gets even more exciting when we get into functions)
@@ -352,21 +337,22 @@ println!("The vector has the magnitude '{}'", magnitude);
 What happens if we add another variant to the enum though? Well, that `match` statement will see that not every case is
 handled, and cause an error.
 
-```rust
+```rust,compile_fail
 enum Vector {
-    Two(usize, usize),
-    Three(usize, usize, usize),
-    Four(usize, usize, usize, usize),
+    Two(f64, f64),
+    Three(f64, f64, f64),
+    Four(f64, f64, f64, f64),
 }
 
 fn main() {
-    let v = Vector::Three(3, 4, 5);
+    let v = Vector::Three(3.0, 4.0, 5.0);
     
     // This match will no longer compile
     let magnitude = match v {
-        Vector::Two(x, y) => x * y,
-        Vector::Three(x, y, z) => x * y * z,
+        Vector::Two(x, y) => (x*x + y*y).sqrt(),
+        Vector::Three(x, y, z) => (x*x + y*y + z*z).sqrt(),
     };
+
     println!("The vector has the magnitude '{}'", magnitude);
 }
 ```
@@ -375,54 +361,50 @@ We can deal with this by either adding the missing case, or using `_`, which is 
 discards whatever is put into it and will match anything.
 
 ```rust
-#enum Vector {
-#    Two(usize, usize),
-#    Three(usize, usize, usize),
-#    Four(usize, usize, usize, usize),
-#}
+# enum Vector {
+#    Two(f64, f64),
+#    Three(f64, f64, f64),
+#    Four(f64, f64, f64, f64),
+# }
 #
-#fn main() {
-#    let v = Vector::Three(3, 4, 5);
+# let v = Vector::Three(3.0, 4.0, 5.0);
 #
 let magnitude = match v {
-    Vector::Two(x, y) => x * y,
-    Vector::Three(x, y, z) => x * y * z,
+    Vector::Two(x, y) => (x*x + y*y).sqrt(),
+    Vector::Three(x, y, z) => (x*x + y*y + z*z).sqrt(),
     // This specific example isn't great, now any variant that doesn't match will return zero, an error might be better
-    _ => 0,
+    _ => 0.0,
 };
-#    println!("The vector has the magnitude '{}'", magnitude);
-#}
+# println!("The vector has the magnitude '{}'", magnitude);
 ```
 
 Patterns on match arms are tested from top to bottom happen from top to bottom, and you can also match on more specific
 patterns, like values:
 
 ```rust
-#enum Vector {
-#    Two(usize, usize),
-#    Three(usize, usize, usize),
-#}
+# enum Vector {
+#     Two(f64, f64),
+#     Three(f64, f64, f64),
+# }
 #
-#fn main() {
-let v = Vector::Two(0, 0);
+let v = Vector::Two(0.0, 0.0);
 
 let magnitude = match v {
     // This arm will match, print the statement and return 0
-    Vector::Two(0, y) =>  {
+    Vector::Two(0.0, y) =>  {
         println!("Hey, did you know that x was zero?");
-        0
+        y
     },
     // Although `v` does match this arm, because we already matched on the previous arm, this block won't be run
-    Vector::Two(x, 0) => {
+    Vector::Two(x, 0.0) => {
         println!("Hey, did you know that y was zero?");
-        0
+        x
     }
     // Nor will this one
-    Vector::Two(x, y) => x * y,
-    Vector::Three(x, y, z) => x * y * z,
+    Vector::Two(x, y) => (x*x + y*y).sqrt(),
+    Vector::Three(x, y, z) => (x*x + y*y + z*z).sqrt(),
 };
 #    println!("The vector has the magnitude '{}'", magnitude);
-#}
 ```
 
 There's one more trick up `match`'s sleeve which is match guards. Say we want to do something similar to the above, but
@@ -430,31 +412,29 @@ instead of matching on exactly zero, we want to match on values less than 10. We
 we could use a match guard which is like a mini if statement:
 
 ```rust
-#enum Vector {
-#    Two(usize, usize),
-#    Three(usize, usize, usize),
-#}
+# enum Vector {
+#    Two(f64, f64),
+#    Three(f64, f64, f64),
+# }
 #
-#fn main() {
-let v = Vector::Two(0, 0);
+let v = Vector::Two(0.0, 0.0);
 
 let magnitude = match v {
     // This arm will match, print the statement and return 0
-    Vector::Two(x, y) if x < 10 =>  {
+    Vector::Two(x, y) if x < 10.0 =>  {
         println!("Hey, did you know that x was small?");
-        x * y
+        (x*x + y*y).sqrt()
     },
     // Although `v` does match this arm, because we already matched on the previous arm, this block won't be run
-    Vector::Two(x, y)  if y < 10  => {
+    Vector::Two(x, y)  if y < 10.0  => {
         println!("Hey, did you know that y was small?");
-        x * y
+        (x*x + y*y).sqrt()
     }
     // Nor will this one
-    Vector::Two(x, y) => x * y,
-    Vector::Three(x, y, z) => x * y * z,
+    Vector::Two(x, y) => (x*x + y*y).sqrt(),
+    Vector::Three(x, y, z) => (x*x + y*y + z*z).sqrt(),
 };
 #    println!("The vector has the magnitude '{}'", magnitude);
-#}
 ```
 
 Looping
@@ -467,8 +447,7 @@ The most basic loop is, well, `loop`.
 When you enter a loop, the code inside it will run until its explicitly told to stop. For example:
 
 ```rust
-#fn main() {
-#let mut protect_the_loop: u8 = 0;
+# let mut protect_the_loop: u8 = 0;
 loop {
     println!("These lines will print out forever");
     println!("Unless the program is interrupted, eg, with Ctrl + C");
@@ -478,7 +457,6 @@ loop {
 #         break;
 #     } 
 }
-#}
 ```
 
 This might seem a little bit unhelpful, surely you never want to get trapped inside a loop forever, but actually, we
@@ -493,12 +471,26 @@ value. The Type of found is an `u64` (don't forget you can expand the code in th
 breaking with that value, the Type of the whole loop becomes `u64` too!
 
 ```rust
+# use std::time::*;
+# use std::thread::*;
+# fn prep() {
+#     loop {    
+#         let secs = UNIX_EPOCH
+#             .elapsed()
+#             .expect("Call the Doctor, time went backwards")
+#             .as_secs();
+#         if secs % 2 == 1 {
+#             break;
+#         } 
+#         sleep(Duration::from_millis(100));
+#     }   
+# }
 # fn find_a_cool_number() -> Option<u64> {
-#     let secs = std::time::UNIX_EPOCH
+#     let secs = UNIX_EPOCH
 #         .elapsed()
 #         .expect("Call the Doctor, time went backwards")
 #         .as_secs();
-#     (secs % 3 == 0).then_some(secs / 3)
+#     (secs % 2 == 0).then_some(secs / 2)
 # }
 # 
 # fn main() {
@@ -508,6 +500,7 @@ let some_cool_number = loop {
     if let Some(found) = find_a_cool_number() {
         break found;
     }
+#    sleep(Duration::from_millis(100));
 };
 
 println!("The number we found was {some_cool_number}");
@@ -521,13 +514,13 @@ The following example will continuously get images, and run a time-consuming `pr
 is an SVG, in which cas it will skip it. 
 
 ```rust
-#use std::{
-#    io::{stdout, Write},
-#    thread::sleep,
-#    time::{Duration, UNIX_EPOCH}
-#};
+# use std::{
+#     io::{stdout, Write},
+#     thread::sleep,
+#     time::{Duration, UNIX_EPOCH}
+# };
 #
-#fn main() {
+# fn main() {
 #     let mut protect_the_loop: u8 = 0;
 loop {
     let image = get_image();
@@ -561,10 +554,7 @@ loop {
 # }
 # 
 # fn process_image(_image: Image) {
-#     print!("Processing Image, please wait... ");
-#     stdout().flush().expect("Something went wrong with stdout");
-#     sleep(Duration::from_millis(1000)); // wait half a second
-#     println!("done");
+#     println!("Processing Image, please wait... done");
 # }
 ```
 
@@ -573,7 +563,7 @@ with things like `break` and `continue` it also supports labels.
 
 Labels start with a single quote `'` and mark the loop they are for with a colon.
 
-This very contrived example steps through a set of instructions. See if you can guess the what will happen (see below 
+This very contrived example steps through a set of instructions. See if you can guess what will happen (see below 
 for the answer).
 
 ```rust
@@ -643,13 +633,28 @@ that evaluates to true or false. The expression is checked at the start of each 
 true, the loop will execute.
 
 ```rust
+# fn main() {
+let mut counter = 0;
+while counter < 10 {
+    println!("The counter is at {counter}");
+    counter += 1;
+}
+println!("The loop has finished");
+# }
+```
+
+The above is actually not a great way to loop over numbers, imagine if we forgot to add to counter!
+
+Here's a different example where we call a function until we're happy with the result.
+
+```rust
 # fn get_seconds() -> u64 {
-#     UNIX_EPOCH
+#     std::time::UNIX_EPOCH
 #         .elapsed()
 #         .expect("Call the Doctor, time went backwards")
-#         .as_seconds()
+#         .as_secs()
 # }
-
+#
 # fn main() {
 while get_seconds() % 3 == 0 {
     println!("The time in seconds is not divisible by 3");
@@ -658,12 +663,12 @@ println!("The time was successfully divided by 3!");
 # }
 ```
 
-The above is a very contrived example, however, you can do all of the tricks we've learned above, including pattern
-matching with `while let`.
+What's really cool though is that you can do all the tricks we've learned above, including pattern matching with
+`while let`.
 
 ```rust
 # fn main() {
-# let messages = "The quick brown fox jumped over the lazy dog".split(" ");
+# let mut messages = "The quick brown fox jumped over the lazy dog".split(" ");
 # let mut get_message = move || messages.next();
 while let Some(message) = get_message() {
     println!("Message received: {message}")
@@ -687,7 +692,7 @@ Often times you might want to do this with a collection such as an [Array](data-
 
 ```rust
 # fn main() {
-let messages: &[str] = ["Hello", "world"];
+let messages: [&str;2] = ["Hello", "world"];
 for message in messages {
     println!("Message received: {message}")
 }
