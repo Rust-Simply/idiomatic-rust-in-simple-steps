@@ -599,7 +599,7 @@ I’ve put this on a new line for legibility, but you don’t <em>need</em> to d
 <p><code>.lines()</code> returns an iterator, allowing us to iterate (step through) each line one at a time. We get the next line by
 calling <code>.next()</code> on the iterator.</p>
 <p>If we add this all in our code looks like this</p>
-<pre><code class="language-rust noplayground"><span class="boring">fn main() {
+<pre><code class="language-rust noplayground no_run"><span class="boring">fn main() {
 </span><span class="boring">   let actual = &quot;blue&quot;;
 </span><span class="boring">   
 </span><span class="boring">   println!(&quot;Welcome to the guessing game!&quot;);
@@ -737,7 +737,7 @@ Rust how to do the comparison, which for <code>&amp;str</code> and <code>String<
 <p><code>if</code>/<code>else</code> is a form of control flow. We put an expression inside the “if” that evaluates to either true or false, in 
 this  case we’re asking if <code>input</code> is equal to <code>actual</code>. If it is, then the execution continues inside the if block
 (the bit between the curly brackets), if it’s not true, then instead execution continues inside the else block.</p>
-<pre><code class="language-rust noplayground">fn main() {
+<pre><code class="language-rust noplayground no_run">fn main() {
     let actual = &quot;blue&quot;;
     
     println!(&quot;Welcome to the guessing game!&quot;);
@@ -782,7 +782,7 @@ merge types together.</p>
 <h2 id="bonus"><a class="header" href="#bonus">Bonus</a></h2>
 <p>You don’t need to do this but if you want to make your <code>actual</code> value random(ish) and turn this into a proper game,
 then you could do it like this:</p>
-<pre><code class="language-rust noplayground"><span class="boring">fn main() {
+<pre><code class="language-rust noplayground no_run"><span class="boring">fn main() {
 </span>    let colors = [&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;];
     let time = std::time::UNIX_EPOCH
         .elapsed()
@@ -939,7 +939,8 @@ one hundred and one.</p>
 <p>Eight bits is a byte, and can represent the numbers from <code>0b0000_0000</code> (zero) to <code>0b1111_1111</code> (two hundred and 
 fifty-five, again, I’m not expecting anyone to be able to <em>read</em> this). Btw, I’m using an underscore as a 
 spacer between numbers to help legibility, this also works in Rust, as does the <code>0b</code> notation!</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
 </span>let min_byte: u8 = 0b0000_0000;
 let max_byte: u8 = 0b1111_1111;
 println!(&quot;min_byte: {min_byte}&quot;); // 0
@@ -1057,8 +1058,8 @@ types, you can write the type at the end of a number:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">use std::fmt::Display;
 </span><span class="boring">
 </span><span class="boring">fn print_value_and_type&lt;T: Display&gt;(v: T) {
-</span><span class="boring">   let type_name = std::any::type_name::&lt;T&gt;();
-</span><span class="boring">   println!(&quot;Type of '{v}' is {type_name}&quot;);
+</span><span class="boring">    let type_name = std::any::type_name::&lt;T&gt;();
+</span><span class="boring">    println!(&quot;Type of '{v}' is {type_name}&quot;);
 </span><span class="boring">}
 </span><span class="boring">
 </span><span class="boring">fn main() {
@@ -1169,7 +1170,8 @@ as a reference to a string slice <code>&amp;str</code>, which makes it unique am
 <p><code>str</code> should always be a UTF-8 string (see ⚠️ below), which means that the length of a string in bytes may not
 necessarily be the same as its length in characters.</p>
 <p>For example (don’t worry about the code yet):</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
 </span>let yuki = &quot;雪&quot;;
 
 let byte_length = yuki.len();
@@ -1181,9 +1183,10 @@ println!(&quot;{yuki} length in characters: {char_length}&quot;); // 1
 <p>Its also worth remembering that when you turn a string into characters, each of those characters will take up 4 bytes
 of memory, even though inside the string they might have only taken up one byte (again, don’t worry about the code in
 the next example we’ll talk about it soon):</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">use std::mem::size_of_val;
-</span><span class="boring">
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
+</span><span class="boring">use std::mem::size_of_val;
+</span><span class="boring">
 </span>let hello = &quot;hello&quot;;
 
 let string_size = size_of_val(hello);
@@ -1200,7 +1203,8 @@ on the system architecture.</p>
 <p>Fun fact about that reference though: you might wonder if it’s just a pointer and a length, does that mean you can
 have a reference to a string slice that exists inside a string slice, and the answer is: yes! Just be careful when
 taking a slice inside a slice to make sure that the sub slice is a valid UTF-8 string.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
 </span>let hello = &quot;hello&quot;;
 // hell is a reference to a substring, range 0..4 is exclusive so 0, 1, 2, 3 but not 4
 let hell = &amp;hello[0..4]; 
@@ -1225,7 +1229,8 @@ size. For example:</p>
 <p>When referenced as an array slice, you do not need to specify the size because, just like with references to string
 slices, the reference not only contains a pointer to the underlying data, but also contains the size. We write this in
 the form <code>&amp;[T]</code> where <code>T</code> is the type of every item in the array.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
 </span><span class="boring">let hello: [char; 5] = ['H', 'e', 'l', 'l', 'o'];
 </span>// hell is a reference to a sub-array, range 0..=3 is inclusive so 0, 1, 2, and 3
 let hell: &amp;[char] = &amp;hello[0..=3];

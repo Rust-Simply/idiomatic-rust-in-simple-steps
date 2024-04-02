@@ -38,18 +38,18 @@ As we step through this tutorial, if you mouse over the code examples, you can s
 Let's quickly change our hello world message to something that welcomes us to the game.
 
 ```rust
-#fn main() {
+# fn main() {
     println!("Welcome to the guessing game!");
-#}
+# }
 ```
 
 And ask the user to do something:
 
 ```rust
-#fn main() {
+# fn main() {
 #     println!("Welcome to the guessing game!");
     println!("I have chosen a color red, green or blue, can you guess which?");
-#}
+# }
 ```
 
 Because we've used a second `println!` this will appear on a new line. The new line actually comes at the end of the
@@ -60,11 +60,11 @@ Let's pick a color that the user has to guess. To begin with we'll just hard cod
 randomly. I'm going to choose blue, but you can choose whatever you like:
 
 ```rust
-#fn main() {
+# fn main() {
     let actual = "blue";
 #     println!("Welcome to the guessing game!");
 #     println!("I have chosen a color red, green or blue, can you guess which?");
-#}
+# }
 ```
 
 Before we move on, I want to call out the "type" of the data we've just created.
@@ -95,12 +95,12 @@ Anyway, back to the program: let's output the color. This will end up being the 
 use this to check everything is working ok:
 
 ```rust
-#fn main() {
+# fn main() {
 #     let actual = "blue";
 #     println!("Welcome to the guessing game!");
 #     println!("I have chosen a color red, green or blue?");
     println!("The color I chose was {actual}");
-#}
+# }
 ```
 
 We can run this now and see that the color to be guessed was entered.
@@ -111,7 +111,7 @@ In order to get some user input, we need to read from the terminal. Before we te
 lets ask them to guess
 
 ```rust,noplayground
-#fn main() {
+# fn main() {
 #     let actual = "blue";
 #     println!("Welcome to the guessing game!");
 #     println!("I have chosen a color red, green or blue");
@@ -119,7 +119,7 @@ lets ask them to guess
     println!("Enter your guess: red, green or blue");
 #    
 #     println!("The color I chose was {actual}");
-#}
+# }
 ```
 
 We're then going to read a line of input from the user. When the program runs in the terminal, we can ask the user to
@@ -164,8 +164,8 @@ calling `.next()` on the iterator.
 
 If we add this all in our code looks like this
 
-```rust,noplayground
-#fn main() {
+```rust,noplayground,no_run
+# fn main() {
 #    let actual = "blue";
 #    
 #    println!("Welcome to the guessing game!");
@@ -181,7 +181,7 @@ If we add this all in our code looks like this
     println!("Your guess was {input}");
 #
 #    println!("The color I chose was {actual}");
-#}
+# }
 ```
 
 Wait wait wait, what are those `expect`s about?!
@@ -335,11 +335,11 @@ same way in memory, but they are not interchangeable. Later, when we discuss fun
 requires a `String` you can not pass it a `&str` and vice versa. You can, however, trivially go from one to another.
 
 ```rust
-#fn main() {
+# fn main() {
 let name = "Daniel";                   // This is a &str pointing at a sequence of bytes in the executable
 let name_on_heap = String::from(name); // This requests memory from the operating system then copies "Daniel" into it
 let name_ref = name_on_heap.as_str();  // This is a &str pointing to a sequence of bytes on the heap
-#}
+# }
 ```
 
 That said, they can be compared to each other (this actually goes for any data type in Rust so long as someone has told
@@ -351,7 +351,7 @@ Let's return to our program one last time. Below I've written out the full progr
 this  case we're asking if `input` is equal to `actual`. If it is, then the execution continues inside the if block
 (the bit between the curly brackets), if it's not true, then instead execution continues inside the else block.
 
-```rust,noplayground
+```rust,noplayground,no_run
 fn main() {
     let actual = "blue";
     
@@ -403,8 +403,8 @@ Bonus
 You don't need to do this but if you want to make your `actual` value random(ish) and turn this into a proper game,
 then you could do it like this:
 
-```rust,noplayground
-#fn main() {
+```rust,noplayground,no_run
+# fn main() {
     let colors = ["red", "green", "blue"];
     let time = std::time::UNIX_EPOCH
         .elapsed()
@@ -430,7 +430,7 @@ then you could do it like this:
 #    } else {
 #        println!("you lose!");
 #    }
-#}
+# }
 ```
 
 First we create an array of string slices for each possible value. Arrays are of known size at build time, for example,

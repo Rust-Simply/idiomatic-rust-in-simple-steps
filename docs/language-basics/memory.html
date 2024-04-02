@@ -288,7 +288,7 @@ I’ve put this on a new line for legibility, but you don’t <em>need</em> to d
 <p><code>.lines()</code> returns an iterator, allowing us to iterate (step through) each line one at a time. We get the next line by
 calling <code>.next()</code> on the iterator.</p>
 <p>If we add this all in our code looks like this</p>
-<pre><code class="language-rust noplayground"><span class="boring">fn main() {
+<pre><code class="language-rust noplayground no_run"><span class="boring">fn main() {
 </span><span class="boring">   let actual = &quot;blue&quot;;
 </span><span class="boring">   
 </span><span class="boring">   println!(&quot;Welcome to the guessing game!&quot;);
@@ -426,7 +426,7 @@ Rust how to do the comparison, which for <code>&amp;str</code> and <code>String<
 <p><code>if</code>/<code>else</code> is a form of control flow. We put an expression inside the “if” that evaluates to either true or false, in 
 this  case we’re asking if <code>input</code> is equal to <code>actual</code>. If it is, then the execution continues inside the if block
 (the bit between the curly brackets), if it’s not true, then instead execution continues inside the else block.</p>
-<pre><code class="language-rust noplayground">fn main() {
+<pre><code class="language-rust noplayground no_run">fn main() {
     let actual = &quot;blue&quot;;
     
     println!(&quot;Welcome to the guessing game!&quot;);
@@ -471,7 +471,7 @@ merge types together.</p>
 <h2 id="bonus"><a class="header" href="#bonus">Bonus</a></h2>
 <p>You don’t need to do this but if you want to make your <code>actual</code> value random(ish) and turn this into a proper game,
 then you could do it like this:</p>
-<pre><code class="language-rust noplayground"><span class="boring">fn main() {
+<pre><code class="language-rust noplayground no_run"><span class="boring">fn main() {
 </span>    let colors = [&quot;red&quot;, &quot;green&quot;, &quot;blue&quot;];
     let time = std::time::UNIX_EPOCH
         .elapsed()

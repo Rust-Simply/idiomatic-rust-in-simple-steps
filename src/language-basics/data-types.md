@@ -134,12 +134,10 @@ fifty-five, again, I'm not expecting anyone to be able to _read_ this). Btw, I'm
 spacer between numbers to help legibility, this also works in Rust, as does the `0b` notation!
 
 ```rust
-#fn main() {
 let min_byte: u8 = 0b0000_0000;
 let max_byte: u8 = 0b1111_1111;
 println!("min_byte: {min_byte}"); // 0
 println!("max_byte: {max_byte}"); // 255
-#}
 ```
 
 The reason why a byte is eight bits has a lot of history, but it basically comes down to character encoding: with 7
@@ -276,16 +274,16 @@ Or, if that's not possible because you are, for example, passing the number to a
 types, you can write the type at the end of a number:
 
 ```rust
-#use std::fmt::Display;
+# use std::fmt::Display;
 #
-#fn print_value_and_type<T: Display>(v: T) {
-#    let type_name = std::any::type_name::<T>();
-#    println!("Type of '{v}' is {type_name}");
-#}
+# fn print_value_and_type<T: Display>(v: T) {
+#     let type_name = std::any::type_name::<T>();
+#     println!("Type of '{v}' is {type_name}");
+# }
 #
-#fn main() {
+# fn main() {
 print_value_and_type(10u8); // u8
-#}
+# }
 ```
 
 #### A brief note on Type Conversion
@@ -314,7 +312,7 @@ off the front of the data, leaving the least significant bits. You can see this 
 you can run this in place with the play button):
 
 ```rust
-#fn main() {
+# fn main() {
 let time = std::time::UNIX_EPOCH
     .elapsed()
     .expect("Call the Doctor, time went backwards")
@@ -324,7 +322,7 @@ let time_u32 = time as u32;
 
 println!("Before conversion: {time}"); // approx: 1710771427971
 println!("After conversion: {time_u32}"); // approx: 1374444163
-#}
+# }
 ```
 
 ### Floating Points
@@ -351,7 +349,7 @@ Imagine using a floating point number to represent money. Someone comes into a s
 have a coupon for $520.02. The remainder that they need to pay is 2 cents, right? Try running the next bit of code:
 
 ```rust
-#fn main() {
+# fn main() {
 println!("520.04 - 520.02 should be 0.02");
 
 // Single Precision Floating Point
@@ -361,7 +359,7 @@ println!("But, using f32 it's: {float_32}");  // 0.019958496
 // Double Precision Floating Point
 let float_64 = 520.04_f64 - 520.02_f64;
 println!("And, using f64 it's: {float_64}"); // 0.01999999999998181
-#}
+# }
 ```
 
 Instead, if the currency you're representing uses "hundredths" for its minor currency like USD or GBP, then you can (and
@@ -391,12 +389,12 @@ space characters, word characters from languages like Chinese and Japanese, emoj
 scalar value".
 
 ```rust
-#fn main() {
+# fn main() {
 let i = 'I';
 let love = '💖';
 let yuki = '雪';
 println!("{i} {love} {yuki}"); // I 💖 雪
-#}
+# }
 ```
 
 We usually use characters in relation to finding things inside strings. You can also turn strings into a collection of
@@ -431,7 +429,6 @@ necessarily be the same as its length in characters.
 For example (don't worry about the code yet):
 
 ```rust
-#fn main() {
 let yuki = "雪";
 
 let byte_length = yuki.len();
@@ -439,7 +436,6 @@ println!("{yuki} length in bytes: {byte_length}"); // 3
 
 let char_length = yuki.chars().count();
 println!("{yuki} length in characters: {char_length}"); // 1
-#}
 ```
 
 Its also worth remembering that when you turn a string into characters, each of those characters will take up 4 bytes
@@ -447,9 +443,8 @@ of memory, even though inside the string they might have only taken up one byte 
 the next example we'll talk about it soon):
 
 ```rust
-#use std::mem::size_of_val;
+# use std::mem::size_of_val;
 #
-#fn main() {
 let hello = "hello";
 
 let string_size = size_of_val(hello);
@@ -458,7 +453,6 @@ println!("Size as string slice: {string_size} bytes"); // 5
 // Convert the string slice to chars, get the size of each char, and sum them
 let  char_size: usize = hello.chars().map(|c| size_of_val(&c)).sum();
 println!("Size as characters: {char_size} bytes"); // 20
-#}
 ```
 
 The size of a string slice depends on what's in it, which is why you won't see it on the stack (string slices live in
@@ -471,12 +465,10 @@ have a reference to a string slice that exists inside a string slice, and the an
 taking a slice inside a slice to make sure that the sub slice is a valid UTF-8 string.
 
 ```rust
-#fn main() {
 let hello = "hello";
 // hell is a reference to a substring, range 0..4 is exclusive so 0, 1, 2, 3 but not 4
 let hell = &hello[0..4]; 
 println!("{hell}"); // hell
-#}
 ```
 
 > ⚠️ It is _possible_ to create a string slice that is not a valid UTF-8 string so you should be mindful that this isn't
@@ -504,14 +496,12 @@ slices, the reference not only contains a pointer to the underlying data, but al
 the form `&[T]` where `T` is the type of every item in the array.
 
 ```rust
-#fn main() {
 # let hello: [char; 5] = ['H', 'e', 'l', 'l', 'o'];
 // hell is a reference to a sub-array, range 0..=3 is inclusive so 0, 1, 2, and 3
 let hell: &[char] = &hello[0..=3];
 
 // This is another way of printing variables with debug that we haven't covered yet 
 print!("{:?}", hell); // ['H', 'e', 'l', 'l']
-#}
 ```
 
 You can access elements inside the array directly by using an index value between square brackets. In Rust, indexing
