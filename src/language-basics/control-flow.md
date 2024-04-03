@@ -244,8 +244,8 @@ This may be easier to observe with our own enum type. Imagine the following:
 
 ```rust
 enum Vector {
-    Two(f64, f64),
-    Three(f64, f64, f64),
+    Two(f32, f32),
+    Three(f32, f32, f32),
 }
 
 fn main() {
@@ -298,8 +298,8 @@ Lets look at our Vector example again:
 
 ```rust
 # enum Vector {
-#     Two(f64, f64),
-#     Three(f64, f64, f64),
+#     Two(f32, f32),
+#     Three(f32, f32, f32),
 # }
 #
 # fn main() {
@@ -318,8 +318,8 @@ expression:
 
 ```rust
 # enum Vector {
-#     Two(f64, f64),
-#     Three(f64, f64, f64),
+#     Two(f32, f32),
+#     Three(f32, f32, f32),
 # }
 #
 let v = Vector::Three(3.0, 4.0, 5.0);
@@ -339,9 +339,9 @@ handled, and cause an error.
 
 ```rust,compile_fail
 enum Vector {
-    Two(f64, f64),
-    Three(f64, f64, f64),
-    Four(f64, f64, f64, f64),
+    Two(f32, f32),
+    Three(f32, f32, f32),
+    Four(f32, f32, f32, f32),
 }
 
 fn main() {
@@ -362,9 +362,9 @@ discards whatever is put into it and will match anything.
 
 ```rust
 # enum Vector {
-#    Two(f64, f64),
-#    Three(f64, f64, f64),
-#    Four(f64, f64, f64, f64),
+#    Two(f32, f32),
+#    Three(f32, f32, f32),
+#    Four(f32, f32, f32, f32),
 # }
 #
 # let v = Vector::Three(3.0, 4.0, 5.0);
@@ -378,13 +378,12 @@ let magnitude = match v {
 # println!("The vector has the magnitude '{}'", magnitude);
 ```
 
-Patterns on match arms are tested from top to bottom happen from top to bottom, and you can also match on more specific
-patterns, like values:
+Patterns on match arms are tested from top to bottom, and you can also match on more specific patterns, like values:
 
 ```rust
 # enum Vector {
-#     Two(f64, f64),
-#     Three(f64, f64, f64),
+#     Two(f32, f32),
+#     Three(f32, f32, f32),
 # }
 #
 let v = Vector::Two(0.0, 0.0);
@@ -413,8 +412,8 @@ we could use a match guard which is like a mini if statement:
 
 ```rust
 # enum Vector {
-#    Two(f64, f64),
-#    Three(f64, f64, f64),
+#    Two(f32, f32),
+#    Three(f32, f32, f32),
 # }
 #
 let v = Vector::Two(0.0, 0.0);
