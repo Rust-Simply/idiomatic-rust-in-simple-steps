@@ -510,7 +510,7 @@ Another useful keyword when looping is `continue`. Imagine you have a series of 
 you can skip over _some_ of those things.
 
 The following example will continuously get images, and run a time-consuming `process_image` function, unless the image
-is an SVG, in which cas it will skip it. 
+is an SVG, in which can it will skip it. 
 
 ```rust
 # use std::{

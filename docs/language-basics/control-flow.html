@@ -373,8 +373,8 @@ if let Some(c) = maybe_not {
 the block), the variable <code>c</code> has the value from inside the <code>Some</code> variant of the <code>Option</code>.</p>
 <p>This may be easier to observe with our own enum type. Imagine the following:</p>
 <pre><pre class="playground"><code class="language-rust">enum Vector {
-    Two(f64, f64),
-    Three(f64, f64, f64),
+    Two(f32, f32),
+    Three(f32, f32, f32),
 }
 
 fn main() {
@@ -417,8 +417,8 @@ from a function or breaking from a loop</p>
 its exhaustive, meaning that a match <em>must</em> deal with every possibility.</p>
 <p>Lets look at our Vector example again:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">enum Vector {
-</span><span class="boring">    Two(f64, f64),
-</span><span class="boring">    Three(f64, f64, f64),
+</span><span class="boring">    Two(f32, f32),
+</span><span class="boring">    Three(f32, f32, f32),
 </span><span class="boring">}
 </span><span class="boring">
 </span><span class="boring">fn main() {
@@ -435,8 +435,8 @@ expression:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">enum Vector {
-</span><span class="boring">    Two(f64, f64),
-</span><span class="boring">    Three(f64, f64, f64),
+</span><span class="boring">    Two(f32, f32),
+</span><span class="boring">    Three(f32, f32, f32),
 </span><span class="boring">}
 </span><span class="boring">
 </span>let v = Vector::Three(3.0, 4.0, 5.0);
@@ -452,9 +452,9 @@ println!(&quot;The vector has the magnitude '{}'&quot;, magnitude);
 <p>What happens if we add another variant to the enum though? Well, that <code>match</code> statement will see that not every case is
 handled, and cause an error.</p>
 <pre><pre class="playground"><code class="language-rust compile_fail">enum Vector {
-    Two(f64, f64),
-    Three(f64, f64, f64),
-    Four(f64, f64, f64, f64),
+    Two(f32, f32),
+    Three(f32, f32, f32),
+    Four(f32, f32, f32, f32),
 }
 
 fn main() {
@@ -473,9 +473,9 @@ discards whatever is put into it and will match anything.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">enum Vector {
-</span><span class="boring">   Two(f64, f64),
-</span><span class="boring">   Three(f64, f64, f64),
-</span><span class="boring">   Four(f64, f64, f64, f64),
+</span><span class="boring">   Two(f32, f32),
+</span><span class="boring">   Three(f32, f32, f32),
+</span><span class="boring">   Four(f32, f32, f32, f32),
 </span><span class="boring">}
 </span><span class="boring">
 </span><span class="boring">let v = Vector::Three(3.0, 4.0, 5.0);
@@ -488,13 +488,12 @@ discards whatever is put into it and will match anything.</p>
 };
 <span class="boring">println!(&quot;The vector has the magnitude '{}'&quot;, magnitude);
 </span><span class="boring">}</span></code></pre></pre>
-<p>Patterns on match arms are tested from top to bottom happen from top to bottom, and you can also match on more specific
-patterns, like values:</p>
+<p>Patterns on match arms are tested from top to bottom, and you can also match on more specific patterns, like values:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">enum Vector {
-</span><span class="boring">    Two(f64, f64),
-</span><span class="boring">    Three(f64, f64, f64),
+</span><span class="boring">    Two(f32, f32),
+</span><span class="boring">    Three(f32, f32, f32),
 </span><span class="boring">}
 </span><span class="boring">
 </span>let v = Vector::Two(0.0, 0.0);
@@ -522,8 +521,8 @@ we could use a match guard which is like a mini if statement:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span><span class="boring">enum Vector {
-</span><span class="boring">   Two(f64, f64),
-</span><span class="boring">   Three(f64, f64, f64),
+</span><span class="boring">   Two(f32, f32),
+</span><span class="boring">   Three(f32, f32, f32),
 </span><span class="boring">}
 </span><span class="boring">
 </span>let v = Vector::Two(0.0, 0.0);
@@ -607,7 +606,7 @@ println!(&quot;The number we found was {some_cool_number}&quot;);
 <p>Another useful keyword when looping is <code>continue</code>. Imagine you have a series of things that need to be processed but
 you can skip over <em>some</em> of those things.</p>
 <p>The following example will continuously get images, and run a time-consuming <code>process_image</code> function, unless the image
-is an SVG, in which cas it will skip it. </p>
+is an SVG, in which can it will skip it. </p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">use std::{
 </span><span class="boring">    io::{stdout, Write},
 </span><span class="boring">    thread::sleep,
