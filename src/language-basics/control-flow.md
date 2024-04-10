@@ -655,7 +655,7 @@ Here's a different example where we call a function until we're happy with the r
 # }
 #
 # fn main() {
-while get_seconds() % 3 == 0 {
+while get_seconds() % 3 != 0 {
     println!("The time in seconds is not divisible by 3");
 }
 println!("The time was successfully divided by 3!");

@@ -1989,7 +1989,7 @@ println!(&quot;The loop has finished&quot;);
 </span><span class="boring">}
 </span><span class="boring">
 </span><span class="boring">fn main() {
-</span>while get_seconds() % 3 == 0 {
+</span>while get_seconds() % 3 != 0 {
     println!(&quot;The time in seconds is not divisible by 3&quot;);
 }
 println!(&quot;The time was successfully divided by 3!&quot;);
