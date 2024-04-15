@@ -10,7 +10,7 @@
     - [Memory](language-basics/memory.md)
     - [Data Types](language-basics/data-types.md)
     - [Control Flow](language-basics/control-flow.md)
-    - [Functions]()
+    - [Functions](language-basics/functions.md)
     - [Documentation]()
     - [Tests]()
     - [Clippy and Fmt]()

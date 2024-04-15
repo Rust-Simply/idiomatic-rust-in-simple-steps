@@ -12,3 +12,11 @@ possible.
 This repository will provide the content in book form, however, the plan is to make a full YouTube series.
 
 You can view the book here: [https://www.danielmason.com/idiomatic-rust-in-simple-steps](https://www.danielmason.com/idiomatic-rust-in-simple-steps)
+
+## Build tools
+
+```shell
+cargo install mdbook
+cargo install mdbook-external-links
+cargo install mdbook-mermaid
+```
