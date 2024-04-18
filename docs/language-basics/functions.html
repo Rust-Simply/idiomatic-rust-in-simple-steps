@@ -291,7 +291,7 @@ the nth number in the fibonacci sequence</p>
 }
 <span class="boring">
 </span><span class="boring">fn main() {
-</span><span class="boring">    let n = 11u8;
+</span><span class="boring">    let n = 11;
 </span><span class="boring">    let fibonacci = find_fibonacci(n);
 </span><span class="boring">    println!("The {n} value of fibonacci is {fibonacci}");
 </span><span class="boring">}</span></code></pre></pre>
@@ -309,182 +309,123 @@ large enough number, it will eventually run out of space in the stack, causing a
 something like:</p>
 <pre><code class="language-text">thread 'main' has overflowed its stack
 </code></pre>
+<blockquote>
+<p>Its worth noting I had to manually set the stack size to something unreasonably small</p>
+</blockquote>
 <p>Rust does support “tail recursion” which is technique for turning a recursive function into a loop at compile time. This
 not only minimises stack usage to effectively a single function call but is also much faster. However, I think this is
 an overrated feature. In any language that supports tail recursion, it’s hard to guarantee the compiler will optimise
 this way, and it’s easy to break. My recommendation is if you need to recurse a <em>lot</em>, then consider whether you can
 manually rewrite your function as a loop instead of depending on a compiler optimization.</p>
-<h2 id="impl"><a class="header" href="#impl">Impl</a></h2>
-<p>As you can imagine, you can pass your own data types into functions, and typically that’s fine, but there are some
-issues, take the example below:</p>
-<pre><pre class="playground"><code class="language-rust">struct User {
-    name: String,
-    fur_color: String,
-}
-
-fn to_string(user: User) -&gt; String {
-    let User { name, fur_color } = user;
-    format!("User name: {name}\nUser fur color: {fur_color}")
-}
-
-fn main() {
-    let yuki = User {
-        name: "Yuki".to_string(),
-        fur_color: "White".to_string(),
-    };
-    println!("{}", to_string(yuki));
-}</code></pre></pre>
-<p>We have a nicely named function that does what it says, taking a User and turning it into a string, however, because
-there is no function overloading in Rust (you are unable to have multiple functions with the same name but different
-parameter lists), we can only have this one <code>to_string</code> function in scope at any time.</p>
-<p>There are a few ways around this: in the case where the types are similar enough, you might be able to use a generic,
-you could “rename” the function using <code>as</code> (we’ll talk about that more in the section on modules), or you could rename
-the function to something even more specific such as <code>user_to_string</code>…</p>
-<p>Or, you could make the function part of the implementation of the type itself using an <code>impl</code> block. This will make the
-function a part of the <code>User</code> type itself, and can be used to make functions called from <code>User</code> or on an instantiated
-object like <code>yuki</code>.</p>
-<p>Let’s make an impl block starting with a function that provides an easier way to create a user:</p>
-<pre><pre class="playground"><code class="language-rust">struct User {
-    name: String,
-    fur_color: String,
-}
-
-impl User {
-    fn new(name: String, fur_color: String) -&gt; Self {
-        User {
-            name,
-            fur_color,
-        }
-    }
-}
-
-<span class="boring">fn to_string(user: User) -&gt; String {
-</span><span class="boring">   let User { name, fur_color } = user;
-</span><span class="boring">   format!("User name: {name}\nUser fur color: {fur_color}")
-</span><span class="boring">}
-</span><span class="boring">
-</span>fn main() {
-    let yuki = User::new("Yuki".to_string(), "White".to_string());
-    println!("{}", to_string(yuki));
-}</code></pre></pre>
-<p>The function <code>new</code> is called from the <code>User</code> type, and returns <code>Self</code>, this is a special keyword meaning the type that
-is being used for the call, which in this case is <code>User</code>. So, when we call <code>User::new</code> with the parameters for <code>name</code>
-and <code>fur_color</code>, it will return a new <code>User</code> object with those fields filled in. You’ll also notice that when the
-properties of the object are the same as the variables being used to set them, we don’t need to add the colon, eg, you
-don’t need to do <code>name: name</code>, just putting <code>name</code> is fine.</p>
-<p>You can also create “methods”, which are functions that can be called on the instantiated data. We do this by making the
-first parameter <code>self</code>, <code>&amp;self</code> or <code>&amp;mut self</code>. We’ll talk more about the difference between these in the
-<a href="#generic-functions">generic functions</a> section below.</p>
-<p>For now, we’ll replicate the existing behaviour of our <code>to_string</code> function into the <code>User</code> implementation:</p>
-<pre><pre class="playground"><code class="language-rust">struct User {
-    name: String,
-    fur_color: String,
-}
-
-impl User {
-    fn new(name: String, fur_color: String) -&gt; Self {
-        // ...
-<span class="boring">        User {
-</span><span class="boring">            name,
-</span><span class="boring">            fur_color,
-</span><span class="boring">        }
-</span>    }
-  
-    fn to_string(self) -&gt; String {
-        let User { name, fur_color } = self;
-        format!("User name: {name}\nUser fur color: {fur_color}")
-    }
-}
-
-fn main() {
-    let yuki = User::new("Yuki".to_string(), "White".to_string());
-    println!("{}", yuki.to_string());
-}</code></pre></pre>
-<p>We moved the function into the impl block, changed the first parameter from <code>user: User</code> to just <code>self</code>, we don’t need
-to specify the type. We also changed the way we call the function from <code>to_string(yuki)</code> to <code>yuki.to_string()</code>.</p>
-<h2 id="traits"><a class="header" href="#traits">Traits</a></h2>
-<p><code>impl</code> is cool, but we can take it a step further and define behaviour that can be implemented for multiple types.</p>
-<p>For example, lets say that we have a similar type to our <code>User</code> type called <code>Admin</code>.</p>
-<pre><code class="language-rust noplayground">struct User {
-    name: String,
-    fur_color: String,
-}
-
-struct Admin {
-    name: String,
-}</code></pre>
-<p>We might want both <code>User</code> and <code>Admin</code> to have the method <code>to_string</code>. We can define it in a trait.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>trait ExampleToString {
-    fn to_string(self) -&gt; String;
-}
-<span class="boring">}</span></code></pre></pre>
-<p>We don’t need to define the body of the function (though you can, if you want to provide some default behaviour), we
-just need to describe its properties and return type. We can then implement that trait for a given type using
-<code>impl &lt;trait&gt; for &lt;type&gt;</code>.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">struct User {
-</span><span class="boring">    name: String,
-</span><span class="boring">    fur_color: String,
-</span><span class="boring">}
-</span><span class="boring">
-</span><span class="boring">impl User {
-</span><span class="boring">    fn new(name: String, fur_color: String) -&gt; Self {
-</span><span class="boring">        User {
-</span><span class="boring">            name,
-</span><span class="boring">            fur_color,
-</span><span class="boring">        }
-</span><span class="boring">    }
-</span><span class="boring">}
-</span><span class="boring">
-</span><span class="boring">trait ExampleToString {
-</span><span class="boring">    fn to_string(self) -&gt; String;
-</span><span class="boring">}
-</span><span class="boring">
-</span>impl ExampleToString for User {
-    fn to_string(self) -&gt; String {
-        let User { name, fur_color } = self;
-        format!("User name: {name}\nUser fur color: {fur_color}")
-    }
-}
-<span class="boring">
-</span><span class="boring">fn main() {
-</span><span class="boring">    let yuki = User::new("Yuki".to_string(), "White".to_string());
-</span><span class="boring">    println!("{}", yuki.to_string());
-</span><span class="boring">}</span></code></pre></pre>
-<p>Now we’ve moved the method from <code>impl User</code> to <code>impl ExampleToString for User</code> we can still access the method on <code>yuki</code>
-with <code>yuki.to_string()</code>. We can also implement the same trait for <code>Admin</code>.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">struct Admin {
-</span><span class="boring">    name: String,
-</span><span class="boring">}
-</span><span class="boring">
-</span><span class="boring">impl Admin {
-</span><span class="boring">    fn new(name: String) -&gt; Self {
-</span><span class="boring">        Admin { name }
-</span><span class="boring">    }
-</span><span class="boring">}
-</span><span class="boring">
-</span><span class="boring">trait ExampleToString {
-</span><span class="boring">    fn to_string(self) -&gt; String;
-</span><span class="boring">}
-</span><span class="boring">
-</span>impl ExampleToString for Admin {
-    fn to_string(self) -&gt; String {
-        let Admin { name } = self;
-        format!("Admin name: {name}")
-    }
-}
-<span class="boring">
-</span><span class="boring">fn main() {
-</span><span class="boring">    let indra = Admin::new("Indra".to_string());
-</span><span class="boring">    println!("{}", indra.to_string());
-</span><span class="boring">}</span></code></pre></pre>
-<p>Why is this better than just implementing the <code>to_string</code> function on to <code>User</code> and <code>Admin</code>, if anything, this is more
-work right? Well, the cool thing about this is that we can use the trait as a trait guard in generics, which we’ll see
-in just a moment.</p>
-<h2 id="generic-functions"><a class="header" href="#generic-functions">Generic Functions</a></h2>
 <h2 id="ownership"><a class="header" href="#ownership">Ownership</a></h2>
+<h3 id="memory-management-primer"><a class="header" href="#memory-management-primer">Memory Management Primer</a></h3>
+<p>Variables in Rust have to live somewhere in physical memory. This primarily comes down to the Stack, the Heap and the
+binary (for a deeper explanation, see the <a href="memory.html">chapter on memory</a>). The Heap can be thought of as managed. You
+ask the operating system (or other memory manager) to “allocate” you a block of memory to use for writing to and reading
+from, before finally “freeing” that block and returning the memory to the operating system.</p>
+<p>In some programming languages, this memory is managed manually by you. You have to ask for the memory and free it
+yourself. This leads to some problems:</p>
+<ul>
+<li>What happens if you try to use memory that wasn’t allocated?</li>
+<li>What happens if you try to use memory that you already freed?</li>
+<li>What happens if you try to store more data than fits?</li>
+</ul>
+<p>Not only is it surprisingly easy to make mistakes here, the consequences can be severe: around 70% of all security
+vulnerabilities are caused by accidental misuse of memory.</p>
+<p>In order to get around these problems, some programming languages use an automated method of memory management called
+garbage collection. In this method, you, the software engineer, don’t have to think about the actions required to get
+or return memory to/from the operating system. Instead, as memory is allocated, the garbage collector built into the
+language, will monitor to see which parts of your program are actively looking at that bit of memory, through a process
+called reference counting. Once the number of places using that data has dropped to zero, the garbage collector can
+safely free the memory.</p>
+<p>This is much safer than manually managing the memory yourself, but comes with some of its own problems:</p>
+<ul>
+<li>The garbage collector requires additional resources to manage memory
+<ul>
+<li>This includes CPU time to do the work but in some cases can also require significantly more memory</li>
+</ul>
+</li>
+<li>Managing memory by proxy is less efficient than managing it directly, meaning its slower</li>
+<li>You have limited to no control over what the garbage collector does or when it does it, this can have big negative
+impacts to performance at uncontrollable times</li>
+</ul>
+<p>Rust’s method of memory management is a little different. It’s low level, giving you the speed of manual memory
+management, but its mechanisms are hidden behind abstractions that mitigate its risks. It’s certainly not as easy to
+learn, but once you get your head around it, it makes a lot of sense.</p>
+<h3 id="ownership-1"><a class="header" href="#ownership-1">Ownership</a></h3>
+<p>In Rust, all data is “owned”. When the variable that “owns” the data goes out of scope, the data is dropped. This means
+that if the data was stored on the Heap, then that bit of memory is immediately freed.</p>
+<p>Let’s have a play with this, first, lets look at the scope aspect of ownership:</p>
+<pre><pre class="playground"><code class="language-rust compile_fail">fn main() {
+  let a = 'a'; // We create `a` in the outer scope of "main"
+
+  { // Start of a new block, starting a nested scope
+
+    println!("{a}"); // This works as `a` is in scope
+
+    let b = 'b'; // We create `b` in the inner scope of this code block
+    println!("{b}"); // This works as `b` is in scope
+
+  } // End of the block, b goes out of scope
+
+  println!("{a}"); // This still works as `a` is still in scope
+  println!("{b}"); // This does not work as `b` went out of scope
+}</code></pre></pre>
+<p>We can see that once a variable is out of scope, it can’t be used. If you run the above example (remember, you can do
+that in this book by mousing over the example and hitting the play button), you’ll see it won’t compile and (amongst
+a few other bits) gives you this message:</p>
+<pre><code class="language-text">error[E0425]: cannot find value `b` in this scope
+  --&gt; src/main.rs:14:14
+</code></pre>
+<p>Which tells us <em>exactly</em> what’s wrong! Rust’s compiler messages generally amazing, especially when it comes to working
+with ownership, so it’s worth getting used to how Rust presents its errors.</p>
+<p>Next, lets look at how data can only be “owned” by one thing at a time:</p>
+<pre><pre class="playground"><code class="language-rust compile_fail"><span class="boring">fn main() {
+</span>let a = "hello".to_string(); // We create some data and give it to `a`
+let b = a;                   // We give the data in `a` to `b`, transfering ownership
+println!("{b}");             // This would be fine as b owns "hello"
+println!("{a}");             // This won't compile, the data "moved" from `a` to `b`
+<span class="boring">}</span></code></pre></pre>
+<p>The statement <code>let b = a;</code> “moves” ownership of the string from <code>a</code> to <code>b</code>. Normally we wouldn’t “move” data in this way
+(spoilers: this is, after all, a chapter on functions), but it neatly shows that the data can’t be owned by multiple
+variables at once.</p>
+<h3 id="move-semantics"><a class="header" href="#move-semantics">Move Semantics</a></h3>
+<p>You might have noticed that we swapped from <code>char</code>s in the first ownership example to a <code>String</code> in the second. This is
+because there are two mechanisms at play: “Move” and “Copy”.</p>
+<p>Let’s try the same code with chars:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>let a = '雪';    // We create some data and give it to `a`
+let b = a;       // We set b to be equal to a
+println!("{b}"); // Prints 雪 
+println!("{a}"); // Also prints 雪
+<span class="boring">}</span></code></pre></pre>
+<p>The reason for this is that <code>char</code> is Copy, that is to say that it has the <code>Copy</code> trait. We’ll talk more about Traits
+in a future chapter, but essentially Traits provide behaviour to Data. Things can have the Copy applied to them if they
+can be trivially copied and this usually (always?) means the data exists on the stack. The reason for this is all the
+memory allocation and freeing stuff from above.</p>
+<p>When data has the Copy trait, instead of being moved from one variable to another, it’s copied. This mechanism on data
+that is Copy is implicit. Data that does not or can not implement Copy may still be duplicated if it implements the
+trait <code>Clone</code>, which provides the <code>.clone()</code> method.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>let a = "hello".to_string(); // We create some data and give it to `a`
+let b = a.clone();           // Allocates memory on the heap and copies the data into it
+println!("{b}");             // Prints "hello"
+println!("{a}");             // Also prints "hello"
+<span class="boring">}</span></code></pre></pre>
 <h2 id="best-practices"><a class="header" href="#best-practices">Best Practices</a></h2>
+<p>Here are some best practices when it comes to working with functions:</p>
+<ul>
+<li>Create a function whenever a section of code can be described in a few words</li>
+<li>Functions should only do one thing, avoid big branches inside functions</li>
+<li>Keep functions short, but not too short
+<ul>
+<li>Functions should be set of instructions grouped together, too few, and it may not be worth the function, too many,
+and it may need to be broken down into more functions</li>
+</ul>
+</li>
+<li>Do not take ownership unless you expressly need to own the data</li>
+<li><em>Try</em> to avoid mutable parameters</li>
+</ul>
 
                     </main>
 
