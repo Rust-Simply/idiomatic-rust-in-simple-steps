@@ -3,7 +3,7 @@ Functions
 
 Functions are reusable blocks of code. They have inputs, usually perform some sort of process, then have an output.
 
-We've been using a function called `main` to run all of our programs and example so far. This is a special function
+We've been using a function called `main` to run all of our programs and examples so far. This is a special function
 that is called as the program starts. We've also used a few other kinds of functions and methods (special functions
 attached to data types) that are built into Rust. We can make and use our own functions too though.
 
@@ -11,30 +11,33 @@ Functions can be pure, or impure. A pure function takes an input, does some proc
 the function extremely predictable. Given the same input they will always produce the same output, and nothing else
 within the system will change. 
 
+<style>
+  .mermaid {
+    text-align: center;
+  }
+</style>
+
 ```mermaid
 ---
 title: Pure Function
 ---
 graph LR;
-    Input --> Process
-    Process --> Output
+    Input ==> Process
+    Process ==> Output
 ```
 
 An impure function, might not always produce the same output given the same input, or may have side effects within the
-system, either changing something else in the system or having some other part of the system 
+system, either changing something else in the system or having some other part of the system change what the function
+does.
 
 ```mermaid
 ---
 title: Impure Function
 ---
 graph LR;
-%%    subgraph Function;
-%%        direction LR
-%%    end
-    
-    Process <--> SE["Side Effect"]
-        Input --> Process
-        Process --> Output
+    Input ==> Process
+    Process ==> Output
+    Process <-.-> SE["Side Effect"]
     
 ```
 
@@ -84,8 +87,9 @@ Creating and calling functions
 
 Functions are defined with the `fn` keyword (short for FuNction), followed by a name, followed by brackets `()` which
 may or may not contain parameters, possibly followed by an arrow `->` and a return type (if no return type is specified
-the return type is the Unit Type `()`, see the [data types chapter](./data-types.md)), and are completed by a code
-block which is the body of the function.
+the return type is the Unit Type `()`, see the [data types chapter](./data-types.md#the-unit-type)). This part of the 
+function is called the "function header". The function is completed by a code block, code between curly brackets, which
+is also called the function body.
 
 So lets create the simplest possible function:
 
@@ -272,7 +276,7 @@ Rust's method of memory management is a little different. It's low level, giving
 management, but its mechanisms are hidden behind abstractions that mitigate its risks. It's certainly not as easy to
 learn, but once you get your head around it, it makes a lot of sense.
 
-### Ownership
+### Introducing Ownership
 
 In Rust, all data is "owned". When the variable that "owns" the data goes out of scope, the data is dropped. This means
 that if the data was stored on the Heap, then that bit of memory is immediately freed.
@@ -380,8 +384,7 @@ _are_ Copy though.
 
 What does this have to do with functions though?
 
-Functions and Ownership
------------------------
+### Functions and Ownership
 
 When we pass data into functions through the use of parameters, the data follows the rules of move semantics.
 
@@ -474,8 +477,7 @@ Some things to note:
 Finally, when it comes to references, you can have as many immutable references to a value as you like, OR a single
 mutable reference.
 
-Lifetimes
----------
+### Lifetimes
 
 So far so clear, but it turns out that keeping track of those references is actually quite hard.
 
@@ -496,6 +498,13 @@ fn main() {
   println!("Right: {right}"); // ki
 }
 ```
+
+> Note, we are taking a sub slice of the input string using ranges. `&input[..up_to]` means the subslice starts at the
+> beginning of the string and runs up to, but does not include the "up_to"th element (remember indexing starts at 0, so
+> if up_to is 2, then the sub slice includes bytes 0 and 1 but not 2). `&input[up_to..]` starts at the "up_to"th byte
+> and continues until the end of the "input" slice. Also note that these are ranges of bytes, not characters so there is
+> a danger here if using multibyte characters. Try not to split strings like this as it's not guaranteed the result is a
+> valid utf-8 string.
 
 The function split takes a reference to a string, a point to split at, and the returns everything on the left of the
 split and everything on the right. The cool thing here is that the string isn't duplicated, the values `left` and 
@@ -704,9 +713,10 @@ Best Practices
 Here are some best practices when it comes to working with functions:
 
 - Create a function whenever a section of code can be described in a few words
+- The function name should describe what that code is doing
 - Functions should only do one thing, avoid big branches inside functions
-- Keep functions short, but not too short
-  - Functions should be set of instructions grouped together, too few, and it may not be worth the function, too many, 
-    and it may need to be broken down into more functions
+- Keep functions short, but not too short. Functions should be set of instructions grouped together, too few, and it may
+  not be worth the function, too many, and it may need to be broken down into more functions
 - Do not take ownership unless you expressly need to own the data
 - _Try_ to avoid mutable parameters
+- Be specific about your lifetimes, if using more than one or two, try naming them

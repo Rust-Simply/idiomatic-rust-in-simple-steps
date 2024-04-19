@@ -2071,32 +2071,34 @@ each number one at a time, then some <code>if</code>/<code>else</code> statement
 <p>Can you work out any other ways to do it?</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="functions"><a class="header" href="#functions">Functions</a></h1>
 <p>Functions are reusable blocks of code. They have inputs, usually perform some sort of process, then have an output.</p>
-<p>We’ve been using a function called <code>main</code> to run all of our programs and example so far. This is a special function
+<p>We’ve been using a function called <code>main</code> to run all of our programs and examples so far. This is a special function
 that is called as the program starts. We’ve also used a few other kinds of functions and methods (special functions
 attached to data types) that are built into Rust. We can make and use our own functions too though.</p>
 <p>Functions can be pure, or impure. A pure function takes an input, does some processing and returns an output. This makes
 the function extremely predictable. Given the same input they will always produce the same output, and nothing else
 within the system will change.</p>
+<style>
+  .mermaid {
+    text-align: center;
+  }
+</style>
 <pre class="mermaid">---
 title: Pure Function
 ---
 graph LR;
-    Input --&gt; Process
-    Process --&gt; Output
+    Input ==&gt; Process
+    Process ==&gt; Output
 </pre>
 <p>An impure function, might not always produce the same output given the same input, or may have side effects within the
-system, either changing something else in the system or having some other part of the system</p>
+system, either changing something else in the system or having some other part of the system change what the function
+does.</p>
 <pre class="mermaid">---
 title: Impure Function
 ---
 graph LR;
-%%    subgraph Function;
-%%        direction LR
-%%    end
-    
-    Process &lt;--&gt; SE[&quot;Side Effect&quot;]
-        Input --&gt; Process
-        Process --&gt; Output
+    Input ==&gt; Process
+    Process ==&gt; Output
+    Process &lt;-.-&gt; SE[&quot;Side Effect&quot;]
     
 </pre>
 <h2 id="a-quick-note-on-mutability"><a class="header" href="#a-quick-note-on-mutability">A Quick Note on Mutability</a></h2>
@@ -2129,8 +2131,9 @@ message.push_str(", world!"); // Modify message by adding this data to the end
 <h2 id="creating-and-calling-functions"><a class="header" href="#creating-and-calling-functions">Creating and calling functions</a></h2>
 <p>Functions are defined with the <code>fn</code> keyword (short for FuNction), followed by a name, followed by brackets <code>()</code> which
 may or may not contain parameters, possibly followed by an arrow <code>-&gt;</code> and a return type (if no return type is specified
-the return type is the Unit Type <code>()</code>, see the <a href="language-basics/./data-types.html">data types chapter</a>), and are completed by a code
-block which is the body of the function.</p>
+the return type is the Unit Type <code>()</code>, see the <a href="language-basics/./data-types.html#the-unit-type">data types chapter</a>). This part of the
+function is called the “function header”. The function is completed by a code block, code between curly brackets, which
+is also called the function body.</p>
 <p>So lets create the simplest possible function:</p>
 <pre><pre class="playground"><code class="language-rust">fn say_hello() {
     println!("Hello, world");
@@ -2275,7 +2278,7 @@ impacts to performance at uncontrollable times</li>
 <p>Rust’s method of memory management is a little different. It’s low level, giving you the speed of manual memory
 management, but its mechanisms are hidden behind abstractions that mitigate its risks. It’s certainly not as easy to
 learn, but once you get your head around it, it makes a lot of sense.</p>
-<h3 id="ownership-1"><a class="header" href="#ownership-1">Ownership</a></h3>
+<h3 id="introducing-ownership"><a class="header" href="#introducing-ownership">Introducing Ownership</a></h3>
 <p>In Rust, all data is “owned”. When the variable that “owns” the data goes out of scope, the data is dropped. This means
 that if the data was stored on the Heap, then that bit of memory is immediately freed.</p>
 <p>Let’s have a play with this, first, lets look at the scope aspect of ownership:</p>
@@ -2349,7 +2352,7 @@ used it can be freed, but as its part of the binary, that wouldn’t sense. Inst
 value exists in memory. This reference is also immutable, you can’t change values in the binary. Immutable references
 <em>are</em> Copy though.</p>
 <p>What does this have to do with functions though?</p>
-<h2 id="functions-and-ownership"><a class="header" href="#functions-and-ownership">Functions and Ownership</a></h2>
+<h3 id="functions-and-ownership"><a class="header" href="#functions-and-ownership">Functions and Ownership</a></h3>
 <p>When we pass data into functions through the use of parameters, the data follows the rules of move semantics.</p>
 <p>Let’s go back to our <code>create_greeting()</code> function. Instead of passing in a string slice reference, what would happen if
 we passed in a <code>String</code>?</p>
@@ -2422,7 +2425,7 @@ are.</li>
 </ul>
 <p>Finally, when it comes to references, you can have as many immutable references to a value as you like, OR a single
 mutable reference.</p>
-<h2 id="lifetimes"><a class="header" href="#lifetimes">Lifetimes</a></h2>
+<h3 id="lifetimes"><a class="header" href="#lifetimes">Lifetimes</a></h3>
 <p>So far so clear, but it turns out that keeping track of those references is actually quite hard.</p>
 <p>Let’s create a function that takes a reference to a string and returns two parts to that string:</p>
 <pre><pre class="playground"><code class="language-rust">fn split(input: &amp;str, at: usize) -&gt; (&amp;str, &amp;str) {
@@ -2438,6 +2441,14 @@ fn main() {
   println!("Left:  {left}");  // yu
   println!("Right: {right}"); // ki
 }</code></pre></pre>
+<blockquote>
+<p>Note, we are taking a sub slice of the input string using ranges. <code>&amp;input[..up_to]</code> means the subslice starts at the
+beginning of the string and runs up to, but does not include the “up_to“th element (remember indexing starts at 0, so
+if up_to is 2, then the sub slice includes bytes 0 and 1 but not 2). <code>&amp;input[up_to..]</code> starts at the “up_to“th byte
+and continues until the end of the “input” slice. Also note that these are ranges of bytes, not characters so there is
+a danger here if using multibyte characters. Try not to split strings like this as it’s not guaranteed the result is a
+valid utf-8 string.</p>
+</blockquote>
 <p>The function split takes a reference to a string, a point to split at, and the returns everything on the left of the
 split and everything on the right. The cool thing here is that the string isn’t duplicated, the values <code>left</code> and
 <code>right</code> are references that point to the inside of our input string!</p>
@@ -2607,15 +2618,13 @@ fur: white"
 <p>Here are some best practices when it comes to working with functions:</p>
 <ul>
 <li>Create a function whenever a section of code can be described in a few words</li>
+<li>The function name should describe what that code is doing</li>
 <li>Functions should only do one thing, avoid big branches inside functions</li>
-<li>Keep functions short, but not too short
-<ul>
-<li>Functions should be set of instructions grouped together, too few, and it may not be worth the function, too many,
-and it may need to be broken down into more functions</li>
-</ul>
-</li>
+<li>Keep functions short, but not too short. Functions should be set of instructions grouped together, too few, and it may
+not be worth the function, too many, and it may need to be broken down into more functions</li>
 <li>Do not take ownership unless you expressly need to own the data</li>
 <li><em>Try</em> to avoid mutable parameters</li>
+<li>Be specific about your lifetimes, if using more than one or two, try naming them</li>
 </ul>
 
                     </main>
