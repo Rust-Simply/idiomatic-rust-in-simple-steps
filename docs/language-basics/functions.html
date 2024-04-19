@@ -203,6 +203,33 @@ graph LR;
         Process --&gt; Output
     
 </pre>
+<h2 id="a-quick-note-on-mutability"><a class="header" href="#a-quick-note-on-mutability">A Quick Note on Mutability</a></h2>
+<p>Up to now, we haven’t needed to change any data once it’s been created. By default, all variables in Rust are implicitly
+“immutable”, meaning that the values inside of them can not be changed.</p>
+<p>This, for example, won’t compile (try to run it to see the compiler output)</p>
+<pre><pre class="playground"><code class="language-rust compile_fail"><span class="boring">fn main() {
+</span>let one = 1;
+one = one + 1;
+<span class="boring">println!("one = {one}");
+</span><span class="boring">}</span></code></pre></pre>
+<p>Immutability is good because it prevents data from being changed by mistake which, going on the name of the variable in
+the above example, is obviously what’s happened here (ie, it seems like <code>one</code> should probably not contain <code>2</code>).</p>
+<p>It’s good to use immutable variables as much as possible, but software needs to be able to process data. If we could
+never mutate values, we’d always have to depend on creating copies like this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>let one = 1;
+let two = one + 1;
+<span class="boring">println!("two = {two}");
+</span><span class="boring">}</span></code></pre></pre>
+<p>That’s fine for small data but imagine we’re processing large data like an image. Do we want to copy it every time we
+make a single pixel change?</p>
+<p>You can explicitly opt in to mutability by adding the word <code>mut</code> (pronounced “mute”) in front of the variable name.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let mut message = "Hello".to_string();
+message.push_str(", world!"); // Modify message by adding this data to the end
+<span class="boring">println!("{message}");
+</span><span class="boring">}</span></code></pre></pre>
 <h2 id="creating-and-calling-functions"><a class="header" href="#creating-and-calling-functions">Creating and calling functions</a></h2>
 <p>Functions are defined with the <code>fn</code> keyword (short for FuNction), followed by a name, followed by brackets <code>()</code> which
 may or may not contain parameters, possibly followed by an arrow <code>-&gt;</code> and a return type (if no return type is specified
@@ -399,19 +426,287 @@ let b = a;       // We set b to be equal to a
 println!("{b}"); // Prints 雪 
 println!("{a}"); // Also prints 雪
 <span class="boring">}</span></code></pre></pre>
+<p>This works! But String didn’t… 🤔</p>
 <p>The reason for this is that <code>char</code> is Copy, that is to say that it has the <code>Copy</code> trait. We’ll talk more about Traits
-in a future chapter, but essentially Traits provide behaviour to Data. Things can have the Copy applied to them if they
-can be trivially copied and this usually (always?) means the data exists on the stack. The reason for this is all the
-memory allocation and freeing stuff from above.</p>
+in a future chapter, but essentially Traits provide behaviour to Data. Things can have the <code>Copy</code> trait applied to them
+if they can be trivially copied and this usually (always?) means the data exists on the stack. The reason for this is
+all the memory allocation and freeing stuff from above.</p>
 <p>When data has the Copy trait, instead of being moved from one variable to another, it’s copied. This mechanism on data
 that is Copy is implicit. Data that does not or can not implement Copy may still be duplicated if it implements the
-trait <code>Clone</code>, which provides the <code>.clone()</code> method.</p>
+trait <code>Clone</code>, which provides the <code>.clone()</code> method. We’ll talk more about implementing traits in the traits section,
+but <code>String</code> already implements this so here’s how to use it:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
 </span>let a = "hello".to_string(); // We create some data and give it to `a`
 let b = a.clone();           // Allocates memory on the heap and copies the data into it
 println!("{b}");             // Prints "hello"
 println!("{a}");             // Also prints "hello"
 <span class="boring">}</span></code></pre></pre>
+<p>You’ll also note that we used a full fat <code>String</code> here, not a string slice reference. Here’s what that would look like:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">fn main() {
+</span>let a = "hello";   // `a` is a reference to data that exists in the binaries "data"
+let b = a;         // references are Copy so the reference is copied from a to b
+println!("{b}");   // Prints "hello"
+println!("{a}");   // Also prints "hello"
+<span class="boring">}</span></code></pre></pre>
+<p>Because <code>"hello"</code> exists inside the binaries data you can not “Own” it. Ownership would imply that once its no longer
+used it can be freed, but as its part of the binary, that wouldn’t sense. Instead, we just get a reference to where the
+value exists in memory. This reference is also immutable, you can’t change values in the binary. Immutable references
+<em>are</em> Copy though.</p>
+<p>What does this have to do with functions though?</p>
+<h2 id="functions-and-ownership"><a class="header" href="#functions-and-ownership">Functions and Ownership</a></h2>
+<p>When we pass data into functions through the use of parameters, the data follows the rules of move semantics.</p>
+<p>Let’s go back to our <code>create_greeting()</code> function. Instead of passing in a string slice reference, what would happen if
+we passed in a <code>String</code>?</p>
+<pre><pre class="playground"><code class="language-rust compile_fail">fn create_greeting(name: String) -&gt; String {
+    let message = format!("Hello, {name}");
+    message
+}
+
+fn main() {
+  let yuki = "Yuki".to_string();
+  let message = create_greeting(yuki);
+  println!("{message}"); // This would be fine but...
+  println!("{yuki}"); // This won't compile
+}</code></pre></pre>
+<p>In the above example, we moved ownership of the data stored in the variable <code>yuki</code> into the parameter <code>name</code> in the
+function <code>create_greeting</code>. This means after the function the variable <code>yuki</code> can no longer be used.</p>
+<p>Because the <code>format!</code> macro does not take ownership of the data in <code>name</code>, so we could return both the message <em>and</em> the
+original <code>String</code> data using a tuple.</p>
+<pre><pre class="playground"><code class="language-rust">fn create_greeting(name: String) -&gt; (String, String) {
+    let message = format!("Hello, {name}");
+    (message, name)
+}
+
+fn main() {
+  let yuki = "Yuki".to_string();
+  let (message, yuki) = create_greeting(yuki);
+  println!("{message}"); 
+  println!("{yuki}"); // This works again
+}</code></pre></pre>
+<p>We’ve changed our <code>create_greeting()</code> function to return a tuple that includes both strings. When the function returns
+we destructure the tuple (see <a href="control-flow.html">destructuring with patterns</a>) into two new variables,
+<code>message</code> and <code>yuki</code>. Note: this new <code>yuki</code> is a different variable from the old <code>yuki</code>, this is called “shadowing”.</p>
+<p>This is obviously a terrible way to deal with ownership. Going back to our original function, you can see that we are
+taking a reference to a string slice instead. The <code>String</code> type can be “dereferenced” into a reference to a string slice
+(remember the internal representation of a String is the same as a string slice), so we can create a reference to our
+<code>yuki</code> <code>String</code> using an ampersand:</p>
+<pre><pre class="playground"><code class="language-rust">// Changed back to taking a &amp;str
+fn create_greeting(name: &amp;str) -&gt; String {
+    let message = format!("Hello, {name}");
+    message
+}
+
+fn main() {
+  let yuki = "Yuki".to_string();
+  let message = create_greeting(&amp;yuki);
+  println!("{message}");
+  println!("{yuki}"); // Yuki's ownership was never moved so this now works
+}</code></pre></pre>
+<p>Let’s say we wanted our function to modify the string instead. Ideally we’d want to avoid modifying data that’s passed
+to a function but sometimes that’s not possible, if you need to do it you can pass a mutable reference.</p>
+<pre><pre class="playground"><code class="language-rust">// Changed back to taking a &amp;str
+fn create_greeting(greeting: &amp;mut String, name: &amp;str)  {
+    greeting.push_str(", ");
+    greeting.push_str(name);
+}
+
+fn main() {
+  let mut greeting = "Hello".to_string();
+  let name = "Yuki".to_string();
+  create_greeting(&amp;mut greeting, &amp;name);
+  println!("{greeting}");
+}</code></pre></pre>
+<p>Some things to note:</p>
+<ul>
+<li>In order to mutate greeting via a mutable reference, the variable itself must also be mutable: <code>let mut greeting ...</code></li>
+<li>When we pass the reference, we are explicit that we are allowing the reference to be mutable too:
+<code>create_greeting(&amp;mut greeting, ...)</code></li>
+<li>The function takes a mutable reference to a String, not a string slice, as string slices are not mutable, but Strings
+are.</li>
+</ul>
+<p>Finally, when it comes to references, you can have as many immutable references to a value as you like, OR a single
+mutable reference.</p>
+<h2 id="lifetimes"><a class="header" href="#lifetimes">Lifetimes</a></h2>
+<p>So far so clear, but it turns out that keeping track of those references is actually quite hard.</p>
+<p>Let’s create a function that takes a reference to a string and returns two parts to that string:</p>
+<pre><pre class="playground"><code class="language-rust">fn split(input: &amp;str, at: usize) -&gt; (&amp;str, &amp;str) {
+  let up_to = std::cmp::min(at, input.len()); // Prevent out of bounds
+  (&amp;input[..up_to], &amp;input[up_to..])
+}
+
+fn main() {
+  let input = "yuki".to_string();
+  let (left, right) = split(&amp;input, 2);
+
+  println!("Input: {input}"); // yuki
+  println!("Left:  {left}");  // yu
+  println!("Right: {right}"); // ki
+}</code></pre></pre>
+<p>The function split takes a reference to a string, a point to split at, and the returns everything on the left of the
+split and everything on the right. The cool thing here is that the string isn’t duplicated, the values <code>left</code> and
+<code>right</code> are references that point to the inside of our input string!</p>
+<p>How does Rust know that though? Let’s confuse it a bit.</p>
+<p>Instead of splitting at a particular point, we’ll find a sub string inside the input string, then split around that:</p>
+<pre><pre class="playground"><code class="language-rust compile_fail">fn split(input: &amp;str, sub_string: &amp;str) -&gt; (&amp;str, &amp;str) {
+  if let Some(found_at) = input.find(sub_string) {
+    (&amp;input[..found_at], &amp;input[found_at + 1..])
+  } else {
+    (&amp;input[..], &amp;input[input.len()..])
+  }
+}
+
+fn main() {
+  let input = "yuki".to_string();
+  let sub_string = "uk";
+  let (left, right) = split(&amp;input, sub_string);
+
+  println!("Input: {input}"); // yuki
+  println!("Left:  {left}"); // y
+  println!("Right: {right}"); // i
+}</code></pre></pre>
+<p>This example won’t compile, we get the error: <code>expected named lifetime parameter</code>, what does that mean?</p>
+<p>We also get guidance from the Rust compiler on how to fix our problem, and what it suggests will work, but once you
+understand the problem, you’ll see there’s a better way to solve it.</p>
+<p>A lifetime is Rust’s way of tracking reference usage. A reference needs to be tied back to its owning variable and this
+relationship must be understood at compile time. The way I like to visualise this is with a kite.</p>
+<p>Remember the stack? Let’s tie what we know about ownership to what we know about the stack.</p>
+<ul>
+<li>Some data is stored on the stack, some is stored on the heap</li>
+<li>Heap data is tied back to variables on the stack that “own” the heap data</li>
+<li>As we enter a function, all the space required for the stack data is added to the top of the stack</li>
+<li>Further functions go up the stack</li>
+<li>As functions come to an end they are removed from the top of the stack</li>
+<li>Owned data that is not returned down the stack is freed</li>
+</ul>
+<p>When it comes to references, we need to make sure that a reference to owned data does not out live the owned data.</p>
+<p>For example, lets create a string on the heap called <code>my_string</code>. We’ll then return a reference to that string, but not
+the string itself. This would mean that when the function comes to an end, the variable <code>my_string</code> goes out of scope,
+so the data that it owns on the Heap is freed… what would our reference point at now? Luckily Rust won’t let us do
+this:</p>
+<pre><pre class="playground"><code class="language-rust compile_fail"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>fn bad() -&gt; &amp;str {
+  let my_string = "Oh no!".to_string();
+  &amp;my_string
+}
+<span class="boring">}</span></code></pre></pre>
+<p>In order to prevent this, Rust tracks the lifetimes of each reference and its owned data. It can often do this
+automatically. In the first version of our function Rust can see that only one reference enters the function, no other
+references are in play, so Rust knows that the two references that are returned <em>must</em> be tied to the same data as the
+incoming reference.</p>
+<p>In the second version of our function, we pass two references in, now Rust is now less sure about which data the
+returned references should be tied to. The suggestion the Rust compiler gives us is to tie all the references to the
+same lifetime. This actually is a valid approach as Rust will use the shortest living bit of data to tie the references
+to.</p>
+<p>Let’s do what it says. Rust lifetimes are annotated with generic labels. If we’re being lazy we might use a single
+lettered label like <code>'a</code>, though if a lot of lifetimes are at play it’s definitely better to use longer, clearer labels.</p>
+<p>We’ll change the header of our function to include the lifetime <code>'a</code>. First we tell Rust we want to use a lifetime by
+putting it inside triangle brackets after the function name. Then we mark each reference with that lifetime.</p>
+<pre><pre class="playground"><code class="language-rust">fn split&lt;'a&gt;(input: &amp;'a str, sub_string: &amp;'a str) -&gt; (&amp;'a str, &amp;'a str) {
+    // ...
+<span class="boring">  if let Some(found_at) = input.find(sub_string) {
+</span><span class="boring">    (&amp;input[..found_at], &amp;input[found_at + 1..])
+</span><span class="boring">  } else {
+</span><span class="boring">    (&amp;input[..], &amp;input[input.len()..])
+</span><span class="boring">  }
+</span>}
+<span class="boring">
+</span><span class="boring">fn main() {
+</span><span class="boring">  let input = "yuki".to_string();
+</span><span class="boring">  let sub_string = "uk";
+</span><span class="boring">  let (left, right) = split(&amp;input, sub_string);
+</span><span class="boring">
+</span><span class="boring">  println!("Input: {input}"); // yuki
+</span><span class="boring">  println!("Left:  {left}"); // y
+</span><span class="boring">  println!("Right: {right}"); // i
+</span><span class="boring">}</span></code></pre></pre>
+<p>You can run the above and see this example works just fine, however, it’s not ideal. We’ve tied all the references to
+the same lifetime. The following shows that we can’t compile code that we know should work.</p>
+<pre><pre class="playground"><code class="language-rust compile_fail"><span class="boring">fn split&lt;'a&gt;(input: &amp;'a str, sub_string: &amp;'a str) -&gt; (&amp;'a str, &amp;'a str) {
+</span><span class="boring">    if let Some(found_at) = input.find(sub_string) {
+</span><span class="boring">        (&amp;input[..found_at], &amp;input[found_at + 1..])
+</span><span class="boring">    } else {
+</span><span class="boring">        (&amp;input[..], &amp;input[input.len()..])
+</span><span class="boring">    }
+</span><span class="boring">}
+</span><span class="boring">
+</span><span class="boring">fn main() {
+</span>let input = "yuki".to_string();
+
+let (left, right) = {
+    let sub_string = "uk".to_string();
+    split(&amp;input, &amp;sub_string)
+};
+
+println!("Input: {input}"); // yuki
+println!("Left:  {left}"); // y
+println!("Right: {right}"); // i
+<span class="boring">}</span></code></pre></pre>
+<p>This is contrived but here we’ve created an inner scope for our sub string. When that scope ends, that substring will be
+freed. You and I know that the left and right references are tied to the input variable in the outer scope, but we told
+Rust that it should tie all the lifetimes together. Since the sub string lasts the least amount of time, that’s the
+lifetime it used.</p>
+<p>To fix this problem we can just remove the lifetime annotation from the sub_string parameter. Now everything works
+as we’d expect:</p>
+<pre><pre class="playground"><code class="language-rust">fn split&lt;'a&gt;(input: &amp;'a str, sub_string: &amp;str) -&gt; (&amp;'a str, &amp;'a str) {
+  // ...
+<span class="boring">  if let Some(found_at) = input.find(sub_string) {
+</span><span class="boring">    (&amp;input[..found_at], &amp;input[found_at + 1..])
+</span><span class="boring">  } else {
+</span><span class="boring">    (&amp;input[..], &amp;input[input.len()..])
+</span><span class="boring">  }
+</span>}
+
+fn main() {
+    let input = "yuki".to_string();
+    
+    let (left, right) = {
+        let sub_string = "uk".to_string();
+        split(&amp;input, &amp;sub_string)
+    };
+    
+    println!("Input: {input}"); // yuki
+    println!("Left:  {left}"); // y
+    println!("Right: {right}"); // i
+}</code></pre></pre>
+<p>References and lifetimes get really tricky. Here’s how I like to think about them. Imagine a person flying a kite. The
+person is the owner of the data, the kite is the reference, and the string tying them together is the lifetime.</p>
+<p>The kite can go up and down the stack freely, but it can’t go below where the person is standing, that’s the equivalent
+of the ground.</p>
+<p>Multiple people can fly their kites through the same functions, and each one has its own reference.</p>
+<p>Its even possible to entwine the kites. Imagine a function that takes two string references and returns the longest.
+This is like a function that accepts two kites but only the largest is returned. Because you don’t know who that kite
+belongs to, it can’t go below the person standing highest on the stack.</p>
+<p>Lifetimes can be incredibly powerful, there’s no need to fear them. One amazing example is that you can have a string
+that contains some data, for example it could be a serialized format like JSON or YAML, or it could be something like
+an Advent of Code input string. Lifetimes mean that you bring that String into your program, allocating the memory for
+it once, then turn it into a complex data structure. So long as the original String exists, the data structure can need
+not allocate any further memory, which is incredibly efficient.</p>
+<pre><pre class="playground"><code class="language-rust">struct User&lt;'a&gt; {
+  name: &amp;'a str,
+  fur_color: &amp;'a str,
+}
+
+
+fn parse_user&lt;'a&gt;(input: &amp;'a str) -&gt; User&lt;'a&gt; {
+    // ...
+<span class="boring">    // ok, you caught me, this isn't a real parser
+</span><span class="boring">    let mut iter = input.lines();
+</span><span class="boring">    let name = &amp;iter.next().unwrap()[6..];
+</span><span class="boring">    let fur_color = &amp;iter.next().unwrap()[4..];
+</span><span class="boring">    User {
+</span><span class="boring">      name,
+</span><span class="boring">      fur_color,
+</span><span class="boring">    }
+</span>}
+
+fn main() {
+    let user = "name: Yuki
+fur: white"
+            .to_string();
+    let User { name, fur_color } = parse_user(&amp;user);
+    println!("User {name} is a {fur_color} cat");
+}</code></pre></pre>
 <h2 id="best-practices"><a class="header" href="#best-practices">Best Practices</a></h2>
 <p>Here are some best practices when it comes to working with functions:</p>
 <ul>
