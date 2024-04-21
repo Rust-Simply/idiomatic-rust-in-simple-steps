@@ -355,8 +355,6 @@ in a future chapter, but essentially Traits provide behaviour to Data. Things ca
 if they can be trivially copied and this usually (always?) means the data exists on the stack. The reason for this is
 all the memory allocation and freeing stuff from above.
 
-// TODO: Explain better
-
 When data has the Copy trait, instead of being moved from one variable to another, it's copied. This mechanism on data
 that is Copy is implicit. Data that does not or can not implement Copy may still be duplicated if it implements the
 trait `Clone`, which provides the `.clone()` method. We'll talk more about implementing traits in the traits section,
@@ -545,7 +543,7 @@ We also get guidance from the Rust compiler on how to fix our problem, and what 
 understand the problem, you'll see there's a better way to solve it.
 
 A lifetime is Rust's way of tracking reference usage. A reference needs to be tied back to its owning variable and this
-relationship must be understood at compile time. // TODO: Kite here?
+relationship must be understood at compile time.
 
 Remember the stack? Let's tie what we know about ownership to what we know about the stack.
 
