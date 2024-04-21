@@ -214,7 +214,7 @@ fn find_fibonacci(n: u128) -> u128 {
 # }
 ```
 
-> Note in this function that we use a boolean OR (`||`) in the `if` so the larger expression evaluates to true of either
+> Note in this function that we use a boolean OR (`||`) in the `if` so the larger expression evaluates to true if either
 > the left or right parts of the expression evaluate to true. I.e. the expression is true if n is equal to 0 OR if n is
 > equal to 1.
 >
@@ -352,6 +352,8 @@ in a future chapter, but essentially Traits provide behaviour to Data. Things ca
 if they can be trivially copied and this usually (always?) means the data exists on the stack. The reason for this is
 all the memory allocation and freeing stuff from above.
 
+// TODO: Explain better
+
 When data has the Copy trait, instead of being moved from one variable to another, it's copied. This mechanism on data
 that is Copy is implicit. Data that does not or can not implement Copy may still be duplicated if it implements the
 trait `Clone`, which provides the `.clone()` method. We'll talk more about implementing traits in the traits section,
@@ -378,9 +380,9 @@ println!("{a}");   // Also prints "hello"
 ```
 
 Because `"hello"` exists inside the binaries data you can not "Own" it. Ownership would imply that once its no longer
-used it can be freed, but as its part of the binary, that wouldn't sense. Instead, we just get a reference to where the
-value exists in memory. This reference is also immutable, you can't change values in the binary. Immutable references
-_are_ Copy though.
+used it can be freed, but as its part of the binary, that wouldn't make sense. Instead, we just get a reference to where 
+the value exists in memory. This reference is also immutable, you can't change values in the binary. Immutable 
+references _are_ Copy though.
 
 What does this have to do with functions though?
 
@@ -408,7 +410,7 @@ fn main() {
 In the above example, we moved ownership of the data stored in the variable `yuki` into the parameter `name` in the
 function `create_greeting`. This means after the function the variable `yuki` can no longer be used.
 
-Because the `format!` macro does not take ownership of the data in `name`, so we could return both the message _and_ the
+Because the `format!` macro does not take ownership of the data in `name`, we could return both the message _and_ the
 original `String` data using a tuple.
 
 ```rust
@@ -453,7 +455,7 @@ Let's say we wanted our function to modify the string instead. Ideally we'd want
 to a function but sometimes that's not possible, if you need to do it you can pass a mutable reference.
 
 ```rust
-// Changed back to taking a &str
+// Change &str to &mut String
 fn create_greeting(greeting: &mut String, name: &str)  {
     greeting.push_str(", ");
     greeting.push_str(name);
@@ -475,7 +477,7 @@ Some things to note:
   are.
 
 Finally, when it comes to references, you can have as many immutable references to a value as you like, OR a single
-mutable reference.
+mutable reference. Mutable references are not Copy.
 
 ### Lifetimes
 
@@ -540,7 +542,7 @@ We also get guidance from the Rust compiler on how to fix our problem, and what 
 understand the problem, you'll see there's a better way to solve it.
 
 A lifetime is Rust's way of tracking reference usage. A reference needs to be tied back to its owning variable and this
-relationship must be understood at compile time. The way I like to visualise this is with a kite.
+relationship must be understood at compile time. // TODO: Kite here?
 
 Remember the stack? Let's tie what we know about ownership to what we know about the stack.
 
@@ -667,7 +669,7 @@ person is the owner of the data, the kite is the reference, and the string tying
 The kite can go up and down the stack freely, but it can't go below where the person is standing, that's the equivalent
 of the ground.
 
-Multiple people can fly their kites through the same functions, and each one has its own reference.
+Multiple people can fly their kites through the same functions, and each one has its own kite string (lifetime).
 
 Its even possible to entwine the kites. Imagine a function that takes two string references and returns the longest.
 This is like a function that accepts two kites but only the largest is returned. Because you don't know who that kite
@@ -691,7 +693,7 @@ fn parse_user<'a>(input: &'a str) -> User<'a> {
 #     // ok, you caught me, this isn't a real parser
 #     let mut iter = input.lines();
 #     let name = &iter.next().unwrap()[6..];
-#     let fur_color = &iter.next().unwrap()[4..];
+#     let fur_color = &iter.next().unwrap()[5..];
 #     User {
 #       name,
 #       fur_color,

@@ -2222,7 +2222,7 @@ the nth number in the fibonacci sequence</p>
 </span><span class="boring">    println!("The {n} value of fibonacci is {fibonacci}");
 </span><span class="boring">}</span></code></pre></pre>
 <blockquote>
-<p>Note in this function that we use a boolean OR (<code>||</code>) in the <code>if</code> so the larger expression evaluates to true of either
+<p>Note in this function that we use a boolean OR (<code>||</code>) in the <code>if</code> so the larger expression evaluates to true if either
 the left or right parts of the expression evaluate to true. I.e. the expression is true if n is equal to 0 OR if n is
 equal to 1.</p>
 <p>We also use the <code>if</code>/<code>else</code> as an expression so the return of the function is equal to the values in the <code>if</code>/<code>else</code>
@@ -2330,6 +2330,7 @@ println!("{a}"); // Also prints 雪
 in a future chapter, but essentially Traits provide behaviour to Data. Things can have the <code>Copy</code> trait applied to them
 if they can be trivially copied and this usually (always?) means the data exists on the stack. The reason for this is
 all the memory allocation and freeing stuff from above.</p>
+<p>// TODO: Explain better</p>
 <p>When data has the Copy trait, instead of being moved from one variable to another, it’s copied. This mechanism on data
 that is Copy is implicit. Data that does not or can not implement Copy may still be duplicated if it implements the
 trait <code>Clone</code>, which provides the <code>.clone()</code> method. We’ll talk more about implementing traits in the traits section,
@@ -2348,9 +2349,9 @@ println!("{b}");   // Prints "hello"
 println!("{a}");   // Also prints "hello"
 <span class="boring">}</span></code></pre></pre>
 <p>Because <code>"hello"</code> exists inside the binaries data you can not “Own” it. Ownership would imply that once its no longer
-used it can be freed, but as its part of the binary, that wouldn’t sense. Instead, we just get a reference to where the
-value exists in memory. This reference is also immutable, you can’t change values in the binary. Immutable references
-<em>are</em> Copy though.</p>
+used it can be freed, but as its part of the binary, that wouldn’t make sense. Instead, we just get a reference to where
+the value exists in memory. This reference is also immutable, you can’t change values in the binary. Immutable
+references <em>are</em> Copy though.</p>
 <p>What does this have to do with functions though?</p>
 <h3 id="functions-and-ownership"><a class="header" href="#functions-and-ownership">Functions and Ownership</a></h3>
 <p>When we pass data into functions through the use of parameters, the data follows the rules of move semantics.</p>
@@ -2369,7 +2370,7 @@ fn main() {
 }</code></pre></pre>
 <p>In the above example, we moved ownership of the data stored in the variable <code>yuki</code> into the parameter <code>name</code> in the
 function <code>create_greeting</code>. This means after the function the variable <code>yuki</code> can no longer be used.</p>
-<p>Because the <code>format!</code> macro does not take ownership of the data in <code>name</code>, so we could return both the message <em>and</em> the
+<p>Because the <code>format!</code> macro does not take ownership of the data in <code>name</code>, we could return both the message <em>and</em> the
 original <code>String</code> data using a tuple.</p>
 <pre><pre class="playground"><code class="language-rust">fn create_greeting(name: String) -&gt; (String, String) {
     let message = format!("Hello, {name}");
@@ -2403,7 +2404,7 @@ fn main() {
 }</code></pre></pre>
 <p>Let’s say we wanted our function to modify the string instead. Ideally we’d want to avoid modifying data that’s passed
 to a function but sometimes that’s not possible, if you need to do it you can pass a mutable reference.</p>
-<pre><pre class="playground"><code class="language-rust">// Changed back to taking a &amp;str
+<pre><pre class="playground"><code class="language-rust">// Change &amp;str to &amp;mut String
 fn create_greeting(greeting: &amp;mut String, name: &amp;str)  {
     greeting.push_str(", ");
     greeting.push_str(name);
@@ -2424,7 +2425,7 @@ fn main() {
 are.</li>
 </ul>
 <p>Finally, when it comes to references, you can have as many immutable references to a value as you like, OR a single
-mutable reference.</p>
+mutable reference. Mutable references are not Copy.</p>
 <h3 id="lifetimes"><a class="header" href="#lifetimes">Lifetimes</a></h3>
 <p>So far so clear, but it turns out that keeping track of those references is actually quite hard.</p>
 <p>Let’s create a function that takes a reference to a string and returns two parts to that string:</p>
@@ -2475,7 +2476,7 @@ fn main() {
 <p>We also get guidance from the Rust compiler on how to fix our problem, and what it suggests will work, but once you
 understand the problem, you’ll see there’s a better way to solve it.</p>
 <p>A lifetime is Rust’s way of tracking reference usage. A reference needs to be tied back to its owning variable and this
-relationship must be understood at compile time. The way I like to visualise this is with a kite.</p>
+relationship must be understood at compile time. // TODO: Kite here?</p>
 <p>Remember the stack? Let’s tie what we know about ownership to what we know about the stack.</p>
 <ul>
 <li>Some data is stored on the stack, some is stored on the heap</li>
@@ -2580,7 +2581,7 @@ fn main() {
 person is the owner of the data, the kite is the reference, and the string tying them together is the lifetime.</p>
 <p>The kite can go up and down the stack freely, but it can’t go below where the person is standing, that’s the equivalent
 of the ground.</p>
-<p>Multiple people can fly their kites through the same functions, and each one has its own reference.</p>
+<p>Multiple people can fly their kites through the same functions, and each one has its own kite string (lifetime).</p>
 <p>Its even possible to entwine the kites. Imagine a function that takes two string references and returns the longest.
 This is like a function that accepts two kites but only the largest is returned. Because you don’t know who that kite
 belongs to, it can’t go below the person standing highest on the stack.</p>
@@ -2600,7 +2601,7 @@ fn parse_user&lt;'a&gt;(input: &amp;'a str) -&gt; User&lt;'a&gt; {
 <span class="boring">    // ok, you caught me, this isn't a real parser
 </span><span class="boring">    let mut iter = input.lines();
 </span><span class="boring">    let name = &amp;iter.next().unwrap()[6..];
-</span><span class="boring">    let fur_color = &amp;iter.next().unwrap()[4..];
+</span><span class="boring">    let fur_color = &amp;iter.next().unwrap()[5..];
 </span><span class="boring">    User {
 </span><span class="boring">      name,
 </span><span class="boring">      fur_color,
