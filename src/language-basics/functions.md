@@ -15,6 +15,9 @@ within the system will change.
   .mermaid {
     text-align: center;
   }
+  .mermaid svg {
+    background-color: white;
+  }
 </style>
 
 ```mermaid
