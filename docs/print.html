@@ -991,7 +991,7 @@ column is the negative version of itself, and all other numbers are the same. So
 <tr><td>u32</td><td style="text-align: right">0</td><td style="text-align: right">4,294,967,295</td></tr>
 <tr><td>i32</td><td style="text-align: right">-2147483648</td><td style="text-align: right">2,147,483,647</td></tr>
 <tr><td>u64</td><td style="text-align: right">0</td><td style="text-align: right">18,446,744,073,709,551,615</td></tr>
-<tr><td>i64</td><td style="text-align: right">-9,223,372,036,854,775,808</td><td style="text-align: right">127</td></tr>
+<tr><td>i64</td><td style="text-align: right">-9,223,372,036,854,775,808</td><td style="text-align: right">9,223,372,036,854,775,807</td></tr>
 <tr><td>u128</td><td style="text-align: right">0</td><td style="text-align: right">340,282,366,920,938,463,463,374,607,431,768,211,455</td></tr>
 <tr><td>i128</td><td style="text-align: right">-170,141,183,460,469,231,731,687,303,715,884,105,728</td><td style="text-align: right">170,141,183,460,469,231,731,687,303,715,884,105,727</td></tr>
 </tbody></table>
@@ -2332,7 +2332,8 @@ println!("{a}"); // Also prints 雪
 <p>The reason for this is that <code>char</code> is Copy, that is to say that it has the <code>Copy</code> trait. We’ll talk more about Traits
 in a future chapter, but essentially Traits provide behaviour to Data. Things can have the <code>Copy</code> trait applied to them
 if they can be trivially copied and this usually (always?) means the data exists on the stack. The reason for this is
-all the memory allocation and freeing stuff from above.</p>
+all that “allocating” and “freeing” memory on the stack we talked about earlier requires a non-trivial amount of time
+and resources.</p>
 <p>When data has the Copy trait, instead of being moved from one variable to another, it’s copied. This mechanism on data
 that is Copy is implicit. Data that does not or can not implement Copy may still be duplicated if it implements the
 trait <code>Clone</code>, which provides the <code>.clone()</code> method. We’ll talk more about implementing traits in the traits section,

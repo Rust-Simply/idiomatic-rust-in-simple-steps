@@ -353,7 +353,8 @@ This works! But String didn't... 🤔
 The reason for this is that `char` is Copy, that is to say that it has the `Copy` trait. We'll talk more about Traits
 in a future chapter, but essentially Traits provide behaviour to Data. Things can have the `Copy` trait applied to them
 if they can be trivially copied and this usually (always?) means the data exists on the stack. The reason for this is
-all the memory allocation and freeing stuff from above.
+all that "allocating" and "freeing" memory on the stack we talked about earlier requires a non-trivial amount of time
+and resources.
 
 When data has the Copy trait, instead of being moved from one variable to another, it's copied. This mechanism on data
 that is Copy is implicit. Data that does not or can not implement Copy may still be duplicated if it implements the
