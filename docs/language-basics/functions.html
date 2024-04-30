@@ -734,6 +734,35 @@ not be worth the function, too many, and it may need to be broken down into more
 <li><em>Try</em> to avoid mutable parameters</li>
 <li>Be specific about your lifetimes, if using more than one or two, try naming them</li>
 </ul>
+<h2 id="homework"><a class="header" href="#homework">Homework</a></h2>
+<p>This time I’d like you to create a function that splits our string like before, but instead of returning a left and
+right side it splits every part of the string.</p>
+<p>There is already a split method on string slices, but I’d like you to only use find, and create a recursive function.</p>
+<p>You’ll need to use a collection type to store all the chunks created by the split, I suggest using <code>Vec</code> (see the
+<a href="https://doc.rust-lang.org/std/vec/struct.Vec.html" title="" target="_blank">Documentation</a>) which is built into Rusts standard library.</p>
+<p>A Vec is a variably sized array that you can push new items on to the end of using the <code>.push(...)</code> method.</p>
+<p>To check whether your Vec contains the correct information after the program has run, use the <code>dbg!</code> macro (we’ll talk
+more about how this works another time, all you need to know is it will work for a Vec of string slice references).</p>
+<p>The header of your function might look something like this:</p>
+<pre><code class="language-rust ignore">fn split(input: &amp;str, split_at: &amp;str, collection: &amp;mut Vec&lt;&amp;str&gt;)</code></pre>
+<p>but you need to work out what the lifetimes will be.</p>
+<p>If your main function looks like this:</p>
+<pre><code class="language-rust ignore">let test_str = "Hello, world!";
+let split_at = "l";
+let mut collection = Vec::new();
+
+split(test_str, split_at, &amp;mut collection);
+
+dbg!(collection);</code></pre>
+<p>Then your output should look something like this:</p>
+<pre><code class="language-text">[src\main.rs:17:5] collection = [
+    "He",
+    "",
+    "o, wor",
+    "d!",
+]
+</code></pre>
+<p>This isn’t an easy task, and will require thinking about the lifetimes carefully.</p>
 
                     </main>
 

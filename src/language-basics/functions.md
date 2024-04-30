@@ -724,3 +724,53 @@ Here are some best practices when it comes to working with functions:
 - Do not take ownership unless you expressly need to own the data
 - _Try_ to avoid mutable parameters
 - Be specific about your lifetimes, if using more than one or two, try naming them
+
+
+Homework
+--------
+
+This time I'd like you to create a function that splits our string like before, but instead of returning a left and
+right side it splits every part of the string.
+
+There is already a split method on string slices, but I'd like you to only use find, and create a recursive function.
+
+You'll need to use a collection type to store all the chunks created by the split, I suggest using `Vec` (see the
+[Documentation](https://doc.rust-lang.org/std/vec/struct.Vec.html)) which is built into Rusts standard library.
+
+A Vec is a variably sized array that you can push new items on to the end of using the `.push(...)` method.
+
+To check whether your Vec contains the correct information after the program has run, use the `dbg!` macro (we'll talk
+more about how this works another time, all you need to know is it will work for a Vec of string slice references).
+
+The header of your function might look something like this:
+
+```rust,ignore
+fn split(input: &str, split_at: &str, collection: &mut Vec<&str>)
+```
+
+but you need to work out what the lifetimes will be.
+
+If your main function looks like this:
+
+```rust,ignore
+let test_str = "Hello, world!";
+let split_at = "l";
+let mut collection = Vec::new();
+
+split(test_str, split_at, &mut collection);
+
+dbg!(collection);
+```
+
+Then your output should look something like this:
+
+```text
+[src\main.rs:17:5] collection = [
+    "He",
+    "",
+    "o, wor",
+    "d!",
+]
+```
+
+This isn't an easy task, and will require thinking about the lifetimes carefully.
