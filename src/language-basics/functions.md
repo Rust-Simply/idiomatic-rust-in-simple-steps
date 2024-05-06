@@ -521,7 +521,7 @@ Instead of splitting at a particular point, we'll find a sub string inside the i
 ```rust,compile_fail
 fn split(input: &str, sub_string: &str) -> (&str, &str) {
   if let Some(found_at) = input.find(sub_string) {
-    (&input[..found_at], &input[found_at + 1..])
+    (&input[..found_at], &input[found_at + sub_string.len()..])
   } else {
     (&input[..], &input[input.len()..])
   }
@@ -589,7 +589,7 @@ putting it inside triangle brackets after the function name. Then we mark each r
 fn split<'a>(input: &'a str, sub_string: &'a str) -> (&'a str, &'a str) {
     // ...
 #   if let Some(found_at) = input.find(sub_string) {
-#     (&input[..found_at], &input[found_at + 1..])
+#     (&input[..found_at], &input[found_at + sub_string.len()..])
 #   } else {
 #     (&input[..], &input[input.len()..])
 #   }
@@ -612,7 +612,7 @@ the same lifetime. The following shows that we can't compile code that we know s
 ```rust,compile_fail
 # fn split<'a>(input: &'a str, sub_string: &'a str) -> (&'a str, &'a str) {
 #     if let Some(found_at) = input.find(sub_string) {
-#         (&input[..found_at], &input[found_at + 1..])
+#         (&input[..found_at], &input[found_at + sub_string.len()..])
 #     } else {
 #         (&input[..], &input[input.len()..])
 #     }

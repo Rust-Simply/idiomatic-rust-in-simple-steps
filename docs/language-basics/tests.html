@@ -220,8 +220,8 @@ of your testing. These tests are so important, that it is best practice to write
 you’re going to test.</p>
 <p>For this book, we’re only going to cover Unit Tests. That isn’t to say that Integration Tests and End-to-End Tests
 aren’t important, they absolutely are, and there are many good guides out there. But, it is to say, that Unit Tests are
-so important, that they significantly impact how we communicate about Rust code and particularly libraries that we might
-use, and they’ll change the way we talk about Rust in this book going forward.</p>
+<em>so</em> important, that they significantly impact how we communicate about Rust code and particularly libraries that we
+might use, and they’ll change the way we talk about Rust in this book going forward.</p>
 <h2 id="introduction-to-modules"><a class="header" href="#introduction-to-modules">Introduction to Modules</a></h2>
 <p>Unlike many languages, in Rust, tests live with the code that they’re testing. To explain this we need to talk about
 how code in Rust is organised with Modules.</p>
@@ -258,7 +258,7 @@ the functions we wrote in the last chapter (I’ve renamed them slightly below).
 fn split_around&lt;'a&gt;(input: &amp;'a str, sub_string: &amp;str) -&gt; (&amp;'a str, &amp;'a str) {
     // ...
 <span class="boring">  if let Some(found_at) = input.find(sub_string) {
-</span><span class="boring">    (&amp;input[..found_at], &amp;input[found_at + 1..])
+</span><span class="boring">    (&amp;input[..found_at], &amp;input[found_at + sub_string.len()..])
 </span><span class="boring">  } else {
 </span><span class="boring">    (&amp;input[..], &amp;input[input.len()..])
 </span><span class="boring">  }
@@ -296,7 +296,7 @@ compiled when we’re building tests and <code>cfg</code> has a “predicate” 
 </span><span class="boring">
 </span><span class="boring">fn split_around&lt;'a&gt;(input: &amp;'a str, sub_string: &amp;str) -&gt; (&amp;'a str, &amp;'a str) {
 </span><span class="boring">  if let Some(found_at) = input.find(sub_string) {
-</span><span class="boring">    (&amp;input[..found_at], &amp;input[found_at + 1..])
+</span><span class="boring">    (&amp;input[..found_at], &amp;input[found_at + sub_string.len()..])
 </span><span class="boring">  } else {
 </span><span class="boring">    (&amp;input[..], &amp;input[input.len()..])
 </span><span class="boring">  }
@@ -399,6 +399,7 @@ mod tests {
         assert_eq!(split_right, "lo, world!", "Rest of input");
     }
 }</code></pre>
+<p><a href="https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=c690b50e621e51a775b9ecf2019ee663" title="" target="_blank">Link to tests</a></p>
 <p>Congratulations, we now have our first working test! If you mess with the assertions, you can see how the optional
 message helps us find the broken assertion faster. And if you read the optional message, it tells us the expected
 behaviour… I think those of you who regularly USE non-english languages will see where the expectation doesn’t meet
@@ -453,26 +454,27 @@ the number of bytes to get our new split point.</p>
  
 #[cfg(test)]
 mod tests {
-    use super::*;
-    
-    #[test]
-    fn test_split_at() {
-        // ...
-<span class="boring">        let input = "Hello, world!";
+    // ...
+<span class="boring">    use super::*;
+</span><span class="boring">    
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn test_split_at() {
+</span><span class="boring">        let input = "Hello, world!";
 </span><span class="boring">        let (split_left, split_right) = split_at(input, 3);
 </span><span class="boring">        assert_eq!(split_left, "Hel", "First 3 characters");
 </span><span class="boring">        assert_eq!(split_right, "lo, world!", "Rest of input");
-</span>    }
-    
-    #[test]
-    fn test_split_at_multibyte() {
-        // ...
-<span class="boring">        let input = "こんにちは世界！";
+</span><span class="boring">    }
+</span><span class="boring">    
+</span><span class="boring">    #[test]
+</span><span class="boring">    fn test_split_at_multibyte() {
+</span><span class="boring">
+</span><span class="boring">        let input = "こんにちは世界！";
 </span><span class="boring">        let (split_left, split_right) = split_at(input, 3);
 </span><span class="boring">        assert_eq!(split_left, "こんに", "First 3 characters");
 </span><span class="boring">        assert_eq!(split_right, "ちは世界！", "Rest of input");
-</span>    }
-}</code></pre>
+</span><span class="boring">    }
+</span>}</code></pre>
+<p><a href="https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=09d99c5316173b306ad23c4f938a0b54" title="" target="_blank">Link to tests</a></p>
 <p>Now this test works too!</p>
 <p>Let’s quickly write the tests for <code>split_around</code> and <code>split_around_many</code>:</p>
 <pre><code class="language-rust noplayground">fn split_at(input: &amp;str, at: usize) -&gt; (&amp;str, &amp;str) {
@@ -484,7 +486,7 @@ mod tests {
 fn split_around&lt;'a&gt;(input: &amp;'a str, sub_string: &amp;str) -&gt; (&amp;'a str, &amp;'a str) {
     // ...
 <span class="boring">  if let Some(found_at) = input.find(sub_string) {
-</span><span class="boring">    (&amp;input[..found_at], &amp;input[found_at + 1..])
+</span><span class="boring">    (&amp;input[..found_at], &amp;input[found_at + sub_string.len()..])
 </span><span class="boring">  } else {
 </span><span class="boring">    (&amp;input[..], &amp;input[input.len()..])
 </span><span class="boring">  }
@@ -575,6 +577,7 @@ mod tests {
         ]);
     }
 }</code></pre>
+<p><a href="https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=1192fc71d8bf6be488c241a0a7f0a827" title="" target="_blank">Link to tests</a></p>
 <p>Note that we didn’t need to update the other functions for multibyte because we’re specifically looking for a substring
 that either exists or doesn’t.</p>
 <p>Now, what if I told you: we just did all of this backwards 😲</p>
@@ -587,7 +590,8 @@ This is called Test Driven Development (TDD).</p>
 <p>Let’s try some TDD. We’ll create a function that checks if a given string is a palindrome (a word that’s the same
 forwards and backwards).</p>
 <p>We’ll start by writing our test:</p>
-<pre><code class="language-rust ignore">mod tests {
+<pre><code class="language-rust noplayground">#[cfg(test)]
+mod tests {
     use super::*;
     
     #[test]
@@ -597,9 +601,10 @@ forwards and backwards).</p>
         assert!(!is_palindrome("wood"));
     }
 }</code></pre>
+<p><a href="https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=6f6409b54d8e8d3af13086a02030c3f4" title="" target="_blank">Link to tests</a></p>
 <p>This won’t compile though, so in order to run our test (even though it won’t work), we need to write the function. We
 don’t want to write any code inside it yet though, so we’ll use the <code>todo!()</code> macro.</p>
-<pre><code class="language-rust ignore">fn is_palindrome(_input: &amp;str) -&gt; bool {
+<pre><code class="language-rust noplayground">fn is_palindrome(_input: &amp;str) -&gt; bool {
     todo!("Implement the palindrome checker");
 }
 
@@ -615,6 +620,7 @@ mod tests {
 </span><span class="boring">        assert!(!is_palindrome("wood"));
 </span>    }
 }</code></pre>
+<p><a href="https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=64e08f5b84aaf37520679327ae0eb015" title="" target="_blank">Link to tests</a></p>
 <p>We use the <code>todo!</code> macro to state we are intending to come back and fix this code soon. It works even in our function
 that’s supposed to return a boolean because Rust recognises that the todo macro will kill the program, and therefore the
 function can will never return.</p>
@@ -624,7 +630,7 @@ isn’t used yet (otherwise it’ll warn us about it).</p>
 did, that would require allocating memory. Instead, lets use the chars iterator like we did earlier, we’ll create two
 iterators, reverse one of them, then zip them together. If every character matches its counterpart then the string is
 a palindrome.</p>
-<pre><code class="language-rust ignore">fn is_palindrome(input: &amp;str) -&gt; bool {
+<pre><code class="language-rust noplayground">fn is_palindrome(input: &amp;str) -&gt; bool {
     let forward = input.chars();
     let backward = forward.clone().rev();
     forward.zip(backward).all(|(f, b)| f == b)
@@ -641,14 +647,15 @@ mod tests {
         assert!(!is_palindrome("wood"));
     }
 }</code></pre>
+<p><a href="https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=29b7f57a396eef9d06d0d0c501bd3e8c" title="" target="_blank">Link to tests</a></p>
 <blockquote>
-<p>Curiously, cloning an iterator does not necessarily cause a memory allocation. In this case we’re safe, but it can be
-worth checking these things.</p>
+<p>ℹ️ Curiously, cloning an iterator does not necessarily cause a memory allocation. In this case we’re safe, but it can
+be worth checking these things when speed and efficiency are important.</p>
 </blockquote>
 <p>And now our test passes! But, uh-oh, when we send the code to be reviewed by a peer, they point out “racecar” isn’t a
 word. They do think that “race car” (with a space) should be considered a palindrome, so we update our test, but now it
 fails.</p>
-<pre><code class="language-rust ignore">fn is_palindrome(input: &amp;str) -&gt; bool {
+<pre><code class="language-rust noplayground">fn is_palindrome(input: &amp;str) -&gt; bool {
     // ...
 <span class="boring">    let forward = input.chars();
 </span><span class="boring">    let backward = forward.clone().rev();
@@ -666,9 +673,10 @@ mod tests {
         assert!(!is_palindrome("wood"));
     }
 }</code></pre>
-<p>Now we broke our test, lets fix the code. This one is easy, we just ignore spaces. We can do this by adding a filter to
-the iterator.</p>
-<pre><code class="language-rust ignore">fn is_palindrome(input: &amp;str) -&gt; bool {
+<p><a href="https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=55ca613fc48720fe1b2ab48370ccf866" title="" target="_blank">Link to tests</a></p>
+<p>Now we broke our test, lets fix the code. This one is easy, we just ignore anything that’s not a letter or a number.
+We can do this by adding a filter to the iterator.</p>
+<pre><code class="language-rust noplayground">fn is_palindrome(input: &amp;str) -&gt; bool {
     let forward = input.chars().filter(|c| c.is_alphanumeric());
     let backward = forward.clone().rev();
     forward.zip(backward).all(|(f, b)| f == b)
@@ -685,9 +693,10 @@ mod tests {
         assert!(!is_palindrome("wood"));
     }
 }</code></pre>
+<p><a href="https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=0b7ab806e298c477989d64dd899985b3" title="" target="_blank">Link to tests</a></p>
 <p>And we’ve fixed the code. The person reviewing the code is happy, so it goes out to customers, but someone complains.
 Their name is Anna, which is an anagram. We add it to the test:</p>
-<pre><code class="language-rust ignore"><span class="boring">fn is_palindrome(input: &amp;str) -&gt; bool {
+<pre><code class="language-rust noplayground"><span class="boring">fn is_palindrome(input: &amp;str) -&gt; bool {
 </span><span class="boring">    let forward = input.chars().filter(|c| c.is_alphanumeric());
 </span><span class="boring">    let backward = forward.clone().rev();
 </span><span class="boring">    forward.zip(backward).all(|(f, b)| f == b)
@@ -705,21 +714,21 @@ fn test_is_palindrome() {
     assert!(is_palindrome("Anna"));
 }
 <span class="boring">}</span></code></pre>
+<p><a href="https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=62e10f1d7a723de4637d560c5153219c" title="" target="_blank">Link to tests</a></p>
 <p>Capital letters are a little more complex as an uppercase character might be the same for multiple lowercase characters.
 When we call <code>.to_lowercase()</code> on a character in Rust, it will return an iterator for each character that could
 conceivably be turned into that uppercase character. If we map over each character and use <code>.to_lowercase()</code> then we
 have an iterator of iterators of characters. We can flatten this out with the <code>.flatten()</code> method to turn it back into
 an iterator of characters. Because we use <code>.rev()</code> after this point, it should still work with strings that contain
 characters that could have multiple lowercase counterparts.</p>
-<pre><code class="language-rust ignore">fn is_palindrome(input: &amp;str) -&gt; bool {
+<pre><code class="language-rust noplayground">fn is_palindrome(input: &amp;str) -&gt; bool {
     let forward = input
         .chars()
         .filter(|c| c.is_alphanumeric())
         .map(|c| c.to_lowercase())
         .flatten();
     let backward = forward.clone().rev();
-    forward.zip(backward).all(|(f, b)| 
-    f.any(|fc| == b.contains(fc))
+    forward.zip(backward).all(|(f, b)| f == b)
 }
 <span class="boring">
 </span><span class="boring">#[cfg(test)]
@@ -734,21 +743,23 @@ characters that could have multiple lowercase counterparts.</p>
 </span><span class="boring">        assert!(is_palindrome("Anna"));
 </span><span class="boring">    }
 </span><span class="boring">}</span></code></pre>
+<p><a href="https://play.rust-lang.org/?version=stable&mode=debug&edition=2021&gist=e012e666c1862768da409a7995116cfe" title="" target="_blank">Link to tests</a></p>
 <p>This function still isn’t perfect, but it works for the given test conditions.</p>
+<blockquote>
+<p>If you want to continue developing this function to include things like diacritics, please do! But, you will need to
+start using external crates which is out of scope of this section of the book.</p>
+</blockquote>
 <h2 id="how-many-tests-should-a-good-test-writer-write-if-a-good-test-writer-could-write-good-tests"><a class="header" href="#how-many-tests-should-a-good-test-writer-write-if-a-good-test-writer-could-write-good-tests">How many tests should a good test writer write if a good test writer could write good tests?</a></h2>
 <p>The perennial of questions when it comes to testing: How many tests should you write?</p>
 <p>The important thing here is “coverage”. Do you have a test that “covers” each line of code.</p>
 <p>Take for example this really silly function:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>fn is_positive(num: i32) -&gt; bool {
+<pre><code class="language-rust noplayground">fn is_positive(num: i32) -&gt; bool {
     if num &gt; 0 {
         true
     } else {
         true
     }
-}
-<span class="boring">}</span></code></pre></pre>
+}</code></pre>
 <p>If we only test this function by giving it a number greater than 0, we’ll only “cover” the line first branch of the
 <code>if</code>, we miss the fact there is a mistake in the second branch.</p>
 <p>So what percent coverage should you aim for?</p>
@@ -767,7 +778,6 @@ not what happens if you went into the first, but not the second.</p>
     } // &lt;- It was this line
     return do_something_else();
 }
-
 </code></pre>
 <p>I wrote the test and… found a bug so severe that I had to rewrite almost a third of the framework. Should have written
 the tests first, right?</p>
@@ -781,9 +791,7 @@ make sure your engineers are encouraged to be the best they can. That means givi
 giving them access to the resources they need to learn how to write the best tests, etc.</p>
 <h2 id="homework"><a class="header" href="#homework">Homework</a></h2>
 <p>We’ve already let on how you can solve last chapters homework:</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>fn split_around_many&lt;'a&gt;(input: &amp;'a str, sub_string: &amp;str, collection: &amp;mut Vec&lt;&amp;'a str&gt;) {
+<pre><code class="language-rust noplayground">fn split_around_many&lt;'a&gt;(input: &amp;'a str, sub_string: &amp;str, collection: &amp;mut Vec&lt;&amp;'a str&gt;) {
     if let Some(found_at) = input.find(sub_string) {
         let end_pos = found_at + sub_string.len();
         collection.push(&amp;input[..found_at]);
@@ -791,8 +799,7 @@ giving them access to the resources they need to learn how to write the best tes
     } else {
         collection.push(&amp;input);
     }
-}
-<span class="boring">}</span></code></pre></pre>
+}</code></pre>
 <p>We only needed one lifetime to represent the link between the input string slice and the string slice inside our vector.</p>
 <p>For a cleaner API though you could keep our recursive function private and expose a public function that creates the
 vector for us. Because we have control of the vector in this example we can make sure we create a vector with a capacity
@@ -800,9 +807,7 @@ that is at least as large as the maximum possible entries in it. This is useful 
 it has a default size, and any time you try to add an item to a vector that is already full, Rust will allocate the
 memory for a new larger vector in the background, copy the data from the old location to the new location, then free the
 memory in the old location.</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>fn split_around_many_recurse&lt;'a&gt;(input: &amp;'a str, sub_string: &amp;str, collection: &amp;mut Vec&lt;&amp;'a str&gt;) {
+<pre><code class="language-rust noplayground">fn split_around_many_recurse&lt;'a&gt;(input: &amp;'a str, sub_string: &amp;str, collection: &amp;mut Vec&lt;&amp;'a str&gt;) {
     // ...
 <span class="boring">    if let Some(found_at) = input.find(sub_string) {
 </span><span class="boring">        let end_pos = found_at + sub_string.len();
@@ -817,8 +822,7 @@ pub fn split_around_many&lt;'a&gt;(input: &amp;'a str, sub_string: &amp;str) -&g
     let mut output = Vec::with_capacity(input.matches(sub_string).count());
     split_around_many_recurse(input, sub_string, &amp;mut output);
     output
-}
-<span class="boring">}</span></code></pre></pre>
+}</code></pre>
 <p>For the homework in this chapter, I would like you to write the tests for, and then implement the code for the following
 requirements in this order:</p>
 <ol>

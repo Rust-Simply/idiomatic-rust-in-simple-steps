@@ -564,7 +564,7 @@ split and everything on the right. The cool thing here is that the string isn’
 <p>Instead of splitting at a particular point, we’ll find a sub string inside the input string, then split around that:</p>
 <pre><pre class="playground"><code class="language-rust compile_fail">fn split(input: &amp;str, sub_string: &amp;str) -&gt; (&amp;str, &amp;str) {
   if let Some(found_at) = input.find(sub_string) {
-    (&amp;input[..found_at], &amp;input[found_at + 1..])
+    (&amp;input[..found_at], &amp;input[found_at + sub_string.len()..])
   } else {
     (&amp;input[..], &amp;input[input.len()..])
   }
@@ -620,7 +620,7 @@ putting it inside triangle brackets after the function name. Then we mark each r
 <pre><pre class="playground"><code class="language-rust">fn split&lt;'a&gt;(input: &amp;'a str, sub_string: &amp;'a str) -&gt; (&amp;'a str, &amp;'a str) {
     // ...
 <span class="boring">  if let Some(found_at) = input.find(sub_string) {
-</span><span class="boring">    (&amp;input[..found_at], &amp;input[found_at + 1..])
+</span><span class="boring">    (&amp;input[..found_at], &amp;input[found_at + sub_string.len()..])
 </span><span class="boring">  } else {
 </span><span class="boring">    (&amp;input[..], &amp;input[input.len()..])
 </span><span class="boring">  }
@@ -639,7 +639,7 @@ putting it inside triangle brackets after the function name. Then we mark each r
 the same lifetime. The following shows that we can’t compile code that we know should work.</p>
 <pre><pre class="playground"><code class="language-rust compile_fail"><span class="boring">fn split&lt;'a&gt;(input: &amp;'a str, sub_string: &amp;'a str) -&gt; (&amp;'a str, &amp;'a str) {
 </span><span class="boring">    if let Some(found_at) = input.find(sub_string) {
-</span><span class="boring">        (&amp;input[..found_at], &amp;input[found_at + 1..])
+</span><span class="boring">        (&amp;input[..found_at], &amp;input[found_at + sub_string.len()..])
 </span><span class="boring">    } else {
 </span><span class="boring">        (&amp;input[..], &amp;input[input.len()..])
 </span><span class="boring">    }
