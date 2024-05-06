@@ -12,7 +12,7 @@
     - [Control Flow](language-basics/control-flow.md)
     - [Functions](language-basics/functions.md)
     - [Tests (wip)](./language-basics/tests.md)
-    - [Documentation]()
+    - [Documentation](./language-basics/documentation.md)
     - [Clippy and Fmt]()
     - [Conversions]()
     - [Pattern Matching]()
