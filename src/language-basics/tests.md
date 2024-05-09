@@ -231,8 +231,6 @@ chapter.
 To run tests in our project we use `cargo test`. In the case of the above we should see the following:
 
 ```text
-error: test failed, to rerun pass `--lib`
-
 running 1 test
 test tests::test_split_at ... FAILED
 
@@ -723,7 +721,7 @@ If we only test this function by giving it a number greater than 0, we'll only "
 So what percent coverage should you aim for?
 
 Anecdotally, when I was creating my own API framework in PHP, I decided I wanted to get 100% coverage, that is, every
-line should have a test that hits it. The very last lime that was uncovered was:
+line should have a test that hits it. The very last line that was uncovered was:
 
 ```php,ignore
         }
