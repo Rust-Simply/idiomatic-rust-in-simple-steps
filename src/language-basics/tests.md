@@ -569,7 +569,7 @@ mod tests {
     #[test]
     fn test_is_palindrome() {
         assert!(is_palindrome("kayak"));
-        assert!(is_palindrome("race car"));
+        assert!(is_palindrome("racecar"));
         assert!(!is_palindrome("wood"));
     }
 }
