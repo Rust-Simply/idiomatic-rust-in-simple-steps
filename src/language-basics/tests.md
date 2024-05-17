@@ -1,4 +1,4 @@
-Tests (WIP)
+Tests
 =====
 
 Tests. Are. Awesome.
