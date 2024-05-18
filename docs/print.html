@@ -3324,8 +3324,55 @@ be the unit type <code>()</code>).</li>
 <a href="https://doc.rust-lang.org/std/result/enum.Result.html" title="" target="_blank">Result</a></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="documentation"><a class="header" href="#documentation">Documentation</a></h1>
 <p>Documentation. Is. Awesome… in Rust.</p>
-<p>Documentation is awesome all the time but in Rust, it’s truly magical. This is thanks to two tools: <code>rustdoc</code> and
-<code>cargo test</code></p>
+<p>Documentation is awesome all the time but in Rust, it’s truly magical. This is thanks to two tools: <code>rustdoc</code> and,
+spoilers, <code>cargo test</code>.</p>
+<h2 id="libraries"><a class="header" href="#libraries">Libraries</a></h2>
+<p>In order to show the value of documentation, we’re going to start creating Rust libraries.</p>
+<p>Up to now, we’ve been building binaries. Rust compiles binaries into executables, but those binaries can link to
+libraries that provide functionality. This is particularly helpful when sharing and reusing code. We’ll be talking much
+more about how we share code with each other when we get to ecosystem, but even as we’re just learning the language, we
+can leverage the power of libraries for things like code reuse within the same project.</p>
+<p>Let’s try it out. First, lets make a normal program, remember you can do this with something like:
+<code>cargo new iriss-documentation</code></p>
+<p>In <code>main.rs</code>, we’ll make a single function and our main program will just check it works.</p>
+<pre><pre class="playground"><code class="language-rust">fn add(a: usize, b: usize) -&gt; usize {
+    a + b
+}
+
+fn main() {
+    assert_eq!(add(40, 2), 42);
+}</code></pre></pre>
+<p>Next, lets migrate the add function to a library. Create a new file called <code>lib.rs</code>. In the same way that <code>main.rs</code> is
+the entry to our binary, <code>lib.rs</code> is the entry point to our library. Our library acts like any other module and the
+module is named the same thing as our project (though swap hyphens <code>-</code> for underscores <code>_</code>).</p>
+<p>We’ll move our add function to the <code>lib.rs</code> and make it public</p>
+<pre><pre class="playground"><code class="language-rust no_playground"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// lib.rs
+pub fn add(a: usize, b: usize) -&gt; usize {
+    a + b
+}
+<span class="boring">}</span></code></pre></pre>
+<p>We can now access this function from our main via the project module (eg, <code>iriss_documentation</code>).</p>
+<pre><pre class="playground"><code class="language-rust no_playground"><span class="boring">// This is included for `mdbook test` which I'm using to check for obvious mistakes,
+</span><span class="boring">// this _should_ be in lib.rs in your project and not in a module
+</span><span class="boring">mod iriss_documentation {
+</span><span class="boring">    pub fn add(a: usize, b: usize) -&gt; usize {
+</span><span class="boring">        a + b
+</span><span class="boring">    }
+</span><span class="boring">}
+</span>// main.rs
+use iriss_documentation::add;
+
+fn main() {
+    assert_eq!(add(40, 2), 42);
+}</code></pre></pre>
+<p>We can now share this code amongst multiple binaries. We <em>aren’t</em> going to do this, but we <em>could</em> move <code>main.rs</code> to
+<code>src/bin</code> and then rename it. We can then have as many binaries as we like here, all using the same library. The reason
+we aren’t going to do this now is that if you have multiple binaries in the bin directory, you have to tell Rust which
+one to run when you use <code>cargo run</code> with the <code>--bin</code> flag.</p>
+<h2 id="rustdoc"><a class="header" href="#rustdoc">rustdoc</a></h2>
+<p>We can create</p>
 
                     </main>
 
