@@ -1,4 +1,4 @@
-Tests (WIP)
+Tests
 =====
 
 Tests. Are. Awesome.
@@ -6,7 +6,7 @@ Tests. Are. Awesome.
 They are my favourite bit of software engineering. I'm sure many of you can relate, but I don't tend to trust humans 
 telling me I'm doing well at my job. When I make a test pass though, oh that dopamine hits good.
 
-A good test makes sure that the thing we're building does what we think it does.
+A good test makes sure that the thing we're building does what we think it should do.
 
 Anecdotally I recently interviewed at a company where I professed my love of tests, and they told me flatly they don't
 write tests, they "move fast". Later in the interview they admitted they were having morale issues because their
@@ -95,17 +95,15 @@ We access that function using `std::io::stdin()`. We can also use the `use` keyw
 use std::io::stdin; // Full name here
 
 fn main() {
-    let _ = stdin; // No need to use the full name here
+    let _ = stdin(); // No need to use the full name here
 }
 ```
-
-We won't need this for testing though.
 
 Test Modules
 ------------
 
-In Rust, we typically create a test module near the code that is being tested. Let's say we want to write a test some of
-the functions we wrote in the last chapter (I've renamed them slightly below).
+In Rust, we typically create a test module near the code that is being tested. Let's say we want to test some of the
+functions we wrote in the last chapter (I've renamed them slightly below).
 
 First we start by creating a module to test these functions in the same file as the functions exist
 
@@ -149,7 +147,7 @@ our tests and Rust provides us a way to tell it that, the
 
 Attributes are one of Rusts many meta programming tools which we'll cover more in the future at increasing difficulty
 levels. For now, the `cfg` attribute allows us to tell the Rust Compiler (`rustc`) _when_ we want to compile something.
-There are many, many ways to use conditional compilation, but for tests its pretty simple, we only want the module
+There are many, many ways to use conditional compilation, but for tests it's pretty simple, we only want the module
 compiled when we're building tests and `cfg` has a "predicate" to identify this simply called `test`.
 
 We use `cfg` to only build our tests module when we're building for tests like this:
@@ -233,8 +231,6 @@ chapter.
 To run tests in our project we use `cargo test`. In the case of the above we should see the following:
 
 ```text
-error: test failed, to rerun pass `--lib`
-
 running 1 test
 test tests::test_split_at ... FAILED
 
@@ -573,7 +569,7 @@ mod tests {
     #[test]
     fn test_is_palindrome() {
         assert!(is_palindrome("kayak"));
-        assert!(is_palindrome("race car"));
+        assert!(is_palindrome("racecar"));
         assert!(!is_palindrome("wood"));
     }
 }
@@ -725,7 +721,7 @@ If we only test this function by giving it a number greater than 0, we'll only "
 So what percent coverage should you aim for?
 
 Anecdotally, when I was creating my own API framework in PHP, I decided I wanted to get 100% coverage, that is, every
-line should have a test that hits it. The very last lime that was uncovered was:
+line should have a test that hits it. The very last line that was uncovered was:
 
 ```php,ignore
         }
@@ -822,3 +818,29 @@ fn reverse_sentence(input: &str) -> Result<String, ()>
 
 Here is the documentation on [String](https://doc.rust-lang.org/std/string/struct.String.html) and
 [Result](https://doc.rust-lang.org/std/result/enum.Result.html)
+
+Going forward
+-------------
+
+As I mentioned, after this chapter we will be talking about Rust differently. This will primarily be by using the assert
+macros to state what a value _should_ be.
+
+For example, one of our earlier code examples looks like this:
+
+```rust
+let min_byte: u8 = 0b0000_0000;
+let max_byte: u8 = 0b1111_1111;
+println!("min_byte: {min_byte}"); // 0
+println!("max_byte: {max_byte}"); // 255
+```
+
+But from here on out it'll look like this:
+
+```rust
+let min_byte: u8 = 0b0000_0000;
+let max_byte: u8 = 0b1111_1111;
+assert_eq!(min_byte, 0);
+assert_eq!(max_byte, 255);
+```
+
+Now that you've seen the assert macros, this should be cleaner and clearer.

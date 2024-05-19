@@ -2659,11 +2659,11 @@ dbg!(collection);</code></pre>
 ]
 </code></pre>
 <p>This isn’t an easy task, and will require thinking about the lifetimes carefully.</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="tests-wip"><a class="header" href="#tests-wip">Tests (WIP)</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="tests"><a class="header" href="#tests">Tests</a></h1>
 <p>Tests. Are. Awesome.</p>
 <p>They are my favourite bit of software engineering. I’m sure many of you can relate, but I don’t tend to trust humans
 telling me I’m doing well at my job. When I make a test pass though, oh that dopamine hits good.</p>
-<p>A good test makes sure that the thing we’re building does what we think it does.</p>
+<p>A good test makes sure that the thing we’re building does what we think it should do.</p>
 <p>Anecdotally I recently interviewed at a company where I professed my love of tests, and they told me flatly they don’t
 write tests, they “move fast”. Later in the interview they admitted they were having morale issues because their
 engineers were constantly getting called out of hours to fix things.</p>
@@ -2728,12 +2728,11 @@ standard library. For example, the <code>stdin</code> function is inside the <co
 <pre><code class="language-rust noplayground">use std::io::stdin; // Full name here
 
 fn main() {
-    let _ = stdin; // No need to use the full name here
+    let _ = stdin(); // No need to use the full name here
 }</code></pre>
-<p>We won’t need this for testing though.</p>
 <h2 id="test-modules"><a class="header" href="#test-modules">Test Modules</a></h2>
-<p>In Rust, we typically create a test module near the code that is being tested. Let’s say we want to write a test some of
-the functions we wrote in the last chapter (I’ve renamed them slightly below).</p>
+<p>In Rust, we typically create a test module near the code that is being tested. Let’s say we want to test some of the
+functions we wrote in the last chapter (I’ve renamed them slightly below).</p>
 <p>First we start by creating a module to test these functions in the same file as the functions exist</p>
 <pre><code class="language-rust noplayground">fn split_at(input: &amp;str, at: usize) -&gt; (&amp;str, &amp;str) {
     // ...
@@ -2772,7 +2771,7 @@ our tests and Rust provides us a way to tell it that, the
 <code>#[cfg(...)]</code> attribute</a>.</p>
 <p>Attributes are one of Rusts many meta programming tools which we’ll cover more in the future at increasing difficulty
 levels. For now, the <code>cfg</code> attribute allows us to tell the Rust Compiler (<code>rustc</code>) <em>when</em> we want to compile something.
-There are many, many ways to use conditional compilation, but for tests its pretty simple, we only want the module
+There are many, many ways to use conditional compilation, but for tests it’s pretty simple, we only want the module
 compiled when we’re building tests and <code>cfg</code> has a “predicate” to identify this simply called <code>test</code>.</p>
 <p>We use <code>cfg</code> to only build our tests module when we’re building for tests like this:</p>
 <pre><code class="language-rust noplayground"><span class="boring">fn split_at(input: &amp;str, at: usize) -&gt; (&amp;str, &amp;str) {
@@ -2841,9 +2840,7 @@ chapter.</p>
 There are even libraries specifically built for enhancing your tests but these are out of scope for this book.</p>
 </blockquote>
 <p>To run tests in our project we use <code>cargo test</code>. In the case of the above we should see the following:</p>
-<pre><code class="language-text">error: test failed, to rerun pass `--lib`
-
-running 1 test
+<pre><code class="language-text">running 1 test
 test tests::test_split_at ... FAILED
 
 failures:
@@ -3129,7 +3126,7 @@ mod tests {
     #[test]
     fn test_is_palindrome() {
         assert!(is_palindrome("kayak"));
-        assert!(is_palindrome("race car"));
+        assert!(is_palindrome("racecar"));
         assert!(!is_palindrome("wood"));
     }
 }</code></pre>
@@ -3250,7 +3247,7 @@ start using external crates which is out of scope of this section of the book.</
 <code>if</code>, we miss the fact there is a mistake in the second branch.</p>
 <p>So what percent coverage should you aim for?</p>
 <p>Anecdotally, when I was creating my own API framework in PHP, I decided I wanted to get 100% coverage, that is, every
-line should have a test that hits it. The very last lime that was uncovered was:</p>
+line should have a test that hits it. The very last line that was uncovered was:</p>
 <pre><code class="language-php ignore">        }
 </code></pre>
 <p>I wondered if it was worth the effort, decided it was. The reason this was the last uncovered line was that it was part
@@ -3322,6 +3319,26 @@ be the unit type <code>()</code>).</li>
 <pre><code class="language-rust ignore">fn reverse_sentence(input: &amp;str) -&gt; Result&lt;String, ()&gt;</code></pre>
 <p>Here is the documentation on <a href="https://doc.rust-lang.org/std/string/struct.String.html" title="" target="_blank">String</a> and
 <a href="https://doc.rust-lang.org/std/result/enum.Result.html" title="" target="_blank">Result</a></p>
+<h2 id="going-forward"><a class="header" href="#going-forward">Going forward</a></h2>
+<p>As I mentioned, after this chapter we will be talking about Rust differently. This will primarily be by using the assert
+macros to state what a value <em>should</em> be.</p>
+<p>For example, one of our earlier code examples looks like this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let min_byte: u8 = 0b0000_0000;
+let max_byte: u8 = 0b1111_1111;
+println!("min_byte: {min_byte}"); // 0
+println!("max_byte: {max_byte}"); // 255
+<span class="boring">}</span></code></pre></pre>
+<p>But from here on out it’ll look like this:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let min_byte: u8 = 0b0000_0000;
+let max_byte: u8 = 0b1111_1111;
+assert_eq!(min_byte, 0);
+assert_eq!(max_byte, 255);
+<span class="boring">}</span></code></pre></pre>
+<p>Now that you’ve seen the assert macros, this should be cleaner and clearer.</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="documentation"><a class="header" href="#documentation">Documentation</a></h1>
 <p>Documentation. Is. Awesome… in Rust.</p>
 <p>Documentation is awesome all the time but in Rust, it’s truly magical. This is thanks to two tools: <code>rustdoc</code> and,
