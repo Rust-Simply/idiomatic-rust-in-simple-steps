@@ -175,12 +175,12 @@
                     <main>
                         <h1 id="documentation"><a class="header" href="#documentation">Documentation</a></h1>
 <p>Documentation. Is. Awesome… in Rust.</p>
-<p>Documentation is awesome all the time but in Rust, it’s truly magical. This is thanks to two tools: <code>rustdoc</code> and,
-spoilers, <code>cargo test</code>.</p>
+<p>Good documentation is awesome all the time but Rust provides some tools that make documenting your project a truly
+magical experience. In Rust good documentation is low effort and high value.</p>
 <p>Documentation is important. You’ll hear a lot of things in Software like “the code should document itself” and “the
-tests”, and this is true, but it’s not a substitute for documentation. Easy to understand code is incredibly important
-when you work in a code base so that you can easily understand it and maintain it. As we spoke about in the last
-chapter, tests are important to show our expectations of the code.</p>
+tests should document the code”, and this is all true, but it’s not a <em>substitute</em> for documentation. Easy to understand
+code is incredibly important when you work in a code base so that you can easily understand it and maintain it. And, as
+we spoke about in the last chapter, tests are important to show our expectations of what the code will do when used.</p>
 <p>But code and tests are not there primarily to teach someone how to use the code. They can do that, but its secondary,
 meaning that someone consuming this for the purpose of learning how to use the code, is having to deal with information
 they don’t need.</p>
@@ -188,11 +188,11 @@ they don’t need.</p>
 quickly, and as painlessly as possible. Rust understands this and provides a full suite of tools that make producing
 documentation, not just trivial, but also fun!</p>
 <h2 id="libraries"><a class="header" href="#libraries">Libraries</a></h2>
-<p>In order to show the value of documentation, we’re going to start creating Rust libraries.</p>
-<p>Up to now, we’ve been building binaries. Rust compiles binaries into executables, but those binaries can link to and,
+<p>In order to show the value of documentation, we’re going to create our first Rust library.</p>
+<p>Up to now, we’ve been building binaries. Rust compiles <code>main.rs</code> into an executable, but our projects can link to and,
 use functionality from, libraries. This is particularly helpful when sharing and reusing code. We’ll be talking much
-more about how we share code with each other when we get to ecosystem, but even as we’re just learning the language, we
-can leverage the power of libraries for things like code reuse within the same project.</p>
+more about how we share code with each other when we cover the Rust ecosystem, but even as we’re just learning the
+language, we can leverage the power of libraries for things like code reuse within the same project.</p>
 <p>Let’s try it out. First, lets make a normal program, remember you can do this with something like:
 <code>cargo new iriss-documentation</code></p>
 <p>In <code>main.rs</code>, we’ll make a single function and our main program will just check it works.</p>
@@ -205,13 +205,14 @@ fn main() {
 }</code></pre></pre>
 <p>Next, lets migrate the add function to a library. Create a new file called <code>lib.rs</code>. In the same way that <code>main.rs</code> is
 the entry to our binary, <code>lib.rs</code> is the entry point to our library. Our library acts like any other module and the
-module is named the same thing as our project (though swap hyphens <code>-</code> for underscores <code>_</code>).</p>
-<p>We’ll move our add function to the <code>lib.rs</code> and make it public:</p>
+module is named the same thing as our project (though swap hyphens <code>-</code> for underscores <code>_</code>). Anything public in <code>lib.rs</code>
+will be available to anyone using the library.</p>
+<p>We’ll move our add function to the <code>lib.rs</code> and make it public so that we can access it from <code>main.rs</code>:</p>
 <pre><code class="language-rust noplayground">// lib.rs
 pub fn add(a: usize, b: usize) -&gt; usize {
     a + b
 }</code></pre>
-<p>We can now access this function from our main via the project module (eg, <code>iriss_documentation</code>).</p>
+<p>We can now use this function in our main function via the project module (eg, <code>iriss_documentation</code>).</p>
 <pre><code class="language-rust noplayground"><span class="boring">// This is included for `mdbook test` which I'm using to check for obvious mistakes,
 </span><span class="boring">// this _should_ be in lib.rs in your project and not in a module
 </span><span class="boring">mod iriss_documentation {
@@ -232,11 +233,13 @@ fn main() {
 <p>If we run our program right now, you can see that it still works but… we’re not really taking advantage of the library
 though, what’s the difference between this and what we had before?</p>
 <p>The main way you’re likely to share code is through Rusts package management system called Crates. Were you to publish
-this project right now (please don’t though, this project is obviously useless to others 😅), then theoretically other
+this project right now (please don’t though, <em>this</em> project is obviously pretty useless 😅), then theoretically other
 people could use your <code>add()</code> function. But, we aren’t going to cover Crates at all in the language basics portion of
 this book.</p>
-<p>That doesn’t mean this technique isn’t useful though. Now that we’ve got our lib.rs, lets move <code>main.rs</code> to
-<code>bin/main.rs</code>. The program still runs if you use <code>cargo run</code> but if you look closely there is a difference.</p>
+<p>That doesn’t mean this technique isn’t useful though. To show how it can be useful, lets make another change to our
+project.</p>
+<p>Now that we’ve got our <code>lib.rs</code>, lets move <code>main.rs</code> to <code>bin/main.rs</code>. The program still runs if you use <code>cargo run</code> but
+if you look closely there is a difference.</p>
 <p>Before:</p>
 <p><img src="documentation/bin-before.png" alt="Before we moved to bin" /></p>
 <p>After:</p>
@@ -248,15 +251,17 @@ from the file name instead of the project.</p>
 <p>To fix this, rename <code>bin/main.rs</code> to <code>bin/iriss-documentation.rs</code> and cargo will go back to creating
 <code>iriss-documentation.exe</code>.</p>
 <p>You can now create more binaries in this directory called different things and all of them will have access to the
-library we’ve created. Feel free to try this out, but bear in mind that once you have more than one file in that
-directory, you will have to tell cargo which binary you want it to focus on. For example
-<code>cargo run --bin iriss-documentation</code></p>
+library we’ve created!</p>
+<p>Feel free to try this out, but bear in mind that once you have more than one file in that directory, you will have to
+tell cargo which binary you want it to focus on. For example: <code>cargo run --bin iriss-documentation</code></p>
 <h2 id="rustdoc"><a class="header" href="#rustdoc">rustdoc</a></h2>
 <p>The Rust toolset includes a program called <code>rustdoc</code> which we can run through Cargo using <code>cargo doc</code>. It’s builds and
 combines the documentation, not only from your code, but from any libraries and crates you’re using.</p>
 <p>Let’s jump in and try it out with our code, if you run <code>cargo doc --open</code> it will build the documentation and then open
 it in your browser. As you can see, without us doing anything rustdoc has figured out about our add function.</p>
 <p><img src="documentation/rustdoc-1.png" alt="Our documentation’s home page" /></p>
+<p>You’ll notice that it’s only documented our library. This is because people consuming your code can’t use code in the
+binary.</p>
 <p>If you click the <code>add</code> function, it’ll take you to the documentation page. Rustdoc has already worked out the header
 for the function, but that’s all the information there is for now.</p>
 <p><img src="documentation/rustdoc-2.png" alt="Add function documentation, it’s a bit bland" /></p>
@@ -268,7 +273,7 @@ compiler. We usually talk about two styles of comments:</p>
 <li>Line comments: starting at <code>//</code> and ending at the end of the line</li>
 <li>Block comments: starting at <code>/*</code> and ending with <code>*/</code></li>
 </ul>
-<p>Many languages like Java, JavaScript, PHP, and more, also provide a special type of comment called a Doc Comment. Like
+<p>Many languages like Java, JavaScript, PHP, and more, also support a special type of comment called a Doc Comment. Like
 comments, these are to convey information about nearby code, and are ignored by the compiler, however you can use
 documentation tooling to read them and produce the documentation for you.</p>
 <p>Rust takes this idea and turbocharges it… but we’ll get to that.</p>
@@ -281,14 +286,14 @@ documentation tooling to read them and produce the documentation for you.</p>
 to always use line comments, even if the comment spans many lines. The reason for this appears to be ambiguity in
 terminating block comments, and the desire for consistency.</p>
 <p>Outer Doc Comments are placed before the thing that’s being documented and use <code>///</code> for each line of the comment, and
-we’ll use them for most things like our add function.</p>
+we’ll use them for most things like modules, types and our <code>add()</code> function.</p>
 <pre><code class="language-rust noplayground">/// Adds two numbers together.
 pub fn add(a: usize, b: usize) -&gt; usize {
     a + b
 }</code></pre>
 <p>We can re-run <code>cargo doc</code> and refresh the page in our browser and our <code>add</code> function now has a little explanation.</p>
 <p><img src="documentation/rustdoc-3.png" alt="add() description" /></p>
-<p>That’s neat, but we could have worked out that out from the name. Rust documentation uses markdown, which means we can
+<p>That’s neat, but we could have worked that out from the name. Rust documentation uses markdown, which means we can
 use formatting and code snippets, as well as consecutive lines being treated as a single paragraph. Let’s add some more
 detail and explain how to use the function using the same technique we learned in the last chapter, assertions.</p>
 <p>Doing it this way may seem odd, but all will be explained in a moment.</p>
@@ -311,7 +316,7 @@ pub fn add(a: usize, b: usize) -&gt; usize {
 }</code></pre>
 <p>Rebuilding our documentation now gives us the code sample too, isn’t that cute!</p>
 <p><img src="documentation/rustdoc-4.png" alt="add() with code sample" /></p>
-<p>What’s quite cool, is that if we go back to the top level of our library where our <code>add</code> function was listed, you can
+<p>What’s also cool, is that if we go back to the top level of our library where our <code>add</code> function was listed, you can
 see that <code>add</code> now has a nice little summary, it’s the first line of our documentation. This is worth bearing in mind
 as you write your documentation. Try to keep this line terse but descriptive.</p>
 <p><img src="documentation/rustdoc-5.png" alt="Summary of add()" /></p>
@@ -344,14 +349,19 @@ at the top of the file. Let’s provide a little</p>
 pub fn add(a: usize, b: usize) -&gt; usize { /* ... */ }</code></pre>
 <p>And all of this will render nicely into our documentation.</p>
 <p><img src="documentation/rustdoc-6.png" alt="Top level documentation" /></p>
+<blockquote>
+<p>ℹ️ Note: You can use Inner Doc Comments for all sorts of things, like modules that are in curly brackets. But, again,
+the convention<sup class="footnote-reference"><a href="#rfc1574">1</a></sup> is to only use Inner Doc Comments for files, whether thats your main library file, or module
+files (eg, <code>my_module/mod.rs</code>, or <code>./my_module.rs</code>).</p>
+</blockquote>
 <h2 id="doc-tests"><a class="header" href="#doc-tests">Doc-Tests</a></h2>
-<p>That’s right, Doc Tests. Some people say tests should be documentation, but here we say documentation can be the test!</p>
-<p>Well, ok, not <em>the</em> test, you should still write your unit tests. 😅</p>
+<p>Some people say tests should be the documentation, but here we say the documentation should be the tests!</p>
+<p>Well, ok, not <em>the</em> test, you absolutely should still write your unit tests, etc. 😅</p>
 <p>But without doing anything else to our project, try running <code>cargo test</code>.</p>
 <p><img src="documentation/doc-tests.png" alt="Doc-Tests" /></p>
 <p>There’s a few things to notice here.</p>
-<p>First, we seem to be getting three sets of tests. Second, we have passing tests… but we didn’t write any tests, did
-we?</p>
+<p>First, we seem to be getting three sets of tests. Second, we have two passing tests… but we didn’t write any tests,
+did we?</p>
 <p>The order of test suites, and individual tests you see may differ from the above, but you should have one test suite
 for our library (<code>lib.rs</code>), one test suite for our binary (<code>iriss-documentation.rs</code>), and one for Doc-tests. The first
 two have no tests, but Doc-tests have two tests.</p>
@@ -385,19 +395,20 @@ mod tests {
 <p>In the doc tests, it’s the file, the name of the thing being documented (unless it <em>is</em> the file) and the line of the
 start of the code block.</p>
 <p>This makes them slightly less useful <em>as</em> tests. So why would we do it?</p>
-<p>Because the leading cause of bad documentation, and the reason why people so often don’t bother writing it to start with
+<p>Well, the leading cause of bad documentation, and the reason why people so often don’t bother writing it to start with
 is that it needs to be maintained. One of the worst things we can do in documentation is tell someone they can achieve
 an outcome in a particular way, then change the code so that particular way no longer works as expected.</p>
 <p>Writing our documentation as test ensures that our documentation is correct, and keeping our documentation right next
-to the thing being documented makes it trivial to update.</p>
+to the thing being documented makes it trivial to update. Rust guarantees that if you said the code works in a
+particular way, so long as you also wrote an example with assertions, then the documentation is correct!</p>
 <h2 id="sharing-documentation"><a class="header" href="#sharing-documentation">Sharing Documentation</a></h2>
 <p>To paraphrase Dr Strangelove: Of course, the whole point of <strong>documentation</strong> is lost, if you keep it a secret!</p>
 <p>How do we tell people about our documentation?</p>
 <p>There’s two ways documentation gets shared and neither of them require any work on your behalf.</p>
 <p>We’ll go into this a further in the ecosystem section of the book, however when you’re ready to share your code, we
 use cargo to “publish” the code to <a href="https://crates.io" title="" target="_blank">crates.io</a>. When someone downloads your code from there, they
-get the source code which includes your documentation. This means when they build their documentation, your
-documentation becomes a part of it.</p>
+get the source code which includes your documentation. This means when they build their documentation, they can also
+build your documentation.</p>
 <p>The second way our documentation is shared is that when we publish to crates.io, our documentation is compiled and
 uploaded to another service, <a href="https://docs.rs" title="" target="_blank">docs.rs</a>. On this service you can find every version of API documentation
 for every crate (library) ever published!</p>
@@ -406,10 +417,8 @@ for every crate (library) ever published!</p>
 <ol>
 <li>Documentation tooling comes with the rust tool suite</li>
 <li>Documentation is written with code, not separately from it</li>
-<li>Code examples are run with tests, meaning it’s very hard to make documentation that’s wrong</li>
+<li>Code examples are run with tests, meaning it’s very hard to produce documentation that’s wrong</li>
 </ol>
-<p>Furthermore, because the tooling is compelling enough to use on its own, everyone is already using it, meaning the
-documentation for Rust projects has a</p>
 <p>Because the prescribed method of writing documentation is so good, everyone ends up using the same tools and the same
 conventions, which means Rust documentation will always feel somewhat familiar, significantly reducing the burden of
 learning.</p>
