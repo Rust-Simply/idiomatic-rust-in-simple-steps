@@ -11,7 +11,7 @@
     - [Data Types](language-basics/data-types.md)
     - [Control Flow](language-basics/control-flow.md)
     - [Functions](language-basics/functions.md)
-    - [Tests (wip)](./language-basics/tests.md)
+    - [Tests](./language-basics/tests.md)
     - [Documentation](./language-basics/documentation.md)
     - [Clippy and Fmt]()
     - [Conversions]()
