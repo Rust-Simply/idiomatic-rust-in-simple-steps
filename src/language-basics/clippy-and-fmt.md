@@ -4,20 +4,68 @@ Clippy and Fmt
 The Rust ecosystem has a wealth of tools that support us when writing Rust but two of the most important ship with the
 default tool suite.
 
-`rustfmt` (pronounced Rust Format) helps us keep our code styles consistent, so that its easy to share your code or read
-and learn from someone elses.
-
-`clippy` (named after the old Microsoft Office tool) helps spot common mistakes, antipatterns, and even make suggestions
-on things like performance, scalability or readability improvements.
+- `cargo check` - we've used cargo a little bit to initialise, build and test our code, but it can provide even more
+  utility to us than just that!
+- `rustfmt` - Pronounced Rust Format, helps us keep our code styles consistent, so that its easy to share your code or
+  read and learn from someone else's.
+- `clippy` - Named after the old Microsoft Office tool, helps spot common mistakes, antipatterns, and even make
+  suggestions on things like performance, scalability or readability improvements.
 
 rustfmt
 -------
 
-Basics
-Configuring it
+`rustfmt` is a formatting tool for Rust. Programming language formatting tools allow you to configure how you want your
+code to look. For example:
+
+- Do you like opening curly brakets on the end of a line, like this:
+    ```rust
+    fn example() {
+    # }
+    ```
+    or on a new line like this:
+    ```rust
+    fn example()
+    {
+    # }
+    ```
+- Do you indent with four spaces or two?
+- Do you use a trailing comma, if a comma-seperated list is split onto multiple lines>
+- How many empty lines are allowed between lines of code in a function?
+- etc...
+
+Maintaining a consistent style improves the legibility of code, making it faster for engineers to read and understand
+what's happening. This is true, even if you only write code for yourself, using familiar patterns reduces the cognitive
+load to parse what you're looking at. When working together as a group, it's important to come to an agreement as to
+how you will style your code together, but luckily a Formatter will reduce the burden of having to maintain the style
+once you've picked what to use.
+
+Different languages have different "styles" that they follow. Some older languages may have multiple well established
+styles to choose from. Luckily there's an official [Rust Style Guide](https://doc.rust-lang.org/nightly/style-guide/) 
+that gives us a compelling reason in the community to all write code the same way, and Rust comes with its own formatter
+called "Rust Format" that will automatically maintain the style for you!
+
+You can call Rust Format manually using `cargo fmt` and it will automatically reformat your entire project, however its
+definitely best if you can set your IDE to automatically run it any time you save a file. This will save you any big
+unexpected changes.
+
+If you just want it to tell you if anything is incorrectly formatted, you can use `cargo fmt --check`. We'll come back
+to this later!
+
+Finally, it might be that you and your team find some aspect of the official Rust Style Guide particularly egregious,
+that's fine! Rust Format allows you to configure how it will format your code through `rustfmt.toml`. You can find
+a complete guide to what you can control, and how, here: https://rust-lang.github.io/rustfmt/
 
 clippy
 ------
+
+Explainer
+Basics
+Configuring it
+
+Cargo Check
+-----------
+
+Cargo can be used to perform some other cursory Check
 
 Continuous Integration
 ----------------------
