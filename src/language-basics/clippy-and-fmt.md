@@ -143,12 +143,14 @@ This might not seem very useful on your machine, but it comes in very handy with
 Continuous Integration
 ----------------------
 
-Continuous Integration is a technique that we use to maintain high quality, robust, and "correct" code in our code base.
+Continuous Integration (CI) is a technique that we use to maintain high quality, robust, and "correct" code in our code 
+base. CI is usually used to help control what goes into your source code management system, where you might be storing
+your code.
 
 Source code management systems like Git, Mercurial, Subversion (SVN), etc, are out of scope for this book, however, if
 you haven't already, you should learn to use one of these as quickly as possible. I can't tell you which to use, it
 depends on what kind of application you're building. Git is very common, but is better for things that are being
-primarily built from text based resources, like websites, or desktop application. If you're making games or something
+_primarily_ built from text based resources, like websites, or desktop application. If you're making games or something
 that uses a lot of images or other non-text based assets though you might want to use SVN, Plastic or Perforce.
 
 Whatever you choose, you can use continuous integration to make sure that every time you make changes, those changes
@@ -158,25 +160,39 @@ How you achieve this will vary depending on not only what SCM you use, but poten
 very different from GitHub Actions. The main idea however is to run a set of instructions before allowing changes to
 be integrated (or merged) into the main project.
 
-Typically for Rust projects, you will want to run at least the following four things:
+For example, a typical Git workflow might have a `main` branch. When you come to do some work, you'd create a new branch
+based on whats currently in `main` and name it something relevant to the work you're going to do (for example, as I 
+write this chapter of the book, I'm on a branch called `clippy-and-fmt`). When you're happy with your code, you would
+merge your branch with `main` and `main` would get all of your changes. This is where CI helps, it makes sure that
+whatever you're working on on your branch is up to the level of quality that is expected of code in `main`.
 
-???
+We can use the tools we've talked about in this and previous chapters to create a CI workflow.
 
-`cargo check` will do a light, cursory check for any errors that will completely stop the application working.
+Roughly what we want to do is:
+1. run `cargo check`, if this fails, there's not a lot of point in continuing so we get our results faster
+2. run `cargo fmt --check` which will make sure code abides by our style guide without changing anything
+3. run `cargo clippy -- -D warnings` which error if there are any warnings from clippy
+   > Remember, although warnings don't necessarily mean something is actually wrong, you should try to make sure you
+   > to fix them all anyway as the more irrelevant warnings you're outputting, the more likely it is that you'll miss 
+   > something that is relevant!
+4. `cargo test` will run all tests and doc tests
+5. `cargo build` will make sure your code actually compiles
+   > This can also be very useful in Continuous Deployment (CD) processes, after merging to main, allowing you to
+   > immediately deploy your latest code automatically 
 
-`cargo fmt --check` will run cargo fmt without making any changes to your code. Instead, it will simply error if it 
-finds anything that that doesn't fit the formatting rules.
+Running all of this one after the other can be very time-consuming, but some of it can be run in parallel.
 
-`cargo clippy` can be run as normal and will check for any issues or improvements that should be addressed before
-allowing the code to be integrated.
+`cargo check` and `cargo fmt --check` do not depend on anything else, and can act as fast fails, letting you know that
+its not worth continuing the process.
 
-`cargo test` will run all tests and doc tests.
+`cargo test` and `cargo clippy -- -D warnings` are only going to work if `cargo check` also works, so as soon as
+`cargo check` is complete, we can start working on them
 
-Where possible, these should be run in parallel, as none of them are dependent on each other, and you don't want to
-have to fix one, wait for the next to fail, fix that but potentially break the first one.
+Finally, once `cargo test` and `cargo clippy` have succeeded, we can move to the final check, `cargo build`. At this
+point, everything that could be caught should have been caught so there should be no surprises which means we might as
+well wait for `cargo fmt` to complete too.
 
-However, all four will require you run `cargo build`, and ideally you don't want to do this four separate times. The
-best way to do this is to do it once and cache the results for the next four tasks. Again, how you do this will depend
+This gives us this order of events:
 
 <style>
   .mermaid {
@@ -198,13 +214,17 @@ graph LR;
     test["cargo test"]
     build["cargo build"]
     
-    fmt ==> clippy
-    fmt ==> test
     check ==> clippy 
     check ==> test
+    fmt ==> build
     clippy ==> build
     test ==> build
 ```
+
+Depending on your CI suite though, it might be that each of these tasks runs in isolation. For example, it might run
+each step in a docker container. But, `cargo check` is going to do a lot of hard work some of the other steps can use.
+This is where its worth learning your CI suite's caching process, so that you can cache the output of the `cargo check`
+step.
 
 ```mermaid
 ---
@@ -240,3 +260,8 @@ block-beta
     cache --> build
 ```
 
+Next Chapter 
+------------
+
+Next we're going to cover traits; what they are, how to write them, how to implement them, and some of the more useful
+traits Rust provides that you should be aware of. 
