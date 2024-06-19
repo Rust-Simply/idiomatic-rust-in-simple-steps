@@ -20,16 +20,42 @@ code to look. For example:
 - Do you like opening curly brakets on the end of a line, like this:
     ```rust
     fn example() {
-    # }
+        // ...
+    }
     ```
     or on a new line like this:
     ```rust
     fn example()
     {
-    # }
+        // ...
+    }
     ```
-- Do you indent with four spaces or two?
-- Do you use a trailing comma, if a comma-seperated list is split onto multiple lines>
+- Do you indent with four spaces:
+  ```rust
+  fn hello() {
+      println!("Hello");  
+  }
+  ```
+  or two:
+  ```rust
+  fn hello() {
+    println!("Hello");  
+  }
+  ```
+- Does the last item in a list across multiple lines have a trailing comma:
+  ```rust
+  let list = [
+      "one",
+      "two",
+  ]
+  ```
+  or not:
+  ```rust
+  let list = [
+      "one",
+      "two"
+  ]
+  ```
 - How many empty lines are allowed between lines of code in a function?
 - etc...
 
@@ -55,17 +81,64 @@ Finally, it might be that you and your team find some aspect of the official Rus
 that's fine! Rust Format allows you to configure how it will format your code through `rustfmt.toml`. You can find
 a complete guide to what you can control, and how, here: https://rust-lang.github.io/rustfmt/
 
+`rustfmt` should now come with the rust tool suite by default, but if for some reason you don't have it, you can install
+it with `rustup component add rustfmt`
+
 clippy
 ------
 
-Explainer
-Basics
-Configuring it
+Clippy is Rust's linter, a tool that can not only make sure your code is correct (`rustc` technically already does
+_that_ for you) but even offer suggestions on how to improve your code, and explain why an alternative might be better!
+
+To run Clippy with the default configuration, simply type `cargo clippy`
+
+This is an incredibly powerful tool, not just for making sure your code is the best it can be, but as an aid for
+learning.
+
+Antithetical to that, though still incredibly useful, Clippy can go right ahead and fix many of the common issues it 
+might find, simply by passing the `--fix` flag (eg: `cargo clippy --fix`).
+
+And, Clippy won't just check your code either, it can also spot common mistakes in your documentation (we love
+documentation here if you couldn't tell 😅). For example, if in your doc comments you use underscores `_` or double 
+colons `::` outside of backticks, Clippy will assume this is a mistake and let you know.
+
+There's a lot of flexibility in how you can configure Clippy. Lints are broken up into groups for easy control, so we
+typically might decide at the group level, what to include, and whether it should be considered a warning or completely
+denied. For example, I tend to use the `pedantic` list of lints with a warning (these are usually allowed by clippy 
+which means you don't get told if there is a potential issue). 
+
+To do this you can either:
+- run: `cargo clippy -- -W clippy::pedantic` or...
+- in my entry file to my project (eg, `main.rs`, or `lib.rs`) I can add the line:
+  ```rust
+  #![warn(clippy::pedantic)]
+  ```
+
+The benefit of the latter is you can set a nice default for the project without you or anyone else needing to remember 
+what options to pass to Clippy, while the former is useful if you want to override any other behaviour.
+
+For a full list of lints, check the list here: https://rust-lang.github.io/rust-clippy/master/index.html#/Configuration
+
+Clippy should now come with the rust tool suite by default, but if for some reason you don't have it, you can install
+it with `rustup component add clippy`.
 
 Cargo Check
 -----------
 
-Cargo can be used to perform some other cursory Check
+There's one last tool I want to mention quickly, and it will initially seem quite underwhelming by comparison to the
+others, but stick with me.
+
+`cargo check` is a tool will... check your code and all its dependencies for errors. Groundbreaking, right?
+
+Since we'd find out that our code has errors when we try to build it with `cargo build`, what's the use of 
+`cargo check`? Well, `cargo check` essentially does the same job as `cargo build` but skips the final step of code
+generation. This means it's faster, and importantly, cheaper to perform, meaning it can be used as a fast-fail.
+
+The work it does isn't wasted either. Because it does in fact perform some of the compilation steps, the output of this
+is cached on your machine so that other tools (such as `cargo build` and Clippy) can use that to skip earlier steps in
+their own processes.
+
+This might not seem very useful on your machine, but it comes in very handy with Continuous Integration.
 
 Continuous Integration
 ----------------------
@@ -119,9 +192,56 @@ best way to do this is to do it once and cache the results for the next four tas
 title: Continuous Integration
 ---
 graph LR;
-    build["cargo build"]  ==> check["cargo check"]
-    build["cargo build"]  ==> fmt["cargo fmt"]
-    build["cargo build"]  ==> clippy["cargo clippy"]
-    build["cargo build"]  ==> test["cargo test"]
+    check["cargo check"]  ==> fmt["cargo fmt"]
+    check["cargo check"]  ==> clippy["cargo clippy"]
+    check["cargo check"]  ==> test["cargo test"]
+    
+    fmt ==> build["cargo build"]
+    clippy ==> build
+    test ==> build
+```
+
+```mermaid
+---
+title: Continuous Integration with Cache
+---
+block-beta
+    columns 1
+    block:cache_block
+        columns 3
+        cache[("cache")]
+        space
+        space
+    end
+    block:process
+        check["cargo check"]
+        block:input
+            columns 1
+            checkToFmt<["&nbsp;"]>(right)
+            checkToClippy<["&nbsp;"]>(right)
+            checkToTest<["&nbsp;"]>(right)
+        end
+        block:parallel
+            columns 1
+            fmt["cargo fmt"]
+            space
+            clippy["cargo clippy"]
+            space
+            test["cargo test"]
+        end
+        block:output
+            columns 1
+            fmtToBuild<["&nbsp;"]>(right)
+            clippyToBuild<["&nbsp;"]>(right)
+            testToBuild<["&nbsp;"]>(right)
+        end
+        build["cargo build"]
+    end
+    
+    check --> cache
+    cache --> fmt
+    cache --> clippy
+    cache --> test
+    cache --> build
 ```
 
