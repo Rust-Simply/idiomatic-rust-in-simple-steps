@@ -192,11 +192,16 @@ best way to do this is to do it once and cache the results for the next four tas
 title: Continuous Integration
 ---
 graph LR;
-    check["cargo check"]  ==> fmt["cargo fmt"]
-    check["cargo check"]  ==> clippy["cargo clippy"]
-    check["cargo check"]  ==> test["cargo test"]
+    check["cargo check"]
+    fmt["cargo fmt"]
+    clippy["cargo clippy"]
+    test["cargo test"]
+    build["cargo build"]
     
-    fmt ==> build["cargo build"]
+    fmt ==> clippy
+    fmt ==> test
+    check ==> clippy 
+    check ==> test
     clippy ==> build
     test ==> build
 ```
@@ -214,32 +219,22 @@ block-beta
         space
     end
     block:process
-        check["cargo check"]
-        block:input
+        block:fastFail
             columns 1
-            checkToFmt<["&nbsp;"]>(right)
-            checkToClippy<["&nbsp;"]>(right)
-            checkToTest<["&nbsp;"]>(right)
-        end
-        block:parallel
-            columns 1
+            check["cargo check"]
             fmt["cargo fmt"]
-            space
+        end
+        fastFailToDeepCheck<["&nbsp;"]>(right)
+        block:deepCheck
+            columns 1
             clippy["cargo clippy"]
-            space
             test["cargo test"]
         end
-        block:output
-            columns 1
-            fmtToBuild<["&nbsp;"]>(right)
-            clippyToBuild<["&nbsp;"]>(right)
-            testToBuild<["&nbsp;"]>(right)
-        end
+        deepCheckToBuild<["&nbsp;"]>(right)
         build["cargo build"]
     end
     
     check --> cache
-    cache --> fmt
     cache --> clippy
     cache --> test
     cache --> build
